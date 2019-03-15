@@ -105,33 +105,33 @@ int StringToInteger(LPCTSTR psz)
 	if(!IsDigit(c)) return 0;
 
 	// ’è”
-	if(c == '0'){
+	if(c == _TCHAR('0')){
 		// 0 ‚© 8i” ‚© 16i”
 		
 		c = *(psz+1);
-		if('0' <= c && c <= '7'){
+		if(_TCHAR('0') <= c && c <= _TCHAR('7')){
 			for(;;){
 				c = *psz++;
-				if('0' <= c && c <= '7'){
+				if(_TCHAR('0') <= c && c <= _TCHAR('7')){
 					n *= 8;
-					n += (c - '0');
+					n += (c - _TCHAR('0'));
 				}else{
 					return n;
 				}
 			}
-		}else if(c == 'x' || c == 'X'){
+		}else if(c == _TCHAR('x') || c == _TCHAR('X')){
 			psz+=2;// psz‚Í0x‚ÌŸ‚ğ‚³‚·
 			for(;;){
 				c = *psz++;
 				if(isxdigit(c)){
 					n *= 16;
 					if(IsDigit(c)){
-						n += (c - '0');
+						n += (c - _TCHAR('0'));
 					}else{
 						if(_istupper(c)){
-							n += ((c - 'A') + 10);
+							n += ((c - _TCHAR('A')) + 10);
 						}else{
-							n += ((c - 'a') + 10);
+							n += ((c - _TCHAR('a')) + 10);
 						}
 					}
 				}else{
@@ -147,7 +147,7 @@ int StringToInteger(LPCTSTR psz)
 			c = *psz++;
 			if(IsDigit(c)){
 				n *= 10;
-				n += (c - '0');
+				n += (c - _TCHAR('0'));
 			}else{
 				return n;
 			}

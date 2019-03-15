@@ -105,7 +105,7 @@ bool ArchiveDll::setDllFilename(LPCTSTR filename, LPCTSTR prefix) {
 FARPROC ArchiveDll::getFuncAddress(LPCTSTR funcName) {
 	String apiName;
 	apiName.Format(_T("%s%s"), mPrefix.c_str(), funcName);
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	USES_CONVERSION;
 	return ::GetProcAddress(mDllHandle, W2A(apiName.c_str()));
 #else
@@ -118,7 +118,7 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 
 	rOutput.Empty();
 
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	USES_CONVERSION;
 	FARPROC f = ::GetProcAddress(mDllHandle, W2A(mPrefix.c_str()));
 #else
@@ -127,14 +127,14 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 	// 関数がサポートされているか
 	if (f == NULL) { return 1; }
 
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	LPSTR lpBuffer = (LPSTR)malloc(65536 + 1);
 #else
 	LPSTR lpBuffer = rOutput.GetBuffer(65536+1);
 #endif
 
 	typedef int  (WINAPI* SEVEN_ZIP)(const HWND,LPCSTR,LPSTR,const DWORD);
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	int r = ((SEVEN_ZIP)f)( hwnd, (LPCSTR)cmdLine, lpBuffer, 65536);
 	rOutput = A2W(lpBuffer);
 	free(lpBuffer);
@@ -169,7 +169,7 @@ bool ArchiveDll::openArchive(const HWND hwnd, const DWORD mode)  {
 	FARPROC f = getFuncAddress(_T("OpenArchive"));
 	if (f == NULL) { return false; }
 	typedef HARC (WINAPI* OPEN_ARCHIVE)(const HWND, LPCSTR, const DWORD);
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, (LPCSTR)archiveFilename_.utf8_str(), mode);
 #else
 	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, archiveFilename_.c_str(), mode);
@@ -336,7 +336,7 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 	}
 
 	String output;
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	int ret = command(NULL, commandLine.utf8_str(), output);
 #else
 	int ret = command(NULL, commandLine.c_str(), output);
@@ -519,13 +519,13 @@ bool ArchiveDll::compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, 
 
 		String commandLine;
 		if (showsProgress) {
-#if defined(_UNICODE)
+#ifdef _UNICODE
 			commandLine.Format(_T("a -tzip %s * -r -mx=%d -mcu=on -sccUTF-8"), filename.c_str(), compressLevel);
 #else
 			commandLine.Format(_T("a -tzip %s * -r -mx=%d"), filename.c_str(), compressLevel);
 #endif
 		} else {
-#if defined(_UNICODE)
+#ifdef _UNICODE
 			commandLine.Format(_T("a -tzip -hide %s * -r -mx=%d -mcu=on -sccUTF-8"), filename.c_str(), compressLevel);
 #else
 			commandLine.Format(_T("a -tzip -hide %s * -r -mx=%d"), filename.c_str(), compressLevel);
@@ -533,7 +533,7 @@ bool ArchiveDll::compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, 
 		}
 
 		String output;
-#if defined(_UNICODE)
+#ifdef _UNICODE
 		int ret = command(NULL, commandLine.utf8_str(), output);
 #else
 		int ret = command(NULL, commandLine.c_str(), output);
@@ -554,7 +554,7 @@ int ArchiveDll::findFirst(LPCTSTR wildName, INDIVIDUALINFO* p) {
 	FARPROC f = getFuncAddress(_T("FindFirst"));
 	if (f == NULL) { return 1; }
 	typedef int (WINAPI* FIND_FIRST)(HARC ,LPCSTR ,INDIVIDUALINFO*);
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	USES_CONVERSION;
 	return ((FIND_FIRST)f)(mArchiveHandle, W2A(wildName), p);
 #else	
@@ -587,7 +587,7 @@ bool ArchiveDll::checkArchive() {
 	FARPROC f = getFuncAddress(_T("CheckArchive"));
 	if (f == NULL) { return false; }
 	typedef BOOL (WINAPI * CHECK_ARCHIVE)(LPCSTR, const int);
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	setUnicodeMode();
 	BOOL b = ((CHECK_ARCHIVE)f)((LPCSTR)archiveFilename_.utf8_str(), 0);
 #else
@@ -628,7 +628,7 @@ int ArchiveDll::getAttribute() {
 int ArchiveDll::getFileName(String& rFilename) {
 	FARPROC f = getFuncAddress(_T("GetFileName"));
 	if (f == NULL) { return -1; }
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	USES_CONVERSION;
 	LPSTR lpBuffer = (LPSTR)malloc(256);
 #else
@@ -636,7 +636,7 @@ int ArchiveDll::getFileName(String& rFilename) {
 #endif
 	typedef int (WINAPI * GET_FILE_NAME)(HARC, LPSTR, const int);
 	int ret = ((GET_FILE_NAME)f)(mArchiveHandle, lpBuffer, 256);
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	rFilename = A2W(lpBuffer);
 	free(lpBuffer);
 #else

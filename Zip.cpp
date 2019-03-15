@@ -816,7 +816,7 @@ struct SortCriterion : public binary_function <ZipWriter::LocalFileData, ZipWrit
 	}
 };
 
-#if defined(_UNICODE)
+#ifdef _UNICODE
 typedef struct {
 	HANDLE hf;
 	int error;
@@ -862,15 +862,11 @@ void* ZipOpenFunc(void *opaque, const char* filename, int mode) {
 
 int ZipWriter::close()
 {
-#if defined(_UNICODE)
-	// 
-#else
 	// 無圧縮の場合は自前で処理
 	if (compressLevel_ == 0) {
 		int r = closeSub();
 		return r;
 	}
-#endif
 
 	if (!isOpen_) return 0;
 
@@ -894,7 +890,7 @@ int ZipWriter::close()
 
 	zipFile zf;
 
-#if defined(_UNICODE)
+#ifdef _UNICODE
 	zlib_filefunc_def* zip_func_ptrs = NULL;
 	zlib_filefunc_def zip_funcs;
 	fill_win32_filefunc(&zip_funcs);
@@ -938,7 +934,7 @@ int ZipWriter::close()
 			}
 		}
 
-#if defined(_UNICODE)
+#ifdef _UNICODE
 		err = zipOpenNewFileInZip4(zf, (const char*)dstFileName.utf8_str(), &zi,
 			NULL,0,NULL,0,NULL /* comment*/,
 			(compressLevel_ != 0) ? Z_DEFLATED : 0,
@@ -1079,10 +1075,10 @@ int ZipWriter::closeSub()
 			// '\\' を '/' に変える
 			// フォルダの場合は末尾に '/' を加える
 			String dstFileName = it->dstFileName;
-			dstFileName.Replace('\\', '/');
+			dstFileName.Replace(_TCHAR('\\'), _TCHAR('/'));
 			if ((it->fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-				if (dstFileName.GetAt(dstFileName.GetLength()-1) != '/') {
-					dstFileName.Cat('/');
+				if (dstFileName.GetAt(dstFileName.GetLength()-1) != _TCHAR('/')) {
+					dstFileName.Cat(_TCHAR('/'));
 				}
 			}
 
@@ -1104,6 +1100,9 @@ int ZipWriter::closeSub()
 			// general purpose bit flag        2 bytes
 			// 暗号化無しで無圧縮ならば0でいい
 			UINT16 flag = 0x0000;
+#ifdef _UNICODE
+			flag = flag | LANGUAGE_ENCODING_FLAG;
+#endif
 			zipFile.write(&flag, sizeof(UINT16));
 
 			// compression method              2 bytes
@@ -1127,7 +1126,11 @@ int ZipWriter::closeSub()
 
 			// file name length                2 bytes
 			// フォルダの場合 末尾に / が付くがその長さも含める
+#ifdef _UNICODE
+			UINT16 fileNameLen = (UINT16)dstFileName.GetUtf8Length();
+#else
 			UINT16 fileNameLen = (UINT16)dstFileName.GetLength();
+#endif
 			zipFile.write(&fileNameLen, sizeof(UINT16));
 
 			// extra field length              2 bytes
@@ -1135,8 +1138,11 @@ int ZipWriter::closeSub()
 			zipFile.write(&extraFieldLen, sizeof(UINT16));
 
 			// file name (variable size)
+#ifdef _UNICODE
+			zipFile.write((void*)dstFileName.utf8_str(), fileNameLen);
+#else
 			zipFile.write((void*)dstFileName.c_str(), fileNameLen);
-
+#endif
 			// extra field (variable size)
 
 			// file data
@@ -1160,7 +1166,7 @@ int ZipWriter::closeSub()
 			centralDirectory.append(vnte);
 
 			// general purpose bit flag        2 bytes
-			centralDirectory.append((UINT16)0x0000);
+			centralDirectory.append((UINT16)flag);
 
 			// compression method              2 bytes
 			centralDirectory.append((UINT16)0x0000);
@@ -1201,7 +1207,11 @@ int ZipWriter::closeSub()
 			centralDirectory.append(relativeOffset);
 
 			// file name
+#ifdef _UNICODE
+			centralDirectory.append(dstFileName.utf8_str(), fileNameLen);
+#else
 			centralDirectory.append(dstFileName.c_str(), fileNameLen);
+#endif
 		}
 
 		// end of central directory record

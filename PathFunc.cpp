@@ -26,7 +26,7 @@ char* GetFullPath(const char* pszFile, const char* pszDefPath, const char* pszDe
 		if(pszDefPath != NULL && *pszDefPath != _TCHAR('\0')){
 			strcpy(pszPath, pszDefPath);
 			// パスの最後に「\」をつける
-			if(strrchrex(pszPath, _TCHAR('\\')) != pszPath + strlen(pszPath)-1) strcat(pszPath, "\\");
+			if(strrchrex(pszPath, _TCHAR('\\')) != pszPath + strlen(pszPath)-1) strcat(pszPath, _T("\\"));
 		}
 	}
 	strcat(pszPath, pszFile);

@@ -35,7 +35,7 @@ using namespace std;
 using namespace boost;
 using namespace KSDK;
 
-#if defined(_UNICODE)
+#ifdef _UNICODE
 #define cout wcout
 #define ofs wofs
 #endif
@@ -48,7 +48,7 @@ public:
 		// INDIVIDUALINFO 内の属性はフォルダ属性が正確でなかったりするので
 		// 別に取得したもので指定する
 
-#if defined(_UNICODE)
+#ifdef _UNICODE
 		USES_CONVERSION;
 		fullPath_ = A2W(rIndividualInfo.szFileName);
 #else
@@ -59,7 +59,7 @@ public:
 		fullPath_.Replace(_TCHAR('/'), _TCHAR('\\'));
 
 		// 末尾の'\\'を取り除く
-		fullPath_.TrimRight(TCHAR('\\'));
+		fullPath_.TrimRight(_TCHAR('\\'));
 
 		GetFileName(fullPath_.c_str(), filename_);
 
@@ -70,7 +70,7 @@ public:
 		isEncrypted_ = isEncrypted;
 
 		// wRatio と szMode から圧縮レベルを判断する
-#if defined(_UNICODE)
+#ifdef _UNICODE
 		if (lstrcmp(A2W(rIndividualInfo.szMode), _T("Store")) == 0) {
 #else
 		if (lstrcmp(rIndividualInfo.szMode, _T("Store")) == 0) {
@@ -88,7 +88,7 @@ public:
 		fullPath_.Replace(_TCHAR('/'), _TCHAR('\\'));
 
 		// 末尾の'\\'を取り除く
-		fullPath_.TrimRight(TCHAR('\\'));
+		fullPath_.TrimRight(_TCHAR('\\'));
 
 		GetFileName(fullPath_.c_str(), filename_);
 
@@ -314,19 +314,19 @@ bool initialize()
 
 	if(g_OutputTextFile)
 	{
-#if defined(_UNICODE)
+#ifdef _UNICODE
 #else
 		ofstream ofs;
 #endif
 		ofs.open(_T("Log.txt"));
-#if defined(_UNICODE)
+#ifdef _UNICODE
 		ofs.imbue({ {}, new std::codecvt_utf8<wchar_t, 0x10FFFF, std::generate_header> });
 #endif
 		cout.rdbuf(ofs.rdbuf());
 	}
 	else
 	{
-#if defined(_UNICODE)
+#ifdef _UNICODE
 		_setmode(_fileno(stdout), _O_U8TEXT);
 #endif
 	}
@@ -794,7 +794,7 @@ void GetRedundantPath(String& rRedundantPath) {
 
 			if (lstrlen(path) < rRedundantPath.GetLength()) {
 				rRedundantPath = path;
-				if (*path == TCHAR('\0')) break;
+				if (*path == _TCHAR('\0')) break;
 			}
 			// そのまま
 			isEmpty = false;
@@ -806,7 +806,7 @@ void GetRedundantPath(String& rRedundantPath) {
 
 			if (lstrlen(path) < rRedundantPath.GetLength()) {
 				rRedundantPath = path;
-				if (*path == TCHAR('\0')) break;
+				if (*path == _TCHAR('\0')) break;
 				isEmpty = false;
 			} else {
 				if (isEmpty) {

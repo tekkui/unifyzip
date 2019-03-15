@@ -59,9 +59,7 @@ public:
 	bool Reserve(int nSize);
 
 	LPCTSTR c_str(void) const {return (LPCTSTR)m_pszStr;}	// 文字列へのポインタを返す
-	LPCTSTR utf8_str(void);									// UTF8文字列へのポインタを返す
 	bool IsEmpty(void) const {return m_nStrLen == 0;}		// 文字列が空か
-
 	int GetLength(void) const {return m_nStrLen;}			// 文字列長さ（文字数単位）
 
 	// 文字配列
@@ -131,6 +129,11 @@ public:
 	bool operator> (const String& String ) const {return m_pszStr && lstrcmp( m_pszStr, String.c_str() ) > 0;}
 	bool operator<=(const String& String ) const {return m_pszStr && lstrcmp( m_pszStr, String.c_str() ) <= 0;}
 	bool operator>=(const String& String ) const {return m_pszStr && lstrcmp( m_pszStr, String.c_str() ) >= 0;}
+
+
+	// UNICODE
+	LPCTSTR utf8_str(void);		// UTF8文字列へのポインタを返す
+	int GetUtf8Length(void);	// UTF8文字列の長さ（バイト単位）
 
 protected:
 	// 実際には終端文字があるので m_nBufLen - 1 文字だけ

@@ -1005,6 +1005,10 @@ LPCTSTR String::utf8_str(void) {
 	}
 	return m_utf8Str;
 }
+
+int String::GetUtf8Length(void) {
+	return WideCharToMultiByte(CP_UTF8, 0, m_pszStr, -1, NULL, 0, NULL, NULL);
+}
 #endif
 
 } // end of namespace KSDK
