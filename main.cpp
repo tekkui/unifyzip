@@ -2,6 +2,8 @@
 
 #include <iostream>
 #include <list>
+#include <fstream>
+#include <codecvt>
 //#include <algorithm>
 
 #include <boost/regex.hpp>
@@ -11,6 +13,9 @@
 
 #include <Shlwapi.h>
 #pragma comment(lib,"shlwapi.lib")
+#include <AtlConv.h>
+#include <fcntl.h>
+#include <io.h>
 
 #include "ArchiveDll.h"
 #include "TemporaryFolder.h"
@@ -30,6 +35,14 @@ using namespace std;
 using namespace boost;
 using namespace KSDK;
 
+#if defined(_DEBUG)
+#define cout wofs
+#else
+#if defined(_UNICODE)
+#define cout wcout
+#endif
+#endif
+
 // アーカイブに格納されるファイル・フォルダの情報
 class IndividualInfo {
 public:
@@ -38,7 +51,12 @@ public:
 		// INDIVIDUALINFO 内の属性はフォルダ属性が正確でなかったりするので
 		// 別に取得したもので指定する
 
+#if defined(_UNICODE)
+		USES_CONVERSION;
+		fullPath_ = A2W(rIndividualInfo.szFileName);
+#else
 		fullPath_ = rIndividualInfo.szFileName;
+#endif
 
 		// UNLHA ではパスのセパレータが '/' なので '\\' に変換
 		fullPath_.Replace(_TCHAR('/'), _TCHAR('\\'));
@@ -55,7 +73,11 @@ public:
 		isEncrypted_ = isEncrypted;
 
 		// wRatio と szMode から圧縮レベルを判断する
+#if defined(_UNICODE)
+		if (lstrcmp(A2W(rIndividualInfo.szMode), _T("Store")) == 0) {
+#else
 		if (lstrcmp(rIndividualInfo.szMode, _T("Store")) == 0) {
+#endif
 			compressLevel_ = 0;
 		} else {
 			compressLevel_ = -1;
@@ -214,17 +236,17 @@ enum FileAttribute {
 };
 }
 
-
+std::wofstream wofs;
 
 // temp フォルダを得る
 bool getTemporaryPath(String& dest) {
 	const DWORD LEN = 512;
-	CHAR path[LEN+1];
+	TCHAR path[LEN+1];
 	dest.Empty();
 	DWORD ret = ::GetTempPath(LEN, path);
 
 	// 短縮形なので
-	CHAR longPath[LEN+1];
+	TCHAR longPath[LEN+1];
 	GetLongPathName(path, longPath, LEN);
 
 	dest.Copy(longPath);
@@ -240,6 +262,16 @@ bool initialize()
 	//_tsetlocale( LC_ALL, _T("japanese") );
 
 	SetCurrentDirectoryEx(_T(""));
+
+#if defined(_DEBUG)
+	wofs.open(_T("Log.txt"));
+	wofs.imbue({ {}, new std::codecvt_utf8<wchar_t, 0x10FFFF, std::generate_header> });
+#else
+#if defined(_UNICODE)
+	_setmode(_fileno(stdout), _O_U8TEXT);
+#endif
+#endif
+
 
 	// iniファイルより設定を読み込む
 	Profile profile;
@@ -287,7 +319,7 @@ bool initialize()
 		g_CompressLevel != 1 && 
 		g_CompressLevel != 9) 
 	{
-		cout << "圧縮レベルの指定が不正" << endl;
+		cout << _T("圧縮レベルの指定が不正") << endl;
 		return false;
 	}
 
@@ -295,7 +327,7 @@ bool initialize()
 		g_WarningLevel != 1 && 
 		g_WarningLevel != 2) 
 	{
-		cout << "警告レベルの指定が不正" << endl;
+		cout << _T("警告レベルの指定が不正") << endl;
 		return false;
 	}
 
@@ -322,13 +354,13 @@ bool initialize()
 		priorityClass = ABOVE_NORMAL_PRIORITY_CLASS;
 		break;
 	default:
-		cout << "プロセスの優先度の指定が不正" << endl;
+		cout << _T("プロセスの優先度の指定が不正") << endl;
 		break;
 	}
 
 	if (priorityClass != NORMAL_PRIORITY_CLASS) {
 		if (SetPriorityClass(hProcess, priorityClass) == 0) {
-			cout << "プロセスの優先順位クラスの設定に失敗" << endl;
+			cout << _T("プロセスの優先順位クラスの設定に失敗") << endl;
 		}
 	}
 
@@ -430,18 +462,11 @@ int main(int, char*, char*)
 	analyzePath(arguments, files);
 
 	#ifdef _DEBUG
-	// デバッグ用に直接指定
-	files.clear();
-	str.Copy("C:\\test.zip");
-	files.push_back(str);
-	#endif
-
-	#ifdef _DEBUG
 	{
 		vector<String>::iterator it;
 		int i;
 		for (i = 0, it = files.begin(); it != files.end(); ++i, ++it) {
-			cout << i << " " << it->c_str() << endl;
+			cout << i << _T(" ") << it->c_str() << endl;
 		}
 	}
 	#endif
@@ -458,7 +483,7 @@ int main(int, char*, char*)
 	}
 
 	if (!g_ExitsImmediately) {
-		cout << "エンターキーを押してください 終了します" << endl;
+		cout << _T("エンターキーを押してください 終了します") << endl;
 		getchar();
 	}
 
@@ -487,7 +512,7 @@ bool GetIndividualInfo(ArchiveDll& rArchiveDll)
 
 	// アーカイブ内の全ファイル・フォルダを取得
 	INDIVIDUALINFO ii;
-	int ret = rArchiveDll.findFirst("*", &ii);
+	int ret = rArchiveDll.findFirst(_T("*"), &ii);
 
 	for (;;) {
 		if (ret == 0) {
@@ -514,7 +539,7 @@ bool GetIndividualInfo(ArchiveDll& rArchiveDll)
 			break;
 		} else {
 			// エラー
-			cout << "書庫内検索中にエラーが起きました" << endl;
+			cout << _T("書庫内検索中にエラーが起きました") << endl;
 			return false;
 		}
 		ret = rArchiveDll.findNext(&ii);
@@ -525,7 +550,7 @@ bool GetIndividualInfo(ArchiveDll& rArchiveDll)
 
 	#ifdef _DEBUG
 	{
-		cout << "フォルダ追加前" << endl;
+		cout << _T("フォルダ追加前") << endl;
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;	
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			cout << (*it)->getFullPath() << endl;
@@ -537,7 +562,7 @@ bool GetIndividualInfo(ArchiveDll& rArchiveDll)
 
 	#ifdef _DEBUG
 	{
-		cout << "フォルダ追加後" << endl;
+		cout << _T("フォルダ追加後") << endl;
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;	
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			cout << (*it)->getFullPath() << endl;
@@ -555,7 +580,7 @@ bool GetIndividualInfo(LPCTSTR path)
 	g_compressFileList.clear();
 
 	if (!GetIndividualInfoSub(path, path)) {
-		cout << "ファイル情報取得中にエラーが起きました" << endl;
+		cout << _T("ファイル情報取得中にエラーが起きました") << endl;
 		return false;
 	}
 
@@ -665,12 +690,12 @@ bool deleteEmptyFolder(LPCTSTR basePath) {
 					String path = basePath;
 					CatPath(path, (*cur)->getFullPath());
 					if(!RemoveDirectory(path.c_str())) {
-						cout << "空フォルダ " << (*cur)->getFullPath() << " の削除に失敗"<< endl;
+						cout << _T("空フォルダ ") << (*cur)->getFullPath() << _T(" の削除に失敗") << endl;
 						return false;
 					}
 				}
 
-				cout << "空フォルダ " << (*cur)->getFullPath() << " を削除"<< endl;
+				cout << _T("空フォルダ ") << (*cur)->getFullPath() << _T(" を削除") << endl;
 				g_compressFileList.erase(cur);
 				if (g_compressFileList.empty()) break;
 				cur = next;
@@ -798,7 +823,7 @@ int CheckRemarkableFile()
 		case 1:
 		{
 			// メッセージと構成出力
-			cout << "注目ファイルのみで構成されています" << endl;
+			cout << _T("注目ファイルのみで構成されています") << endl;
 			list<boost::shared_ptr<IndividualInfo> >::iterator it;
 			for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 				cout << (*it)->getFullPath() << endl;
@@ -808,7 +833,7 @@ int CheckRemarkableFile()
 		case 2:
 		{
 			// メッセージと構成出力
-			cout << "注目ファイルが含まれています" << endl;
+			cout << _T("注目ファイルが含まれています") << endl;
 			list<boost::shared_ptr<IndividualInfo> >::iterator it;
 			for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 				cout << (*it)->getFullPath() << endl;
@@ -851,7 +876,7 @@ int CheckRemarkableFileSub()
 			}
 
 			#ifdef _UNICODE
-				wstring filename((*it)->getFullPath()));
+				wstring filename((*it)->getFullPath());
 			#else
 				wstring filename;
 				setMultiByteString(filename, (*it)->getFullPath());
@@ -868,7 +893,7 @@ int CheckRemarkableFileSub()
 	}
 
 	catch (boost::bad_expression) {
-		cout << "正規表現のコンパイルに失敗" << endl;
+		cout << _T("正規表現のコンパイルに失敗") << endl;
 		return -1;
 	}
 
@@ -898,7 +923,7 @@ bool CheckAppendFile(LPCTSTR basePath) {
 			}
 
 			#ifdef _UNICODE
-				wstring filename((*it)->getFullPath()));
+				wstring filename((*it)->getFullPath());
 			#else
 				wstring filename;
 				setMultiByteString(filename, (*it)->getFullPath());
@@ -917,18 +942,18 @@ bool CheckAppendFile(LPCTSTR basePath) {
 					// DeleteFile() ではなく DeleteFileOrFolder() を使用
 					bool usesRecycleBin = g_RecyclesIndividualFiles;
 					if(!DeleteFileOrFolder(path.c_str(), usesRecycleBin)) {
-						cout << "ファイル " << (*it)->getFullPath() << " の削除に失敗"<< endl;
+						cout << _T("ファイル ") << (*it)->getFullPath() << _T(" の削除に失敗") << endl;
 						return false;
 					}
 				}
-				cout << "ファイル " << (*it)->getFullPath() << " を削除"<< endl;
+				cout << _T("ファイル ") << (*it)->getFullPath() << _T(" を削除") << endl;
 				it = g_compressFileList.erase(it);
 			}
 		}
 	}
 
 	catch (boost::bad_expression) {
-		cout << "正規表現のコンパイルに失敗" << endl;
+		cout << _T("正規表現のコンパイルに失敗") << endl;
 		return false;
 	}
 
@@ -956,7 +981,7 @@ bool ExistsNotAppendFile() {
 			}
 
 			#ifdef _UNICODE
-				wstring filename((*it)->getFullPath()));
+				wstring filename((*it)->getFullPath());
 			#else
 				wstring filename;
 				setMultiByteString(filename, (*it)->getFullPath());
@@ -1004,7 +1029,7 @@ bool CheckExcludeFile(LPCTSTR basePath) {
 			}
 
 			#ifdef _UNICODE
-				wstring filename((*it)->getFullPath()));
+				wstring filename((*it)->getFullPath());
 			#else
 				wstring filename;
 				setMultiByteString(filename, (*it)->getFullPath());
@@ -1021,11 +1046,11 @@ bool CheckExcludeFile(LPCTSTR basePath) {
 					// DeleteFile() ではなく DeleteFileOrFolder() を使用
 					bool usesRecycleBin = g_RecyclesIndividualFiles;
 					if(!DeleteFileOrFolder(path.c_str(), usesRecycleBin)) {
-						cout << "ファイル " << (*it)->getFullPath() << " の削除に失敗"<< endl;
+						cout << _T("ファイル ") << (*it)->getFullPath() << _T(" の削除に失敗") << endl;
 						return false;
 					}
 				}
-				cout << "ファイル " << (*it)->getFullPath() << " を削除"<< endl;
+				cout << _T("ファイル ") << (*it)->getFullPath() << _T(" を削除") << endl;
 				it = g_compressFileList.erase(it);
 			} else {
 				++it;
@@ -1034,7 +1059,7 @@ bool CheckExcludeFile(LPCTSTR basePath) {
 	}
 
 	catch (boost::bad_expression) {
-		cout << "正規表現のコンパイルに失敗" << endl;
+		cout << _T("正規表現のコンパイルに失敗") << endl;
 		return false;
 	}
 
@@ -1063,7 +1088,7 @@ bool ExistsExcludeFile() {
 			}
 
 			#ifdef _UNICODE
-				wstring filename((*it)->getFullPath()));
+				wstring filename((*it)->getFullPath());
 			#else
 				wstring filename;
 				setMultiByteString(filename, (*it)->getFullPath());
@@ -1131,14 +1156,14 @@ bool SetFileLastWriteTime(LPCTSTR filename, LPCTSTR lastWriteTime) {
 
 	HANDLE hFile = CreateFile(filename, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		cout << "ファイルの更新日時変更に失敗しました" << endl;
+		cout << _T("ファイルの更新日時変更に失敗しました") << endl;
 		return false;
 	}
 
 	bool b = (SetFileTime(hFile, NULL, NULL, &ft) != 0);
 
 	if (b == false) {
-		cout << "ファイルの更新日時変更に失敗しました" << endl;
+		cout << _T("ファイルの更新日時変更に失敗しました") << endl;
 	}
 
 	CloseHandle(hFile);
@@ -1537,7 +1562,7 @@ int getPassword(LPCTSTR archive, LPCTSTR file, String& password) {
 bool process(LPCTSTR filename) 
 {
 	if (!FileExists(filename)) {
-		cout << "書庫が見つかりません" << endl;
+		cout << _T("書庫が見つかりません") << endl;
 		return false;
 	}
 
@@ -1552,14 +1577,14 @@ bool process(LPCTSTR filename)
 	GetFullPath(srcFilename);
 
 	if (srcFilename.GetLength() > MAX_PATH) {
-		cout << "書庫のパスが長すぎます" << endl;
+		cout << _T("書庫のパスが長すぎます") << endl;
 		return false;
 	}
 
 	// 処理済みかどうかチェック
 	int result = isProcessedArchive(srcFilename.c_str());
 	if (g_PreCheck && result == 0) {
-		cout << "処理は不要です" << endl;
+		cout << _T("処理は不要です") << endl;
 
 		// 注目ファイルのチェック
 		CheckRemarkableFile();
@@ -1577,7 +1602,7 @@ bool process(LPCTSTR filename)
 		destFilename.Cat(_T(".zip"));
 		EvacuateFileName(destFilename);
 		if (MoveFile(srcFilename.c_str(), destFilename.c_str()) == 0) {
-			cout << "書庫のリネームに失敗しました" << endl;
+			cout << _T("書庫のリネームに失敗しました") << endl;
 			cout << destFilename.c_str() << endl;
 		}
 		return true;
@@ -1586,7 +1611,7 @@ bool process(LPCTSTR filename)
 	ArchiveDll* pArchiveDll;
 	pArchiveDll = g_ArchiveDllManager.getSuitableArchiveDll(srcFilename.c_str());
 	if (pArchiveDll == NULL) {
-		cout << "書庫を扱うのに適当なDLLが見つかりません" << endl;
+		cout << _T("書庫を扱うのに適当なDLLが見つかりません") << endl;
 		return false;
 	}
 
@@ -1602,7 +1627,7 @@ bool process(LPCTSTR filename)
 	getTemporaryPath(destPath);
 
 	// 一意な名前のフォルダを作る
-	CatPath(destPath, "uz");
+	CatPath(destPath, _T("uz"));
 	EvacuateFolderName(destPath);
 
 	// ファイル名を元にフォルダ名を作成する場合
@@ -1613,7 +1638,7 @@ bool process(LPCTSTR filename)
 	// destPath に一意なフォルダ名が入ったのでそのフォルダを作成
 	TemporaryFolder temp_folder;
 	if (!temp_folder.create(destPath.c_str())) {
-		cout << "テンポラリフォルダ作成に失敗しました" << endl;
+		cout << _T("テンポラリフォルダ作成に失敗しました") << endl;
 		return false;
 	}
 
@@ -1635,15 +1660,15 @@ bool process(LPCTSTR filename)
 
 				// NTFSのファイル名に使えない文字は「?  "  /  \  <  >  *  |  :」
 				// パスの区切りに使われている '/' と '\\' のチェックは省略
-				if (filename.FindOneOf(":") != -1) {
+				if (filename.FindOneOf(_T(":")) != -1) {
 					error = true;
 				}
-				if (path.FindOneOf("?/<>*|") != -1) {
+				if (path.FindOneOf(_T("?/<>*|")) != -1) {
 					error = true;
 				}
 
 				if (error) {
-					cout << "解凍時にエラーが発生しました" << endl;
+					cout << _T("解凍時にエラーが発生しました") << endl;
 					return false;
 				}
 			}
@@ -1658,7 +1683,7 @@ bool process(LPCTSTR filename)
 		int r = pArchiveDll->extract(temp_folder.getPath(), g_ShowsProgress, true);
 
 		if (r != 0) {
-			cout << "解凍時にエラーが発生しました" << endl;
+			cout << _T("解凍時にエラーが発生しました") << endl;
 			return false;
 		}
 
@@ -1675,7 +1700,7 @@ bool process(LPCTSTR filename)
 			AddLackFolder();
 		} else if (result == -1) {
 			if (!pArchiveDll->openArchive(NULL, 0)) {
-				cout << "書庫が開けません" << endl;
+				cout << _T("書庫が開けません") << endl;
 				return false;
 			}
 			if (!GetIndividualInfo(*pArchiveDll)) {
@@ -1688,7 +1713,7 @@ bool process(LPCTSTR filename)
 	// この時点で書庫内にファイルが見つからなかった場合
 	// 空の書庫、もしくは、壊れて空に見える書庫という事になる
 	if (g_compressFileList.empty()) {
-		cout << "書庫内にファイルが見あたりません" << endl;
+		cout << _T("書庫内にファイルが見あたりません") << endl;
 		return false;
 	}
 
@@ -1723,7 +1748,7 @@ bool process(LPCTSTR filename)
 		list<boost::shared_ptr<IndividualInfo> >::iterator it = g_compressFileList.begin();
 		while (it != g_compressFileList.end()) {
 			if ((*it)->isEncrypted()) {
-				cout << "暗号化されたファイル " << (*it)->getFullPath() << " を削除"<< endl;
+				cout << _T("暗号化されたファイル ") << (*it)->getFullPath() << _T(" を削除") << endl;
 				it = g_compressFileList.erase(it);
 			} else {
 				++it;
@@ -1734,7 +1759,7 @@ bool process(LPCTSTR filename)
 
 	#ifdef _DEBUG
 	{
-		cout << "冗長フォルダ検出前" << endl;
+		cout << _T("冗長フォルダ検出前") << endl;
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;	
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			cout << (*it)->getFullPath() << endl;
@@ -1748,7 +1773,7 @@ bool process(LPCTSTR filename)
 	if (g_RemovesRedundantFolder != 0) {
 		GetRedundantPath(redundantPath);
 		if (redundantPath.IsEmpty() == false) {
-			cout << "冗長フォルダ " << redundantPath.c_str() << " を短縮" << endl;
+			cout << _T("冗長フォルダ ") << redundantPath.c_str() << _T(" を短縮") << endl;
 		}
 	}
 	// 冗長パスの長さを得る
@@ -1781,7 +1806,7 @@ bool process(LPCTSTR filename)
 
 				// UNLHA32.dll はフォルダを解凍できないようなので自前で作成
 				if (CreateDirectory(destPath.c_str(), NULL) == 0) {
-					cout << "解凍時にエラーが発生しました" << endl;
+					cout << _T("解凍時にエラーが発生しました") << endl;
 					return false;
 				}
 			} else {
@@ -1796,7 +1821,7 @@ bool process(LPCTSTR filename)
 				if (isEncrypted) {
 					if (hasValidPassword == false) {
 						if (getPassword(pArchiveDll->getArchiveFilename(), (*it)->getFullPath(), password) == IDCANCEL) {
-							cout << "パスワードの入力がキャンセルされました" << endl;
+							cout << _T("パスワードの入力がキャンセルされました") << endl;
 							return false;
 						}
 					}
@@ -1810,11 +1835,11 @@ bool process(LPCTSTR filename)
 						if (hasValidPassword) {
 							hasValidPassword = false;
 						} else {
-							cout << "パスワードが違います" << endl;
+							cout << _T("パスワードが違います") << endl;
 						}
 						goto RETRY;
 					} else {
-						cout << "解凍時にエラーが発生しました" << endl;
+						cout << _T("解凍時にエラーが発生しました") << endl;
 						return false;
 					}
 				} else {
@@ -1826,7 +1851,7 @@ bool process(LPCTSTR filename)
 						isEncrypted = true;
 						goto RETRY;
 					} else {
-						cout << "解凍時にエラーが発生しました" << endl;
+						cout << _T("解凍時にエラーが発生しました") << endl;
 						return false;
 					}
 				}
@@ -1840,7 +1865,7 @@ bool process(LPCTSTR filename)
 		while (pArchiveDll->getRunning()) {
 			Sleep(10);
 			if (timeGetTime() - startTime > 3000) {
-				cout << "解凍時にエラーが発生しました" << endl;
+				cout << _T("解凍時にエラーが発生しました") << endl;
 				return false;
 			}
 		}
@@ -1875,13 +1900,13 @@ bool process(LPCTSTR filename)
 					if (SetFileAttributes(path.c_str(), (attribute & (~FILE_ATTRIBUTE_READONLY)))) {
 						isReadOnly = true;
 					} else {
-						cout << "フォルダの属性一時変更に失敗しました" << endl;
+						cout << _T("フォルダの属性一時変更に失敗しました") << endl;
 					}
 				}
 
 				HANDLE hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
 				if (hFile == INVALID_HANDLE_VALUE) {
-					cout << "フォルダの更新日時変更に失敗しました" << endl;
+					cout << _T("フォルダの更新日時変更に失敗しました") << endl;
 				} else {
 					FILETIME ft;
 					if (g_FolderTimeMode == 0) {
@@ -1891,7 +1916,7 @@ bool process(LPCTSTR filename)
 						StringToFileTime(g_FolderTime.c_str(), ft);
 					}
 					if (SetFileTime(hFile, NULL, NULL, &ft) == 0) {
-						cout << "フォルダの更新日時変更に失敗しました" << endl;
+						cout << _T("フォルダの更新日時変更に失敗しました") << endl;
 					}
 					CloseHandle(hFile);
 				}
@@ -1899,7 +1924,7 @@ bool process(LPCTSTR filename)
 				// 属性を元に戻す
 				if (isReadOnly && g_FolderAttribute == -1) {
 					if (!SetFileAttributes(path.c_str(), attribute)) {
-						cout << "フォルダの属性復帰に失敗しました" << endl;					
+						cout << _T("フォルダの属性復帰に失敗しました") << endl;					
 					}
 				}
 			} else {
@@ -1913,18 +1938,18 @@ bool process(LPCTSTR filename)
 					if (SetFileAttributes(path.c_str(), (attribute & (~FILE_ATTRIBUTE_READONLY)))) {
 						isReadOnly = true;
 					} else {
-						cout << "ファイルの属性一時変更に失敗しました" << endl;
+						cout << _T("ファイルの属性一時変更に失敗しました") << endl;
 					}
 				}
 
 				if (SetFileLastWriteTime(path.c_str(), g_FileTime.c_str()) == false) {
-					cout << "ファイルの更新日時変更に失敗しました" << endl;
+					cout << _T("ファイルの更新日時変更に失敗しました") << endl;
 				}
 
 				// 属性を元に戻す
 				if (isReadOnly && g_FileAttribute == -1) {
 					if (!SetFileAttributes(path.c_str(), attribute)) {
-						cout << "ファイルの属性復帰に失敗しました" << endl;					
+						cout << _T("ファイルの属性復帰に失敗しました") << endl;					
 					}
 				}
 			}
@@ -1964,7 +1989,7 @@ bool process(LPCTSTR filename)
 					if ((g_FolderAttribute & FileAttribute::ARCHIVE) != 0)		newAttribute |= FILE_ATTRIBUTE_ARCHIVE;
 				}
 				if (SetFileAttributes(path.c_str(), newAttribute) == 0) {
-					cout << "フォルダの属性変更に失敗しました" << endl;
+					cout << _T("フォルダの属性変更に失敗しました") << endl;
 					continue;
 				}
 			} else {
@@ -1977,7 +2002,7 @@ bool process(LPCTSTR filename)
 					if (newAttribute == 0) newAttribute = FILE_ATTRIBUTE_NORMAL;
 					if (newAttribute == attribute) continue;
 					if (SetFileAttributes(path.c_str(), newAttribute) == 0) {
-						cout << "ファイルの属性変更に失敗しました" << endl;
+						cout << _T("ファイルの属性変更に失敗しました") << endl;
 						continue;
 					}
 				}
@@ -1992,19 +2017,19 @@ bool process(LPCTSTR filename)
 	// 圧縮しようとするフォルダ内が空であったら終了
 	// （空のアーカイブとなることを表示）
 	if (IsEmptyFolder(temp_folder.getPath())) {
-		cout << "空の書庫となるため書庫を作成しません" << endl;
+		cout << _T("空の書庫となるため書庫を作成しません") << endl;
 
 		// テンポラリフォルダの削除(明示的に行う)
 		if (!temp_folder.destroy()) {
 			// フォルダ削除失敗
-			cout << "テンポラリフォルダの削除に失敗しました" << endl;
+			cout << _T("テンポラリフォルダの削除に失敗しました") << endl;
 			cout << temp_folder.getPath() << endl;
 		}
 
 		// 元の書庫を削除
 		if (!DeleteFileOrFolder(srcFilename.c_str(), UsesRecycleBin)) {
 			// ファイル削除失敗
-			cout << "元の書庫の削除に失敗しました" << endl;
+			cout << _T("元の書庫の削除に失敗しました") << endl;
 			cout << srcFilename.c_str() << endl;
 		}
 
@@ -2046,7 +2071,7 @@ bool process(LPCTSTR filename)
 	// 指定の名前で必要なフォルダ以下を圧縮
 	{
 		bool b;
-
+#ifndef _UNICODE
 		if (g_BatchDecompress) {
 			// 一括解凍の場合はここで冗長フォルダを考慮する
 			String path = temp_folder.getPath();
@@ -2056,14 +2081,14 @@ bool process(LPCTSTR filename)
 			b = compress(temp_folder.getPath(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
 		}
 
-/*
+#else
 		if (pArchiveDll->getID() != ArchiveDllID::SEVEN_ZIP) {
 			pArchiveDll = g_ArchiveDllManager.getArchiveDll(ArchiveDllID::SEVEN_ZIP);
 			if (pArchiveDll == NULL) {
 				pArchiveDll = g_ArchiveDllManager.addArchiveDll(ArchiveDllID::SEVEN_ZIP);
 			}
 			if (pArchiveDll == NULL) {
-				cout << "書庫を圧縮するのに適当なDLLが見つかりません" << endl;
+				cout << _T("書庫を圧縮するのに適当なDLLが見つかりません") << endl;
 				return false;
 			}
 		}
@@ -2075,10 +2100,9 @@ bool process(LPCTSTR filename)
 		} else {
 			b = pArchiveDll->compress(temp_folder.getPath(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
 		}
-*/
-
+#endif
 		if (b == false) {
-			cout << "圧縮時にエラーが発生しました" << endl;
+			cout << _T("圧縮時にエラーが発生しました") << endl;
 			return false;
 		}
 	}
@@ -2086,14 +2110,14 @@ bool process(LPCTSTR filename)
 	// テンポラリフォルダの削除(明示的に行う)
 	if (!temp_folder.destroy()) {
 		// フォルダ削除失敗
-		cout << "テンポラリフォルダの削除に失敗しました" << endl;
+		cout << _T("テンポラリフォルダの削除に失敗しました") << endl;
 		cout << temp_folder.getPath() << endl;
 	}
 
 	// 元の書庫を削除
 	if (!DeleteFileOrFolder(srcFilename.c_str(), UsesRecycleBin)) {
 		// ファイル削除失敗
-		cout << "元の書庫の削除に失敗しました" << endl;
+		cout << _T("元の書庫の削除に失敗しました") << endl;
 		cout << srcFilename.c_str() << endl;
 	}
 
@@ -2108,7 +2132,7 @@ bool process(LPCTSTR filename)
 			} else if (i < n - 1) {
 				Sleep(3000);
 			} else {
-				cout << "作成した書庫のリネームに失敗しました" << endl;
+				cout << _T("作成した書庫のリネームに失敗しました") << endl;
 				cout << destFilename.c_str() << endl;
 			}
 		}
@@ -2172,10 +2196,10 @@ bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime) {
 				}
 				HANDLE hFile = CreateFile(searchPath.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
 				if (hFile == INVALID_HANDLE_VALUE) {
-					cout << "フォルダの更新日時変更に失敗しました" << endl;
+					cout << _T("フォルダの更新日時変更に失敗しました") << endl;
 				} else {
 					if (SetFileTime(hFile, NULL, NULL, &ft) == 0) {
-						cout << "フォルダの更新日時変更に失敗しました" << endl;
+						cout << _T("フォルダの更新日時変更に失敗しました") << endl;
 						GetLastErrorMssage();
 					}
 					CloseHandle(hFile);

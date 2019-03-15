@@ -76,6 +76,8 @@ public:
 	// ‡˜”  65
 	bool getWriteTimeEx(FILETIME& rLastWriteTime);
 
+	int setUnicodeMode();
+
 private:
 	ArchiveDll(const ArchiveDll& archiveDll);
 	ArchiveDll& operator=(const ArchiveDll& archiveDll);

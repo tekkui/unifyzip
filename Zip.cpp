@@ -2,6 +2,7 @@
 
 #include <boost/crc.hpp>
 #include <tchar.h>
+#include <AtlConv.h>
 
 #define ZLIB_WINAPI
 
@@ -19,6 +20,8 @@
 
 using namespace std;
 using namespace boost;
+
+const uLong LANGUAGE_ENCODING_FLAG = 0x1 << 11;
 
 namespace {
 
@@ -561,12 +564,12 @@ endrecFound:;
 				char* src = (char*)(pCentralDir+46);
 				int srclen = filename_length;
 				TCHAR dst[MAX_PATH];
-				int dstlen = MultiByteToWideChar( CP_ACP, 0, src, srclen, dst, MAX_PATH);
+				int dstlen = MultiByteToWideChar( CP_UTF8, 0, src, srclen, dst, MAX_PATH);
 				if (dstlen == 0 || dstlen >= MAX_PATH) {
 					return false;
 				}
 				dst[dstlen] = 0;
-				fileName = dst;
+				fileName = srclen;
 			}
 		#else
 			fileName.NCopy((char*)(pCentralDir+46), filename_length);
@@ -814,11 +817,15 @@ struct SortCriterion : public binary_function <ZipWriter::LocalFileData, ZipWrit
 
 int ZipWriter::close()
 {
+#if defined(_UNICODE)
+	// 
+#else
 	// 無圧縮の場合は自前で処理
 	if (compressLevel_ == 0) {
 		int r = closeSub();
 		return r;
 	}
+#endif
 
 	if (!isOpen_) return 0;
 
@@ -842,19 +849,12 @@ int ZipWriter::close()
 
 	zipFile zf;
 
-	#ifdef _UNICODE
-		{
-			CHAR path[MAX_PATH];
-			int sizeMulti = WideCharToMultiByte(CP_ACP, 0, zipFileName_.c_str(), -1, NULL, 0, NULL, NULL);
-			if (sizeMulti == 0) {
-				return -1;
-			}
-			WideCharToMultiByte(CP_ACP, 0, zipFileName_.c_str(), -1, &path[0], sizeMulti, NULL, NULL);
-			zf = zipOpen(path, 0);
-		}
-	#else
-		zf = zipOpen(zipFileName_.c_str(), 0);
-	#endif
+#if defined(_UNICODE)
+	USES_CONVERSION;
+	zf = zipOpen(W2A(zipFileName_.c_str()), 0);
+#else
+	zf = zipOpen(zipFileName_.c_str(), 0);
+#endif
 
 	if (zf == NULL) {
 		err= ZIP_ERRNO;
@@ -881,36 +881,37 @@ int ZipWriter::close()
 		// '\\' を '/' に変える
 		// フォルダの場合は末尾に '/' を加える
 		String dstFileName = it->dstFileName;
-		dstFileName.Replace('\\', '/');
+		dstFileName.Replace(_TCHAR('\\'), _TCHAR('/'));
 		if ((it->fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-			if (dstFileName.GetAt(dstFileName.GetLength()-1) != '/') {
-				dstFileName.Cat('/');
+			if (dstFileName.GetAt(dstFileName.GetLength()-1) != _TCHAR('/')) {
+				dstFileName.Cat(_TCHAR('/'));
 			}
 		}
 
-		#ifdef _UNICODE
+#if defined(_UNICODE)
 			{
 				CHAR path[MAX_PATH];
-				int sizeMulti = WideCharToMultiByte(CP_ACP, 0, dstFileName.c_str(), -1, NULL, 0, NULL, NULL);
+				int sizeMulti = WideCharToMultiByte(CP_UTF8, 0, dstFileName.c_str(), -1, NULL, 0, NULL, NULL);
 				if (sizeMulti == 0) {
 					return -1;
 				}
-				WideCharToMultiByte(CP_ACP, 0, dstFileName.c_str(), -1, &path[0], sizeMulti, NULL, NULL);
-				err = zipOpenNewFileInZip3(zf, path, &zi,
+				WideCharToMultiByte(CP_UTF8, 0, dstFileName.c_str(), -1, &path[0], sizeMulti, NULL, NULL);
+				err = zipOpenNewFileInZip4(zf, path, &zi,
 					NULL,0,NULL,0,NULL /* comment*/,
 					(compressLevel_ != 0) ? Z_DEFLATED : 0,
 					compressLevel_, 0,
 					-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-					NULL, 0);
+					NULL, 0,
+					0, LANGUAGE_ENCODING_FLAG);
 			}
-		#else
+#else
 			err = zipOpenNewFileInZip3(zf, dstFileName.c_str(), &zi,
 				NULL,0,NULL,0,NULL /* comment*/,
 				(compressLevel_ != 0) ? Z_DEFLATED : 0,
 				compressLevel_, 0,
 				-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
 				NULL, 0);
-		#endif
+#endif
 
 
 		if (err != ZIP_OK) {

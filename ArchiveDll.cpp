@@ -4,6 +4,7 @@
 #include "MemoryMappedFile.h"
 
 #include <tchar.h>
+#include <AtlConv.h>
 
 namespace KSDK {
 
@@ -104,7 +105,12 @@ bool ArchiveDll::setDllFilename(LPCTSTR filename, LPCTSTR prefix) {
 FARPROC ArchiveDll::getFuncAddress(LPCTSTR funcName) {
 	String apiName;
 	apiName.Format(_T("%s%s"), mPrefix.c_str(), funcName);
+#if defined(_UNICODE)
+	USES_CONVERSION;
+	return ::GetProcAddress(mDllHandle, W2A(apiName.c_str()));
+#else
 	return ::GetProcAddress(mDllHandle, apiName.c_str());
+#endif
 }
 
 // 順序数  1
@@ -112,14 +118,36 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 
 	rOutput.Empty();
 
+#if defined(_UNICODE)
+	USES_CONVERSION;
+	FARPROC f = ::GetProcAddress(mDllHandle, W2A(mPrefix.c_str()));
+#else
 	FARPROC f = ::GetProcAddress(mDllHandle, mPrefix.c_str());
+#endif	
 	// 関数がサポートされているか
 	if (f == NULL) { return 1; }
 
+#if defined(_UNICODE)
+	LPSTR lpBuffer = (LPSTR)malloc(65536 + 1);
+#else
 	LPSTR lpBuffer = rOutput.GetBuffer(65536+1);
+#endif
 
 	typedef int  (WINAPI* SEVEN_ZIP)(const HWND,LPCSTR,LPSTR,const DWORD);
+#if defined(_UNICODE)
+	CHAR cl[MAX_PATH];
+	int sizeMulti = WideCharToMultiByte(CP_UTF8, 0, cmdLine, -1, NULL, 0, NULL, NULL);
+	if (sizeMulti == 0) {
+		return false;
+	}
+	WideCharToMultiByte(CP_UTF8, 0, cmdLine, -1, &cl[0], sizeMulti, NULL, NULL);
+
+	int r = ((SEVEN_ZIP)f)( hwnd, cl, lpBuffer, 65536);
+	rOutput = A2W(lpBuffer);
+	free(lpBuffer);
+#else
 	int r = ((SEVEN_ZIP)f)( hwnd, cmdLine, lpBuffer, 65536);
+#endif
 
 	rOutput.ReleaseBuffer();
 
@@ -132,7 +160,7 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 }
 
 WORD ArchiveDll::getVersion() {
-	FARPROC f = getFuncAddress("GetVersion");
+	FARPROC f = getFuncAddress(_T("GetVersion"));
 	// 関数がサポートされているか
 	if (f == NULL) { return 0; }
 	typedef WORD (WINAPI * GET_VERSION)();
@@ -145,15 +173,26 @@ bool ArchiveDll::openArchive(const HWND hwnd, const DWORD mode)  {
 			return false;
 		}
 	}
-	FARPROC f = getFuncAddress("OpenArchive");
+	FARPROC f = getFuncAddress(_T("OpenArchive"));
 	if (f == NULL) { return false; }
 	typedef HARC (WINAPI* OPEN_ARCHIVE)(const HWND, LPCSTR, const DWORD);
+#if defined(_UNICODE)
+	USES_CONVERSION;
+	CHAR filePath[MAX_PATH];
+	int sizeMulti = WideCharToMultiByte(CP_UTF8, 0, archiveFilename_.c_str(), -1, NULL, 0, NULL, NULL);
+	if (sizeMulti == 0) {
+		return false;
+	}
+	WideCharToMultiByte(CP_UTF8, 0, archiveFilename_.c_str(), -1, &filePath[0], sizeMulti, NULL, NULL);
+	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, filePath, mode);
+#else
 	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, archiveFilename_.c_str(), mode);
+#endif
 	return (mArchiveHandle != NULL);
 }
 
 bool ArchiveDll::closeArchive() {
-	FARPROC f = getFuncAddress("CloseArchive");
+	FARPROC f = getFuncAddress(_T("CloseArchive"));
 	if (f == NULL) { return false; }
 	typedef int (WINAPI * CLOSE_ARCHIVE)(HARC);
 	int r = ((CLOSE_ARCHIVE)f)(mArchiveHandle);
@@ -193,23 +232,23 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 
 	if (archiveDllID_ == ArchiveDllID::SEVEN_ZIP) {
 
-		commandLine.Cat("x ");
+		commandLine.Cat(_T("x "));
 
 		commandLine.Cat(archive.c_str());
-		commandLine.Cat(" ");
+		commandLine.Cat(_T(" "));
 
 		if (overwritesFile) {
-			commandLine.Cat("-aoa ");
+			commandLine.Cat(_T("-aoa "));
 		} else {
 			// 別名で解凍（ファイル名に _1 等をつける）
-			commandLine.Cat("-aou ");
+			commandLine.Cat(_T("-aou "));
 		}
 
 		if (!dest.IsEmpty()) {
 			String dir;
 			dir.Format(_T("-o%s"), dest.c_str());
 			DoubleQuoteString(dir);	// スイッチごとダブルクォートで囲む
-			dir.Cat(" ");
+			dir.Cat(_T(" "));
 			commandLine.Cat(dir.c_str());
 		}
 
@@ -237,16 +276,16 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 		}
 
 		commandLine.Cat(archive.c_str());
-		commandLine.Cat(" ");
+		commandLine.Cat(_T(" "));
 
 		// 展開先の指定の場合フォルダは'\\'で終わらなければならない
 		if (!dest.IsEmpty()) {
 			String dir = dest;
-			if (dir.GetAt(dir.GetLength() - 1) != '\\') {
-				dir.Cat('\\');
+			if (dir.GetAt(dir.GetLength() - 1) != _TCHAR('\\')) {
+				dir.Cat(_TCHAR('\\'));
 			}
 			DoubleQuoteString(dir);
-			dir.Cat(" ");
+			dir.Cat(_T(" "));
 			commandLine.Cat(dir.c_str());
 		}
 
@@ -261,49 +300,49 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 
 		if (overwritesFile) {
 			// 常に上書き展開
-			commandLine.Cat("-o ");
+			commandLine.Cat(_T("-o "));
 		} else {
 			// 上書きするか否かを選ぶダイアログが出る
 		}
 
 		commandLine.Cat(archive.c_str());
-		commandLine.Cat(" ");
+		commandLine.Cat(_T(" "));
 
 		// 展開先の指定の場合フォルダは'\\'で終わらなければならない
 		if (!dest.IsEmpty()) {
 			String dir = dest;
-			if (dir.GetAt(dir.GetLength() - 1) != '\\') {
-				dir.Cat('\\');
+			if (dir.GetAt(dir.GetLength() - 1) != _TCHAR('\\')) {
+				dir.Cat(_TCHAR('\\'));
 			}
 			DoubleQuoteString(dir);
-			dir.Cat(" ");
+			dir.Cat(_T(" "));
 			commandLine.Cat(dir.c_str());
 		}
 
 	} else if (archiveDllID_ == ArchiveDllID::UNZIP) {
 		if (showsProgress == false) {
-			commandLine.Cat("--i ");
+			commandLine.Cat(_T("--i "));
 		}
 
 		if (overwritesFile) {
 			// 常に上書き展開
-			commandLine.Cat("-o ");
+			commandLine.Cat(_T("-o "));
 		} else {
 			// 上書きするか否かを選ぶダイアログが出る（リネームも可能）
 		}
 
 		commandLine.Cat(archive.c_str());
-		commandLine.Cat(" ");
+		commandLine.Cat(_T(" "));
 
 		// 展開先の指定の場合フォルダは'\\'で終わらなければならない
 		String dir;
 		if (!dest.IsEmpty()) {
 			dir = dest;
-			if (dir.GetAt(dir.GetLength() - 1) != '\\') {
-				dir.Cat('\\');
+			if (dir.GetAt(dir.GetLength() - 1) != _TCHAR('\\')) {
+				dir.Cat(_TCHAR('\\'));
 			}
 			DoubleQuoteString(dir);
-			dir.Cat(" ");
+			dir.Cat(_T(" "));
 			commandLine.Cat(dir.c_str());
 		}
 	} else {
@@ -368,63 +407,63 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 
 		WORD version = getVersion();
 
-		switchString = "-aos ";
+		switchString = _T("-aos ");
 
 		if (showsProgress == false) {
-			switchString.Cat("-hide ");
+			switchString.Cat(_T("-hide "));
 		}
 
 		// パスワード
 		if (password != NULL) {
 			String p;
-			p.Format("-p%s", password);
+			p.Format(_T("-p%s"), password);
 			DoubleQuoteString(p);
-			p.Cat(" ");
+			p.Cat(_T(" "));
 			switchString.Cat(p.c_str());
 		}
 
 		if (version < 431) {
-			commandLine.Format("e %s %s %s %s", switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
+			commandLine.Format(_T("e %s %s %s %s"), switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 		} else {
-			commandLine.Format("e %s %s -o%s %s", switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
+			commandLine.Format(_T("e %s %s -o%s %s"), switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 		}
 	} else if (archiveDllID_ == ArchiveDllID::UNLHA) {
 		// 対象ディレクトリに存在しないファイルのみ 属性を有効にして 展開
 		if (showsProgress) {
-			commandLine.Format("e -jn -a1 %s %s %s", archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
+			commandLine.Format(_T("e -jn -a1 %s %s %s"), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 		} else {
-			commandLine.Format("e -jn -a1 -n1 %s %s %s", archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
+			commandLine.Format(_T("e -jn -a1 -n1 %s %s %s"), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 		}
 	} else if (archiveDllID_ == ArchiveDllID::UNRAR) {
-		switchString = "-s ";
+		switchString = _T("-s ");
 
 		if (showsProgress == false) {
-			switchString.Cat("-q ");
+			switchString.Cat(_T("-q "));
 		}
 
 		// パスワード
 		if (password != NULL) {
 			String p;
-			p.Format("-p%s", password);			
+			p.Format(_T("-p%s"), password);			
 			DoubleQuoteString(p);
-			p.Cat(" ");
+			p.Cat(_T(" "));
 			switchString.Cat(p.c_str());
 		}
 
-		commandLine.Format("e %s %s %s %s", switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
+		commandLine.Format(_T("e %s %s %s %s"), switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 
 	} else if (archiveDllID_ == ArchiveDllID::UNZIP) {
 
 		if (showsProgress == false) {
-			switchString.Cat("--i ");
+			switchString.Cat(_T("--i "));
 		}
 
 		// パスワード
 		if (password != NULL) {
 			String p;
-			p.Format("-P%s", password);			
+			p.Format(_T("-P%s"), password);			
 			DoubleQuoteString(p);
-			p.Cat(" ");
+			p.Cat(_T(" "));
 			switchString.Cat(p.c_str());
 		}
 
@@ -433,7 +472,7 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 		// 面倒なので「/」に置換する
 		extractFilename.Replace(_TCHAR('\\'), _TCHAR('/'));
 
-		commandLine.Format("-j -n %s %s %s %s", switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
+		commandLine.Format(_T("-j -n %s %s %s %s"), switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 
 	} else {
 		// その他の形式
@@ -490,9 +529,17 @@ bool ArchiveDll::compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, 
 
 		String commandLine;
 		if (showsProgress) {
-			commandLine.Format("a -tzip %s * -r -mx=%d", filename.c_str(), compressLevel);
+#if defined(_UNICODE)
+			commandLine.Format(_T("a -tzip %s * -r -mx=%d -mcu=on -sccUTF-8"), filename.c_str(), compressLevel);
+#else
+			commandLine.Format(_T("a -tzip %s * -r -mx=%d"), filename.c_str(), compressLevel);
+#endif
 		} else {
-			commandLine.Format("a -tzip -hide %s * -r -mx=%d", filename.c_str(), compressLevel);
+#if defined(_UNICODE)
+			commandLine.Format(_T("a -tzip -hide %s * -r -mx=%d -mcu=on -sccUTF-8"), filename.c_str(), compressLevel);
+#else
+			commandLine.Format(_T("a -tzip -hide %s * -r -mx=%d"), filename.c_str(), compressLevel);
+#endif
 		}
 
 		String output;
@@ -510,10 +557,15 @@ bool ArchiveDll::compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, 
 // －1			: 検索終了
 // 0, －1 以外	: 異常終了
 int ArchiveDll::findFirst(LPCTSTR wildName, INDIVIDUALINFO* p) {
-	FARPROC f = getFuncAddress("FindFirst");
+	FARPROC f = getFuncAddress(_T("FindFirst"));
 	if (f == NULL) { return 1; }
 	typedef int (WINAPI* FIND_FIRST)(HARC ,LPCSTR ,INDIVIDUALINFO*);
+#if defined(_UNICODE)
+	USES_CONVERSION;
+	return ((FIND_FIRST)f)(mArchiveHandle, W2A(wildName), p);
+#else	
 	return ((FIND_FIRST)f)(mArchiveHandle, wildName, p);
+#endif
 }
 
 // 戻り値 
@@ -521,7 +573,7 @@ int ArchiveDll::findFirst(LPCTSTR wildName, INDIVIDUALINFO* p) {
 // －1			: 検索終了
 // 0, －1 以外	: 異常終了
 int ArchiveDll::findNext(INDIVIDUALINFO* p) {
-	FARPROC f = getFuncAddress("FindNext");
+	FARPROC f = getFuncAddress(_T("FindNext"));
 	if (f == NULL) { return 1; }
 	typedef int (WINAPI* FIND_NEXT)(HARC ,INDIVIDUALINFO*);
 	return ((FIND_NEXT)f)(mArchiveHandle, p);
@@ -529,7 +581,7 @@ int ArchiveDll::findNext(INDIVIDUALINFO* p) {
 
 // 順序数  10
 bool ArchiveDll::getRunning() {
-	FARPROC f = getFuncAddress("GetRunning");
+	FARPROC f = getFuncAddress(_T("GetRunning"));
 	if (f == NULL) { return false; }
 	typedef BOOL (WINAPI * GET_RUNNING)();
 	BOOL b = ((GET_RUNNING)f)();
@@ -538,10 +590,22 @@ bool ArchiveDll::getRunning() {
 
 // 順序数  12
 bool ArchiveDll::checkArchive() {
-	FARPROC f = getFuncAddress("CheckArchive");
+	FARPROC f = getFuncAddress(_T("CheckArchive"));
 	if (f == NULL) { return false; }
 	typedef BOOL (WINAPI * CHECK_ARCHIVE)(LPCSTR, const int);
+#if defined(_UNICODE)
+	setUnicodeMode();
+
+	CHAR path[MAX_PATH];
+	int sizeMulti = WideCharToMultiByte(CP_UTF8, 0, archiveFilename_.c_str(), -1, NULL, 0, NULL, NULL);
+	if (sizeMulti == 0) {
+		return false;
+	}
+	WideCharToMultiByte(CP_UTF8, 0, archiveFilename_.c_str(), -1, &path[0], sizeMulti, NULL, NULL);
+	BOOL b = ((CHECK_ARCHIVE)f)(path, 0);
+#else
 	BOOL b = ((CHECK_ARCHIVE)f)(archiveFilename_.c_str(), 0);
+#endif
 
 	// UNZIP32.DLL はアーカイブでないファイルに対して
 	// checkArchive() が通ってしまう事があるので
@@ -558,8 +622,16 @@ bool ArchiveDll::checkArchive() {
 	return (b == TRUE);
 }
 
+int ArchiveDll::setUnicodeMode() {
+	FARPROC f = getFuncAddress(_T("SetUnicodeMode"));
+	if (f == NULL) { return -1; }
+
+	typedef int (WINAPI * SET_UNICODEMODE)(bool);
+	return ((SET_UNICODEMODE)f)(true);
+}
+
 int ArchiveDll::getAttribute() {
-	FARPROC f = getFuncAddress("GetAttribute");
+	FARPROC f = getFuncAddress(_T("GetAttribute"));
 	if (f == NULL) { return -1; }
 
 	typedef int (WINAPI * GET_ATTRIBUTE)(HARC);
@@ -567,17 +639,27 @@ int ArchiveDll::getAttribute() {
 }
 
 int ArchiveDll::getFileName(String& rFilename) {
-	FARPROC f = getFuncAddress("GetFileName");
+	FARPROC f = getFuncAddress(_T("GetFileName"));
 	if (f == NULL) { return -1; }
+#if defined(_UNICODE)
+	USES_CONVERSION;
+	LPSTR lpBuffer = (LPSTR)malloc(256);
+#else
 	LPSTR lpBuffer = rFilename.GetBuffer(256);
+#endif
 	typedef int (WINAPI * GET_FILE_NAME)(HARC, LPSTR, const int);
 	int ret = ((GET_FILE_NAME)f)(mArchiveHandle, lpBuffer, 256);
+#if defined(_UNICODE)
+	rFilename = A2W(lpBuffer);
+	free(lpBuffer);
+#else
 	rFilename.ReleaseBuffer();
+#endif
 	return ret;
 }
 
 bool ArchiveDll::getWriteTimeEx(FILETIME& rLastWriteTime) {
-	FARPROC f = getFuncAddress("GetWriteTimeEx");
+	FARPROC f = getFuncAddress(_T("GetWriteTimeEx"));
 	if (f == NULL) { return false; }
 	typedef int (WINAPI * GET_WRITE_TIME_EX)(HARC, FILETIME*);
 	BOOL b = ((GET_WRITE_TIME_EX)f)(mArchiveHandle, &rLastWriteTime);
