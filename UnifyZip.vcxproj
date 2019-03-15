@@ -96,6 +96,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\zlib-1.2.11\contrib\minizip\iowin32.c" />
     <ClCompile Include="ArchiveDll.cpp" />
     <ClCompile Include="CommandLine.cpp" />
     <ClCompile Include="Error.cpp" />

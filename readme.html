@@ -32,7 +32,9 @@ content="text/html; charset=x-sjis">
     </li>
     <li><p align="left"><a href="#advice"><font size="3">アドバイス</font></a></p>
     </li>
-    <li><p align="left"><a href="#important"><font size="3">注意事項</font></a></p>
+    <li><p align="left"><a href="#important1"><font size="3">注意事項(1)</font></a></p>
+    </li>
+    <li><p align="left"><a href="#important2"><font size="3">注意事項(2)</font></a></p>
     </li>
     <li><p align="left"><a href="#copyright"><font size="3">著作権</font></a></p>
     </li>
@@ -58,7 +60,7 @@ content="text/html; charset=x-sjis">
 
 <h2><a name="platform">動作環境</a></h2>
 <pre style="font-size:100%;">
-Windows 2000, XP, 7
+Windows XP, 7, 10
 
 
 ※動作には「7-zip32.dll」が必要です。
@@ -435,6 +437,33 @@ UnifyZip.exeにエクスプローラなどからドラッグアンドドロップすると<br>
 	0	:	書庫が処理済みかどうかのチェックを行わない
 	1	:	書庫が処理済みかどうかのチェックを行う
 
+<b>IgnoresEncryptedFiles :</b>
+
+	暗号化されたファイルを無視するかしないか
+
+	0	:	暗号化されたファイルを無視しない
+	1	:	暗号化されたファイルを無視する
+
+<b>Compress7Zip :</b>
+
+	圧縮に7-zip32.dllを使用するか、本体で行うか
+
+	ZIP書庫作成で問題が発生した場合に切り替える
+
+	0	:	7-zip32.dllでZIP書庫を作成する
+	1	:	本体でZIP書庫を作成する
+
+<b>OutputTextFile :</b>
+
+	処理結果をファイルに出力するか、コンソールに表示するか
+
+ 	コンソールで一部の文字が化けて部分を確認したい場合には
+	ファイルに出力する。
+　　　　（ファイル出力時はExitsImmediately=1が強制される）
+
+	0	:	処理結果をコンソールに表示するか
+	1	:	処理結果をファイルに出力する
+
 </pre>
 
 <p><a href="#index">目次へ</a></p>
@@ -485,7 +514,7 @@ UnDup
 
 
 
-<h2><a name="important">注意事項</a></h2>
+<h2><a name="important1">注意事項(1)</a></h2>
 
 <pre style="font-size:100%;">
 UnifyZip の動作には「7-zip32.dll」等が必要です。
@@ -512,6 +541,30 @@ Windows のエクスプローラと同様の基準でソートするようにしています。
 
 <p><a href="#index">目次へ</a></p>
 
+<hr>
+
+<h2><a name="important2">注意事項(2)</a></h2>
+
+<pre style="font-size:100%;">
+Version 2.28 より UNICODEに対応しました。
+
+設定ファイル（UnifyZip.ini）のエンコードをUTF-16 LE（BOM有り）に変更しています。
+古いままでも動作しますが、一部の機能が制限されます。
+取り除くファイルの正規表現などにUNICODE文字が指定できない為です。
+
+不具合が発生した場合用に、圧縮を本体で行うか、7-zip32.dllで行うか
+切り替えられるように設定を追加しました。
+標準は本体による圧縮です。
+
+コンソールへの結果出力で文字化けしている事がありますが
+プログラムからは正常に出力しています。
+コンソールではフォントリンクが動作していないと推測されます。
+設定でファイル出力に切り替える事で、文字化け無く結果を確認できます。
+標準はコンソール出力です。
+</pre>
+
+<p><a href="#index">目次へ</a></p>
+
 
 
 <hr>
@@ -527,7 +580,13 @@ Windows のエクスプローラと同様の基準でソートするようにしています。
 <br>
 e-mail : <a href="mailto:KurimaKDV@hotmail.com">KurimaKDV@hotmail.com</a><br>
 home page : <a href="http://kurima.sakura.ne.jp/">http://kurima.sakura.ne.jp/</a><br>
+
+<br>
+Version 2.28 の UNICODE対応はひらめが行っています。<br>
+e-mail : <a href="mailto:tekkui@outlook.jp">tekkui@outlook.jp</a><br>
+
 </p>
+
 
 <p><a href="#index">目次へ</a></p>
 
@@ -763,9 +822,23 @@ home page : <a href="http://kurima.sakura.ne.jp/">http://kurima.sakura.ne.jp/</a
 <li>新しいバージョンの UNRAR32.DLL(version 0.13) に対応<br>
 </ul>
 
+2019/02/28<br>
+　- Version 2.28 a1
+<ul>
+<li>ファイル名にUNICODEを含む書庫対応<br>
+<li>7-zip32.dllによるUNICODE ZIP書庫作成<br>
+<li>正規表現のUNICODE対応<br>
+<li>コンソールへ出力されるログのUNICODE対応<br>
+<li>Windows10 1809のコンソールでログが文字化けする問題へ対応<br>
+</ul>
 
-
-
+2019/03/12<br>
+　- Version 2.28 a2
+<ul>
+<li>本体によるZIP書庫作成のUNICODE対応<br>
+<li>7-zip32.dllによるUNICODE ZIP書庫作成<br>
+<li>ロングファイルネームの制約（259文字）に近い場合に処理に失敗する問題へ対応<br>
+</ul>
 
 </p>
 

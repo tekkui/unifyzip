@@ -35,12 +35,9 @@ using namespace std;
 using namespace boost;
 using namespace KSDK;
 
-#if defined(_DEBUG)
-#define cout wofs
-#else
 #if defined(_UNICODE)
 #define cout wcout
-#endif
+#define ofs wofs
 #endif
 
 // アーカイブに格納されるファイル・フォルダの情報
@@ -225,6 +222,10 @@ bool g_PreCheck;
 
 bool g_IgnoresEncryptedFiles;
 
+bool g_Compress7Zip;
+bool g_OutputTextFile;
+
+
 std::vector<UINT8> g_ArchiveComment;
 
 namespace FileAttribute {
@@ -262,16 +263,6 @@ bool initialize()
 	//_tsetlocale( LC_ALL, _T("japanese") );
 
 	SetCurrentDirectoryEx(_T(""));
-
-#if defined(_DEBUG)
-	wofs.open(_T("Log.txt"));
-	wofs.imbue({ {}, new std::codecvt_utf8<wchar_t, 0x10FFFF, std::generate_header> });
-#else
-#if defined(_UNICODE)
-	_setmode(_fileno(stdout), _O_U8TEXT);
-#endif
-#endif
-
 
 	// iniファイルより設定を読み込む
 	Profile profile;
@@ -313,6 +304,32 @@ bool initialize()
 	g_PreCheck = (profile.GetInt(_T("Setting"), _T("PreCheck"), 1) != 0);
 
 	g_IgnoresEncryptedFiles = (profile.GetInt(_T("Setting"), _T("IgnoresEncryptedFiles"), 1) != 0);
+
+	g_Compress7Zip = (profile.GetInt(_T("Setting"), _T("Compress7Zip"), 0) != 0);
+	g_OutputTextFile = (profile.GetInt(_T("Setting"), _T("OutputTextFile"), 0) != 0);
+	if (g_OutputTextFile)
+	{
+		g_ExitsImmediately = 1;
+	}
+
+	if(g_OutputTextFile)
+	{
+#if defined(_UNICODE)
+#else
+		ofstream ofs;
+#endif
+		ofs.open(_T("Log.txt"));
+#if defined(_UNICODE)
+		ofs.imbue({ {}, new std::codecvt_utf8<wchar_t, 0x10FFFF, std::generate_header> });
+#endif
+		cout.rdbuf(ofs.rdbuf());
+	}
+	else
+	{
+#if defined(_UNICODE)
+		_setmode(_fileno(stdout), _O_U8TEXT);
+#endif
+	}
 
 	if (g_CompressLevel != -1 && 
 		g_CompressLevel != 0 && 
@@ -439,9 +456,15 @@ struct FileSortCriterion : public binary_function <String, String, bool> {
 #include <fstream>
 int main(int, char*, char*) 
 {
+
 	if (!initialize()) {
 		return 0;
 	}
+
+#ifdef _DEBUG
+	cout << _T("プロセスにアタッチして下さい") << endl;
+	getchar();
+#endif
 
 	vector<String> arguments;
 	vector<String> files;
@@ -482,7 +505,11 @@ int main(int, char*, char*)
 		cout << endl;
 	}
 
-	if (!g_ExitsImmediately) {
+	if (g_ExitsImmediately) {
+		cout << _T("完了") << endl;
+	}
+	else
+	{
 		cout << _T("エンターキーを押してください 終了します") << endl;
 		getchar();
 	}
@@ -2071,36 +2098,40 @@ bool process(LPCTSTR filename)
 	// 指定の名前で必要なフォルダ以下を圧縮
 	{
 		bool b;
-#ifndef _UNICODE
-		if (g_BatchDecompress) {
-			// 一括解凍の場合はここで冗長フォルダを考慮する
-			String path = temp_folder.getPath();
-			CatPath(path, redundantPath.c_str());
-			b = compress(path.c_str(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
-		} else {
-			b = compress(temp_folder.getPath(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
-		}
 
-#else
-		if (pArchiveDll->getID() != ArchiveDllID::SEVEN_ZIP) {
-			pArchiveDll = g_ArchiveDllManager.getArchiveDll(ArchiveDllID::SEVEN_ZIP);
-			if (pArchiveDll == NULL) {
-				pArchiveDll = g_ArchiveDllManager.addArchiveDll(ArchiveDllID::SEVEN_ZIP);
+		if(!g_Compress7Zip)
+		{
+			if (g_BatchDecompress) {
+				// 一括解凍の場合はここで冗長フォルダを考慮する
+				String path = temp_folder.getPath();
+				CatPath(path, redundantPath.c_str());
+				b = compress(path.c_str(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
+			} else {
+				b = compress(temp_folder.getPath(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
 			}
-			if (pArchiveDll == NULL) {
-				cout << _T("書庫を圧縮するのに適当なDLLが見つかりません") << endl;
-				return false;
+
+		}
+		else
+		{
+			if (pArchiveDll->getID() != ArchiveDllID::SEVEN_ZIP) {
+				pArchiveDll = g_ArchiveDllManager.getArchiveDll(ArchiveDllID::SEVEN_ZIP);
+				if (pArchiveDll == NULL) {
+					pArchiveDll = g_ArchiveDllManager.addArchiveDll(ArchiveDllID::SEVEN_ZIP);
+				}
+				if (pArchiveDll == NULL) {
+					cout << _T("書庫を圧縮するのに適当なDLLが見つかりません") << endl;
+					return false;
+				}
+			}
+			if (g_BatchDecompress) {
+				// 一括解凍の場合はここで冗長フォルダを考慮する
+				String path = temp_folder.getPath();
+				CatPath(path, redundantPath.c_str());
+				b = pArchiveDll->compress(path.c_str(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
+			} else {
+				b = pArchiveDll->compress(temp_folder.getPath(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
 			}
 		}
-		if (g_BatchDecompress) {
-			// 一括解凍の場合はここで冗長フォルダを考慮する
-			String path = temp_folder.getPath();
-			CatPath(path, redundantPath.c_str());
-			b = pArchiveDll->compress(path.c_str(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
-		} else {
-			b = pArchiveDll->compress(temp_folder.getPath(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
-		}
-#endif
 		if (b == false) {
 			cout << _T("圧縮時にエラーが発生しました") << endl;
 			return false;

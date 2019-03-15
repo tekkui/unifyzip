@@ -135,14 +135,7 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 
 	typedef int  (WINAPI* SEVEN_ZIP)(const HWND,LPCSTR,LPSTR,const DWORD);
 #if defined(_UNICODE)
-	CHAR cl[MAX_PATH];
-	int sizeMulti = WideCharToMultiByte(CP_UTF8, 0, cmdLine, -1, NULL, 0, NULL, NULL);
-	if (sizeMulti == 0) {
-		return false;
-	}
-	WideCharToMultiByte(CP_UTF8, 0, cmdLine, -1, &cl[0], sizeMulti, NULL, NULL);
-
-	int r = ((SEVEN_ZIP)f)( hwnd, cl, lpBuffer, 65536);
+	int r = ((SEVEN_ZIP)f)( hwnd, (LPCSTR)cmdLine, lpBuffer, 65536);
 	rOutput = A2W(lpBuffer);
 	free(lpBuffer);
 #else
@@ -177,14 +170,7 @@ bool ArchiveDll::openArchive(const HWND hwnd, const DWORD mode)  {
 	if (f == NULL) { return false; }
 	typedef HARC (WINAPI* OPEN_ARCHIVE)(const HWND, LPCSTR, const DWORD);
 #if defined(_UNICODE)
-	USES_CONVERSION;
-	CHAR filePath[MAX_PATH];
-	int sizeMulti = WideCharToMultiByte(CP_UTF8, 0, archiveFilename_.c_str(), -1, NULL, 0, NULL, NULL);
-	if (sizeMulti == 0) {
-		return false;
-	}
-	WideCharToMultiByte(CP_UTF8, 0, archiveFilename_.c_str(), -1, &filePath[0], sizeMulti, NULL, NULL);
-	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, filePath, mode);
+	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, (LPCSTR)archiveFilename_.utf8_str(), mode);
 #else
 	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, archiveFilename_.c_str(), mode);
 #endif
@@ -350,7 +336,11 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 	}
 
 	String output;
+#if defined(_UNICODE)
+	int ret = command(NULL, commandLine.utf8_str(), output);
+#else
 	int ret = command(NULL, commandLine.c_str(), output);
+#endif
 
 	if (ret == 0) {
 		return 0;
@@ -543,7 +533,11 @@ bool ArchiveDll::compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, 
 		}
 
 		String output;
+#if defined(_UNICODE)
+		int ret = command(NULL, commandLine.utf8_str(), output);
+#else
 		int ret = command(NULL, commandLine.c_str(), output);
+#endif
 
 		// カレントディレクトリを戻す
 		SetCurrentDirectoryEx(oldCurrentDirectory.c_str());
@@ -595,14 +589,7 @@ bool ArchiveDll::checkArchive() {
 	typedef BOOL (WINAPI * CHECK_ARCHIVE)(LPCSTR, const int);
 #if defined(_UNICODE)
 	setUnicodeMode();
-
-	CHAR path[MAX_PATH];
-	int sizeMulti = WideCharToMultiByte(CP_UTF8, 0, archiveFilename_.c_str(), -1, NULL, 0, NULL, NULL);
-	if (sizeMulti == 0) {
-		return false;
-	}
-	WideCharToMultiByte(CP_UTF8, 0, archiveFilename_.c_str(), -1, &path[0], sizeMulti, NULL, NULL);
-	BOOL b = ((CHECK_ARCHIVE)f)(path, 0);
+	BOOL b = ((CHECK_ARCHIVE)f)((LPCSTR)archiveFilename_.utf8_str(), 0);
 #else
 	BOOL b = ((CHECK_ARCHIVE)f)(archiveFilename_.c_str(), 0);
 #endif

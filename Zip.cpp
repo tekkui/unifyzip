@@ -12,6 +12,7 @@
 
 //#include "../zlib/contrib/minizip/zip.h"
 #include "../zlib-1.2.11/contrib/minizip/zip.h"
+#include "../zlib-1.2.11/contrib/minizip/iowin32.h"
 
 #include "StrFunc.h"
 #include "PathFunc.h"
@@ -815,6 +816,50 @@ struct SortCriterion : public binary_function <ZipWriter::LocalFileData, ZipWrit
 	}
 };
 
+#if defined(_UNICODE)
+typedef struct {
+	HANDLE hf;
+	int error;
+} WIN32FILE_IOWIN;
+
+void* ZipOpenFunc(void *opaque, const char* filename, int mode) {
+	DWORD desired_access = 0, creation_disposition = 0;
+	DWORD share_mode = 0, flags_and_attributes = 0;
+	HANDLE file = 0;
+	void* ret = NULL;
+	if ((mode & ZLIB_FILEFUNC_MODE_READWRITEFILTER) == ZLIB_FILEFUNC_MODE_READ) {
+		desired_access = GENERIC_READ;
+		creation_disposition = OPEN_EXISTING;
+		share_mode = FILE_SHARE_READ;
+	}
+	else if (mode & ZLIB_FILEFUNC_MODE_EXISTING) {
+		desired_access = GENERIC_WRITE | GENERIC_READ;
+		creation_disposition = OPEN_EXISTING;
+	}
+	else if (mode & ZLIB_FILEFUNC_MODE_CREATE) {
+		desired_access = GENERIC_WRITE | GENERIC_READ;
+		creation_disposition = CREATE_ALWAYS;
+	}
+
+	file = CreateFile(LPCWSTR(filename), desired_access, share_mode,
+			NULL, creation_disposition, flags_and_attributes, NULL);
+
+	if (file == INVALID_HANDLE_VALUE)
+		file = NULL;
+	if (file != NULL) {
+		WIN32FILE_IOWIN file_ret;
+		file_ret.hf = file;
+		file_ret.error = 0;
+		ret = malloc(sizeof(WIN32FILE_IOWIN));
+		if (ret == NULL)
+			CloseHandle(file);
+		else
+			*(static_cast<WIN32FILE_IOWIN*>(ret)) = file_ret;
+	}
+	return ret;
+}
+#endif
+
 int ZipWriter::close()
 {
 #if defined(_UNICODE)
@@ -850,8 +895,13 @@ int ZipWriter::close()
 	zipFile zf;
 
 #if defined(_UNICODE)
-	USES_CONVERSION;
-	zf = zipOpen(W2A(zipFileName_.c_str()), 0);
+	zlib_filefunc_def* zip_func_ptrs = NULL;
+	zlib_filefunc_def zip_funcs;
+	fill_win32_filefunc(&zip_funcs);
+	zip_funcs.zopen_file = ZipOpenFunc;
+	zip_func_ptrs = &zip_funcs;
+
+	zf = zipOpen2((const char *)zipFileName_.c_str(), APPEND_STATUS_CREATE, 0, zip_func_ptrs);
 #else
 	zf = zipOpen(zipFileName_.c_str(), 0);
 #endif
@@ -889,30 +939,21 @@ int ZipWriter::close()
 		}
 
 #if defined(_UNICODE)
-			{
-				CHAR path[MAX_PATH];
-				int sizeMulti = WideCharToMultiByte(CP_UTF8, 0, dstFileName.c_str(), -1, NULL, 0, NULL, NULL);
-				if (sizeMulti == 0) {
-					return -1;
-				}
-				WideCharToMultiByte(CP_UTF8, 0, dstFileName.c_str(), -1, &path[0], sizeMulti, NULL, NULL);
-				err = zipOpenNewFileInZip4(zf, path, &zi,
-					NULL,0,NULL,0,NULL /* comment*/,
-					(compressLevel_ != 0) ? Z_DEFLATED : 0,
-					compressLevel_, 0,
-					-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-					NULL, 0,
-					0, LANGUAGE_ENCODING_FLAG);
-			}
+		err = zipOpenNewFileInZip4(zf, (const char*)dstFileName.utf8_str(), &zi,
+			NULL,0,NULL,0,NULL /* comment*/,
+			(compressLevel_ != 0) ? Z_DEFLATED : 0,
+			compressLevel_, 0,
+			-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
+			NULL, 0,
+			0, LANGUAGE_ENCODING_FLAG);
 #else
-			err = zipOpenNewFileInZip3(zf, dstFileName.c_str(), &zi,
-				NULL,0,NULL,0,NULL /* comment*/,
-				(compressLevel_ != 0) ? Z_DEFLATED : 0,
-				compressLevel_, 0,
-				-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
-				NULL, 0);
+		err = zipOpenNewFileInZip3(zf, dstFileName.c_str(), &zi,
+			NULL,0,NULL,0,NULL /* comment*/,
+			(compressLevel_ != 0) ? Z_DEFLATED : 0,
+			compressLevel_, 0,
+			-MAX_WBITS, DEF_MEM_LEVEL, Z_DEFAULT_STRATEGY,
+			NULL, 0);
 #endif
-
 
 		if (err != ZIP_OK) {
 			//_tprintf("error in opening %s in zipfile\n", filenameinzip);

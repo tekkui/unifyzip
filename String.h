@@ -59,6 +59,7 @@ public:
 	bool Reserve(int nSize);
 
 	LPCTSTR c_str(void) const {return (LPCTSTR)m_pszStr;}	// 文字列へのポインタを返す
+	LPCTSTR utf8_str(void);									// UTF8文字列へのポインタを返す
 	bool IsEmpty(void) const {return m_nStrLen == 0;}		// 文字列が空か
 
 	int GetLength(void) const {return m_nStrLen;}			// 文字列長さ（文字数単位）
@@ -137,6 +138,7 @@ protected:
 
 	LPTSTR m_pszBuf;	// 確保しているメモリへのポインタ
 	LPTSTR m_pszStr;	// 文字列へのポインタ
+	LPTSTR m_utf8Str;	// UTF8文字列へのポインタ
 	int m_nMaxBufLen;	// 確保しているメモリ量（文字数単位）
 	int m_nBufLen;		// 文字列が使用できるメモリ量（文字数単位）
 	int m_nStrLen;		// 文字列の長さ（文字数単位）

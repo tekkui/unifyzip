@@ -16,21 +16,21 @@ const int MIN_BUF_LEN = 16;	// 最低メモリ確保量（文字数単位）
 const int MAX_INT_LEN = 10;	// int(32bit)を文字列に直したときに必要なメモリ量（文字数単位）
 
 //コンストラクタ
-String::String() :	m_pszBuf(NULL), m_pszStr(NULL), 
+String::String() :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL),
 						m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Reserve(MIN_BUF_LEN);
 }
 
 // 文字列で初期化
-String::String(LPCTSTR pszString) :	m_pszBuf(NULL), m_pszStr(NULL), 
+String::String(LPCTSTR pszString) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL),
 										m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Copy(pszString);
 }
 
 // コピーコンストラクタ
-String::String(const String& another) :	m_pszBuf(NULL), m_pszStr(NULL), 
+String::String(const String& another) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL),
 											m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Copy(another.c_str());
@@ -39,6 +39,7 @@ String::String(const String& another) :	m_pszBuf(NULL), m_pszStr(NULL),
 // デストラクタ
 String::~String(){
 	if(m_pszBuf != NULL) free(m_pszBuf);
+	if(m_utf8Str != NULL) delete m_utf8Str;
 }
 
 // 文字列を代入
@@ -994,5 +995,16 @@ void String::ReleaseBuffer(int nNewLength) {
 		m_pszStr[m_nStrLen] = _TCHAR('\0');
 	}
 }
+
+#if defined(_UNICODE)
+LPCTSTR String::utf8_str(void) {
+	int size = WideCharToMultiByte(CP_UTF8, 0, m_pszStr, -1, NULL, 0, NULL, NULL);
+	if (size != 0) {
+		m_utf8Str = new TCHAR[size];
+		WideCharToMultiByte(CP_UTF8, 0, m_pszStr, -1, (LPSTR)m_utf8Str, size, NULL, NULL);
+	}
+	return m_utf8Str;
+}
+#endif
 
 } // end of namespace KSDK
