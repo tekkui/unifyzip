@@ -7,7 +7,7 @@
 #include "StrFunc.h"
 
 #include <stdio.h>
-
+#include <strsafe.h>
 #include <tchar.h>
 
 namespace KSDK {
@@ -16,21 +16,21 @@ const int MIN_BUF_LEN = 16;	// 最低メモリ確保量（文字数単位）
 const int MAX_INT_LEN = 10;	// int(32bit)を文字列に直したときに必要なメモリ量（文字数単位）
 
 //コンストラクタ
-String::String() :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL),
+String::String() :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL), m_ansiStr(NULL),
 						m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Reserve(MIN_BUF_LEN);
 }
 
 // 文字列で初期化
-String::String(LPCTSTR pszString) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL),
+String::String(LPCTSTR pszString) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL), m_ansiStr(NULL),
 										m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Copy(pszString);
 }
 
 // コピーコンストラクタ
-String::String(const String& another) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL),
+String::String(const String& another) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL), m_ansiStr(NULL),
 											m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Copy(another.c_str());
@@ -39,7 +39,8 @@ String::String(const String& another) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8St
 // デストラクタ
 String::~String(){
 	if(m_pszBuf != NULL) free(m_pszBuf);
-	if(m_utf8Str != NULL) delete m_utf8Str;
+	if(m_utf8Str != NULL) delete[] m_utf8Str;
+	if(m_ansiStr != NULL) delete[] m_ansiStr;
 }
 
 // 文字列を代入
@@ -997,6 +998,26 @@ void String::ReleaseBuffer(int nNewLength) {
 }
 
 #if defined(_UNICODE)
+// 文字列を代入
+String& String::Utf8Copy(const char *utf8str)
+{
+	size_t utf8Size = 0;
+	int utf8Length = 0;
+	StringCchLengthA(utf8str, INT_MAX, &utf8Size);
+	if (utf8Size != 0) {
+		utf8Size++;
+		utf8Length = static_cast<int>(utf8Size);
+		int utf16Length = MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, utf8str, utf8Length, NULL, 0);
+		if (utf16Length != 0) {
+			TCHAR *utf16str = new TCHAR[utf16Length];
+			MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, utf8str, utf8Length, utf16str, utf16Length);
+			Copy(utf16str);
+			delete[] utf16str;
+		}
+	}
+	return *this;
+}
+
 LPCTSTR String::utf8_str(void) {
 	int size = WideCharToMultiByte(CP_UTF8, 0, m_pszStr, -1, NULL, 0, NULL, NULL);
 	if (size != 0) {
@@ -1008,6 +1029,19 @@ LPCTSTR String::utf8_str(void) {
 
 int String::GetUtf8Length(void) {
 	return WideCharToMultiByte(CP_UTF8, 0, m_pszStr, -1, NULL, 0, NULL, NULL);
+}
+
+LPCSTR String::ansi_str(void) {
+	int size = WideCharToMultiByte(CP_ACP, 0, m_pszStr, -1, NULL, 0, NULL, NULL);
+	if (size != 0) {
+		m_ansiStr = new char[size];
+		WideCharToMultiByte(CP_ACP, 0, m_pszStr, -1, m_ansiStr, size, NULL, NULL);
+	}
+	return m_ansiStr;
+}
+
+int String::GetAnsiLength(void) {
+	return WideCharToMultiByte(CP_ACP, 0, m_pszStr, -1, NULL, 0, NULL, NULL);
 }
 #endif
 

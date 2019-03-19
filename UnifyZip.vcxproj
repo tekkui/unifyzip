@@ -101,6 +101,7 @@
     <ClCompile Include="CommandLine.cpp" />
     <ClCompile Include="Error.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NkfDll.cpp" />
     <ClCompile Include="PathFunc.cpp" />
     <ClCompile Include="Profile.cpp" />
     <ClCompile Include="StrFunc.cpp" />

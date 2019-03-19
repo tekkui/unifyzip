@@ -132,8 +132,11 @@ public:
 
 
 	// UNICODE
+	String& Utf8Copy(const char * utf8str);
 	LPCTSTR utf8_str(void);		// UTF8文字列へのポインタを返す
 	int GetUtf8Length(void);	// UTF8文字列の長さ（バイト単位）
+	LPCSTR ansi_str(void);		// ANSI文字列へのポインタを返す
+	int GetAnsiLength(void);	// ANSI文字列の長さ（バイト単位）
 
 protected:
 	// 実際には終端文字があるので m_nBufLen - 1 文字だけ
@@ -142,6 +145,7 @@ protected:
 	LPTSTR m_pszBuf;	// 確保しているメモリへのポインタ
 	LPTSTR m_pszStr;	// 文字列へのポインタ
 	LPTSTR m_utf8Str;	// UTF8文字列へのポインタ
+	LPSTR m_ansiStr;	// ANSI文字列へのポインタ
 	int m_nMaxBufLen;	// 確保しているメモリ量（文字数単位）
 	int m_nBufLen;		// 文字列が使用できるメモリ量（文字数単位）
 	int m_nStrLen;		// 文字列の長さ（文字数単位）

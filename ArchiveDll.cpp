@@ -4,7 +4,6 @@
 #include "MemoryMappedFile.h"
 
 #include <tchar.h>
-#include <AtlConv.h>
 
 namespace KSDK {
 
@@ -106,8 +105,7 @@ FARPROC ArchiveDll::getFuncAddress(LPCTSTR funcName) {
 	String apiName;
 	apiName.Format(_T("%s%s"), mPrefix.c_str(), funcName);
 #ifdef _UNICODE
-	USES_CONVERSION;
-	return ::GetProcAddress(mDllHandle, W2A(apiName.c_str()));
+	return ::GetProcAddress(mDllHandle, apiName.ansi_str());
 #else
 	return ::GetProcAddress(mDllHandle, apiName.c_str());
 #endif
@@ -119,8 +117,7 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 	rOutput.Empty();
 
 #ifdef _UNICODE
-	USES_CONVERSION;
-	FARPROC f = ::GetProcAddress(mDllHandle, W2A(mPrefix.c_str()));
+	FARPROC f = ::GetProcAddress(mDllHandle, mPrefix.ansi_str());
 #else
 	FARPROC f = ::GetProcAddress(mDllHandle, mPrefix.c_str());
 #endif	
@@ -136,7 +133,7 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 	typedef int  (WINAPI* SEVEN_ZIP)(const HWND,LPCSTR,LPSTR,const DWORD);
 #ifdef _UNICODE
 	int r = ((SEVEN_ZIP)f)( hwnd, (LPCSTR)cmdLine, lpBuffer, 65536);
-	rOutput = A2W(lpBuffer);
+	rOutput.Utf8Copy(lpBuffer);
 	free(lpBuffer);
 #else
 	int r = ((SEVEN_ZIP)f)( hwnd, cmdLine, lpBuffer, 65536);
@@ -555,8 +552,8 @@ int ArchiveDll::findFirst(LPCTSTR wildName, INDIVIDUALINFO* p) {
 	if (f == NULL) { return 1; }
 	typedef int (WINAPI* FIND_FIRST)(HARC ,LPCSTR ,INDIVIDUALINFO*);
 #ifdef _UNICODE
-	USES_CONVERSION;
-	return ((FIND_FIRST)f)(mArchiveHandle, W2A(wildName), p);
+	String wName(wildName);
+	return ((FIND_FIRST)f)(mArchiveHandle, wName.ansi_str(), p);
 #else	
 	return ((FIND_FIRST)f)(mArchiveHandle, wildName, p);
 #endif
@@ -629,15 +626,14 @@ int ArchiveDll::getFileName(String& rFilename) {
 	FARPROC f = getFuncAddress(_T("GetFileName"));
 	if (f == NULL) { return -1; }
 #ifdef _UNICODE
-	USES_CONVERSION;
-	LPSTR lpBuffer = (LPSTR)malloc(256);
+	LPSTR lpBuffer = (LPSTR)malloc(MAX_PATH);
 #else
-	LPSTR lpBuffer = rFilename.GetBuffer(256);
+	LPSTR lpBuffer = rFilename.GetBuffer(MAX_PATH);
 #endif
 	typedef int (WINAPI * GET_FILE_NAME)(HARC, LPSTR, const int);
 	int ret = ((GET_FILE_NAME)f)(mArchiveHandle, lpBuffer, 256);
 #ifdef _UNICODE
-	rFilename = A2W(lpBuffer);
+	rFilename.Utf8Copy(lpBuffer);
 	free(lpBuffer);
 #else
 	rFilename.ReleaseBuffer();

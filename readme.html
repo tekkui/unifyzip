@@ -66,8 +66,8 @@ Windows XP, 7, 10
 ※動作には「7-zip32.dll」が必要です。
 
 <b>7-zip32.dll</b>
-作者		Akky さん
-作者ページ	<a href="http://akky.cjb.net/">http://akky.cjb.net/</a>
+作者		秋田 稔 さん
+作者ページ	<a href="http://akky.xrea.jp">http://akky.xrea.jp</a>
 
 
 また「UNLHA32.DLL」があればLHA形式のファイルも扱えます。
@@ -75,7 +75,7 @@ Windows XP, 7, 10
 
 <b>UNLHA32.DLL</b>
 作者		Micco さん
-作者ページ	<a href="http://www2.nsknet.or.jp/~micco/micindex.html">http://www2.nsknet.or.jp/~micco/micindex.html</a>
+作者ページ	<a href="http://micco.mars.jp/micindex.html">http://micco.mars.jp/micindex.html</a>
 
 
 加えて「unrar32.dll」があればRAR形式のファイルも扱えます。
@@ -83,13 +83,13 @@ Windows XP, 7, 10
 
 <b>unrar32.dll</b>
 作者		亀井 哲弥 さん
-作者ページ	<a href="http://www.jsdlab.co.jp/~kamei/">http://www.jsdlab.co.jp/~kamei/</a>
+統合アーカイバ	<a href="http://www.madobe.net/archiver/lib/unrar32.html">http://www.madobe.net/archiver/lib/unrar32.html</a>
 
 なお unrar32.dll の動作には unrar.dll が必要です。
 
 <b>unrar.dll</b>
 作者		Eugene Roshal さん
-作者ページ	<a href="http://www.diana.dti.ne.jp/~winrar/">http://www.diana.dti.ne.jp/~winrar/</a>
+作者ページ	<a href="http://www.rarlab.com">http://www.rarlab.com</a>
 
 
 さらに「UNZIP32.DLL」があれば「7-zip32.dll」で扱えない形式のZIPファイルを扱えることがあります。
@@ -97,6 +97,13 @@ Windows XP, 7, 10
 <b>UNZIP32.DLL</b>
 作者		shoda T. さん
 作者ページ	<a href="http://www.csdinc.co.jp/">http://www.csdinc.co.jp/</a>
+
+
+「nkf32.dll」があれば文字コード変換が行えます。
+
+<b>nkf32.dll</b>
+作者		市川 至 さん、The nkf Project.
+作者ページ	<a href="https://ja.osdn.net/projects/nkf/">https://ja.osdn.net/projects/nkf/</a>
 </pre>
 
 <p><a href="#index">目次へ</a></p>
@@ -464,6 +471,17 @@ UnifyZip.exeにエクスプローラなどからドラッグアンドドロップすると<br>
 	0	:	処理結果をコンソールに表示するか
 	1	:	処理結果をファイルに出力する
 
+<b>ConvertFileName :</b>
+
+	ファイル名・フォルダ名の文字コード変換するか
+
+	0	:	文字コード変換しない
+	1	:	文字コード変換する
+	
+<b>NkfOption :</b>
+
+	nkfへ指定するオプションを指定できる。（制約あり）
+
 </pre>
 
 <p><a href="#index">目次へ</a></p>
@@ -561,6 +579,16 @@ Version 2.28 より UNICODEに対応しました。
 コンソールではフォントリンクが動作していないと推測されます。
 設定でファイル出力に切り替える事で、文字化け無く結果を確認できます。
 標準はコンソール出力です。
+
+nkf(Network Kanji Filter)を使用した
+書庫名や書庫内のフォルダ、ファイル名の文字コード変換に対応しました。
+標準では以下の変換を行います。
+半角カナ ⇒ 全角カナ　(-X)
+全角英数 ⇒ 半角英数 　(-Z0)
+全角スペース ⇒ 半角スペース 　(-Z1)
+結合文字列 ⇒ 合成済み文字　(--ic=UTF8-MAC)
+オプションの変更にも対応していますが、入力はUTF-8、出力はUTF-16 LE(BOM無し)固定です。
+
 </pre>
 
 <p><a href="#index">目次へ</a></p>
@@ -844,6 +872,12 @@ home page : <a href="http://kurima.sakura.ne.jp/">http://kurima.sakura.ne.jp/</a
 　- Version 2.28 a3
 <ul>
 <li>無圧縮の場合の自前処理のUNICODE対応<br>
+</ul>
+
+2019/03/19<br>
+　- Version 2.28 a4
+<ul>
+<li>nkf32.dllによる書庫名、書庫内のフォルダ、ファイル名の文字コード変換に対応<br>
 </ul>
 
 </p>

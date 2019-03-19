@@ -13,7 +13,6 @@
 
 #include <Shlwapi.h>
 #pragma comment(lib,"shlwapi.lib")
-#include <AtlConv.h>
 #include <fcntl.h>
 #include <io.h>
 
@@ -26,8 +25,8 @@
 #include "Profile.h"
 #include "CommandLine.h"
 #include "String.h"
-
 #include "Zip.h"
+#include "NkfDll.h"
 
 #include "resource.h"
 
@@ -49,8 +48,7 @@ public:
 		// 別に取得したもので指定する
 
 #ifdef _UNICODE
-		USES_CONVERSION;
-		fullPath_ = A2W(rIndividualInfo.szFileName);
+		fullPath_.Utf8Copy(rIndividualInfo.szFileName);
 #else
 		fullPath_ = rIndividualInfo.szFileName;
 #endif
@@ -71,7 +69,9 @@ public:
 
 		// wRatio と szMode から圧縮レベルを判断する
 #ifdef _UNICODE
-		if (lstrcmp(A2W(rIndividualInfo.szMode), _T("Store")) == 0) {
+		String szMode;
+		szMode.Utf8Copy(rIndividualInfo.szMode);
+		if (lstrcmp(szMode.c_str(), _T("Store")) == 0) {
 #else
 		if (lstrcmp(rIndividualInfo.szMode, _T("Store")) == 0) {
 #endif
@@ -224,7 +224,9 @@ bool g_IgnoresEncryptedFiles;
 
 bool g_Compress7Zip;
 bool g_OutputTextFile;
-
+bool g_ConvertFileName;
+String g_NkfOption;
+NkfDll *nkf;
 
 std::vector<UINT8> g_ArchiveComment;
 
@@ -329,6 +331,16 @@ bool initialize()
 #ifdef _UNICODE
 		_setmode(_fileno(stdout), _O_U8TEXT);
 #endif
+	}
+
+	g_ConvertFileName = (profile.GetInt(_T("Setting"), _T("ConvertFileName"), 0) != 0);
+	if (g_ConvertFileName) {
+		profile.GetString(_T("Setting"), _T("NkfOption"), _T(""), g_NkfOption);
+		nkf = new NkfDll;
+		if (!nkf->init(g_NkfOption)) {
+			cout << _T("nkf32.dllが見つかりません") << endl;
+			return false;
+		}
 	}
 
 	if (g_CompressLevel != -1 && 
@@ -2037,6 +2049,101 @@ bool process(LPCTSTR filename)
 		}
 	}
 
+	if (g_ConvertFileName) {
+
+		// ファイル名の文字変換
+		list<boost::shared_ptr<IndividualInfo> >::iterator it;
+		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
+
+			String path(temp_folder.getPath());
+			if (lstrlen((*it)->getFullPath()) <= redundantPathLen) continue;
+
+			if (g_BatchDecompress) {
+				CatPath(path, (*it)->getFullPath());
+			}
+			else {
+				CatPath(path, (*it)->getFullPath() + redundantPathLen);
+			}
+
+			DWORD attribute = (*it)->getAttribute();
+
+			String orgFilename;
+			String cnvFilename;
+			GetFileName(path.c_str(), orgFilename);
+			nkf->Convert(orgFilename, cnvFilename);
+
+			if((orgFilename != cnvFilename) || (orgFilename.GetLength() != cnvFilename.GetLength())) {
+				if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+					continue;
+				}
+				else {
+					cout << _T("ファイル名 変換前：") << orgFilename.c_str() << endl;
+					cout << _T("ファイル名 変換後：") << cnvFilename.c_str() << endl;
+				}
+
+				String cnvPath(path);
+				RemoveFileName(cnvPath);
+				CatPath(cnvPath, cnvFilename.c_str());
+				int n = 2;
+				for (int i = 0; i < n; ++i) {
+					if (MoveFileEx(path.c_str(), cnvPath.c_str(), MOVEFILE_WRITE_THROUGH) != 0) {
+						break;
+					} else if (i < n - 1) {
+						Sleep(3000);
+					} else {
+						cout << _T("リネームに失敗しました") << endl;
+					}
+				}
+			}
+		}
+
+		// フォルダ名の文字変換
+		list<boost::shared_ptr<IndividualInfo> >::reverse_iterator ir;
+		for (ir = g_compressFileList.rbegin() ; ir != g_compressFileList.rend() ; ++ir) {
+
+			String path(temp_folder.getPath());
+			if (lstrlen((*ir)->getFullPath()) <= redundantPathLen) continue;
+
+			if (g_BatchDecompress) {
+				CatPath(path, (*ir)->getFullPath());
+			}
+			else {
+				CatPath(path, (*ir)->getFullPath() + redundantPathLen);
+			}
+
+			DWORD attribute = (*ir)->getAttribute();
+
+			String orgFilename;
+			String cnvFilename;
+			GetFileName(path.c_str(), orgFilename);
+			nkf->Convert(orgFilename, cnvFilename);
+
+			if((orgFilename != cnvFilename) || (orgFilename.GetLength() != cnvFilename.GetLength())) {
+				if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+					cout << _T("フォルダ名 変換前：") << orgFilename.c_str() << endl;
+					cout << _T("フォルダ名 変換後：") << cnvFilename.c_str() << endl;
+				}
+				else {
+					continue;
+				}
+
+				String cnvPath(path);
+				RemoveFileName(cnvPath);
+				CatPath(cnvPath, cnvFilename.c_str());
+				int n = 2;
+				for (int i = 0; i < n; ++i) {
+					if (MoveFileEx(path.c_str(), cnvPath.c_str(), MOVEFILE_WRITE_THROUGH) != 0) {
+						break;
+					} else if (i < n - 1) {
+						Sleep(3000);
+					} else {
+						cout << _T("リネームに失敗しました") << endl;
+					}
+				}
+			}
+		}
+	}
+
 	// 圧縮しようとするフォルダ内が
 	// 指定の拡張子のファイル(例えばアーカイブ)のみだったら
 	// 元のフォルダにそのファイルを移動して終わり
@@ -2151,7 +2258,21 @@ bool process(LPCTSTR filename)
 		cout << _T("元の書庫の削除に失敗しました") << endl;
 		cout << srcFilename.c_str() << endl;
 	}
-
+	
+	// 書庫のファイル名をnkfで変換
+	if (g_ConvertFileName) {
+		String orgFilename;
+		GetFileName(finalDestFilename.c_str(), orgFilename);
+		String cnvFilename;
+		nkf->Convert(orgFilename, cnvFilename);
+		RemoveFileName(finalDestFilename);
+		CatPath(finalDestFilename, cnvFilename.c_str());
+		if(orgFilename != cnvFilename) {
+			cout << _T("書庫名 変換前：") << orgFilename.c_str() << endl;
+			cout << _T("書庫名 変換後：") << cnvFilename.c_str() << endl;
+		}
+	}
+	
 	// 元の書庫削除後目標の名前に変える
 	if (finalDestFilename != destFilename) {
 		// 念のためファイルがディスク上で実際に移動するまで待つ
