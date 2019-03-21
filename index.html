@@ -2,1048 +2,1065 @@
 <html lang="ja">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=x-sjis">
-	<meta name="GENERATOR" content="Microsoft FrontPage Express 2.0">
-	<title>readme.html</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<title>UnifyZip Unicode版</title>
 </head>
 
 <body bgcolor="#FFFFFF">
-	<h1 align="center">UnifyZip</h1>
-	<p align="center">�`���ɓ���`</p>
+	<h1 align="center">UnifyZip Unicode版</h1>
+	<p align="center">～書庫統一～</p>
 	<hr>
-	<h2 align="left"><a name="index">�ڎ�</a></h2>
+	<h2 align="left"><a name="index">目次</a></h2>
 	<ul type="square">
 		<li>
+			<p align="left"><a href="#preface">
+					<font size="3">前書き</font>
+				</a></p>
+		</li>
+		<li>
 			<p align="left"><a href="#summary">
-					<font size="3">�T�v</font>
+					<font size="3">概要</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#platform">
-					<font size="3">�����</font>
+					<font size="3">動作環境</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#composition">
-					<font size="3">�\���t�@�C��</font>
+					<font size="3">構成ファイル</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#installation">
-					<font size="3">�C���X�g�[���E�A���C���X�g�[�����@</font>
+					<font size="3">インストール・アンインストール方法</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#direction">
-					<font size="3">�g����</font>
+					<font size="3">使い方</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#option">
-					<font size="3">�I�v�V����</font>
+					<font size="3">オプション</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#advice">
-					<font size="3">�A�h�o�C�X</font>
+					<font size="3">アドバイス</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#important">
-					<font size="3">���ӎ���</font>
+					<font size="3">注意事項</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#copyright">
-					<font size="3">���쌠</font>
+					<font size="3">著作権</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#exemption">
-					<font size="3">�Ɛ�</font>
+					<font size="3">免責</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#support">
-					<font size="3">�T�|�[�g</font>
+					<font size="3">サポート</font>
 				</a></p>
 		</li>
 		<li>
 			<p align="left"><a href="#history">
-					<font size="3">�X�V����</font>
+					<font size="3">更新履歴</font>
 				</a></p>
 		</li>
 		<!--
 		<li>
 			<p align="left"><a href="#plan">
-					<font size="3">�\��</font>
+					<font size="3">予定</font>
 				</a></p>
 		</li>
 		-->
 		<li>
 			<p align="left"><a href="#acknowledgments">
-					<font size="3">�ӎ�</font>
+					<font size="3">謝辞</font>
 				</a></p>
 		</li>
 	</ul>
 	<hr>
 
-	<h2><a name="summary">�T�v</a></h2>
-	<p>zip(7z, lzh, rar)�t�@�C���ɑ΂���<br>
-		<li>�C�ӂ̃t�@�C������g���q�̃t�@�C������菜���i���K�\���Ŏw��j</li>
-		<li>�C�ӂ̃t�@�C������g���q�̃t�@�C���̂ݎc���i���K�\���Ŏw��j</li>
-		<li>���k����ύX����</li>
-		<li>��t�H���_����菜��</li>
-		<li>�璷�ȃt�H���_���폜����</li>
-		<li>�t�@�C���A�t�H���_�̍X�V������ύX����</li>
-		<li>�t�@�C���A�t�H���_�̑�����ύX����</li><br>
-		�Ƃ��������Ƃ��s���c�[���ł��B<br>
-		<br>
-		UnifyZip�ŏ������s����<br>
-		�������̂����k���Ă���͂��Ȃ̂�<br>
-		��̏��ɂ����S�ɓ������̂ɂȂ�Ȃ�<br>
-		�Ƃ�����Ԃ������ł��܂��B<br>
-		<br>
-		�莝���̏��ɂ��������Ă݂�Ύ��͓������ɂ�����<br>
-		�Ȃ�Ă��Ƃ������Ƃ���͂��ł��B<br>
-		<br>
-		�i���� 7z, lzh, rar �� zip �ւ̃R���o�[�^�[�Ƃ��Ă��g���܂��c�B�j<br>
+	<h2><a name="preface">前書き</a></h2>
+	<p>Kurima様が作成されたUnifyZip Version 2.27を<br>
+		ひらめが開発環境をVisual Studio 2017へ変更し、UNICODE対応を行った物です。<br>
+		GitHubにて公開、配布しています。<br>
+		<a href="https://tekkui.github.io/unifyzip/">https://tekkui.github.io/unifyzip/</a><br>
+		<a href="https://github.com/tekkui/unifyzip/releases">https://github.com/tekkui/unifyzip/releases</a><br>
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="platform">�����</a></h2>
+	<h2><a name="summary">概要</a></h2>
+	<p>zip(7z, lzh, rar)ファイルに対して<br>
+		<li>任意のファイル名や拡張子のファイルを取り除く（正規表現で指定）</li>
+		<li>任意のファイル名や拡張子のファイルのみ残す（正規表現で指定）</li>
+		<li>圧縮率を変更する</li>
+		<li>空フォルダを取り除く</li>
+		<li>冗長なフォルダを削除する</li>
+		<li>ファイル、フォルダの更新日時を変更する</li>
+		<li>ファイル、フォルダの属性を変更する</li><br>
+		といったことを行うツールです。<br>
+		<br>
+		UnifyZipで処理を行えば<br>
+		同じものを圧縮してあるはずなのに<br>
+		二つの書庫が完全に同じものにならない<br>
+		という状態を解消できます。<br>
+		<br>
+		手持ちの書庫を処理してみれば実は同じ書庫だった<br>
+		なんてことがきっとあるはずです。<br>
+		<br>
+		（あと 7z, lzh, rar → zip へのコンバーターとしても使えます…。）<br>
+	</p>
+	<p><a href="#index">目次へ</a></p>
+	<hr>
+
+	<h2><a name="platform">動作環境</a></h2>
 	<p>Windows XP, 7, 10<br>
 		<br>
-		������ɂ́u7-zip32.dll�v���K�v�ł��B<br>
+		※動作には「7-zip32.dll」が必要です。<br>
 		<br>
 		<b>7-zip32.dll</b><br>
-		��� �H�c �� ����<br>
-		��҃y�[�W <a href="http://akky.xrea.jp">http://akky.xrea.jp</a><br>
+		作者 秋田 稔 さん<br>
+		作者ページ <a href="http://akky.xrea.jp">http://akky.xrea.jp</a><br>
 		<br>
-		�܂��uUNLHA32.DLL�v�������LHA�`���̃t�@�C���������܂��B<br>
-		�i�������A������̃t�@�C����zip�`���ƂȂ�܂��j<br>
+		また「UNLHA32.DLL」があればLHA形式のファイルも扱えます。<br>
+		（ただし、処理後のファイルはzip形式となります）<br>
 		<br>
 		<b>UNLHA32.DLL</b><br>
-		��� Micco ����<br>
-		��҃y�[�W <a href="http://micco.mars.jp/micindex.html">http://micco.mars.jp/micindex.html</a><br>
+		作者 Micco さん<br>
+		作者ページ <a href="http://micco.mars.jp/micindex.html">http://micco.mars.jp/micindex.html</a><br>
 		<br>
-		�����āuunrar32.dll�v�������RAR�`���̃t�@�C���������܂��B<br>
-		�i�������A������̃t�@�C����zip�`���ƂȂ�܂��j<br>
+		加えて「unrar32.dll」があればRAR形式のファイルも扱えます。<br>
+		（ただし、処理後のファイルはzip形式となります）<br>
 		<br>
 		<b>unrar32.dll</b><br>
-		��� �T�� �N�� ����<br>
-		�����A�[�J�C�o <a
+		作者 亀井 哲弥 さん<br>
+		統合アーカイバ <a
 			href="http://www.madobe.net/archiver/lib/unrar32.html">http://www.madobe.net/archiver/lib/unrar32.html</a><br>
 		<br>
-		�Ȃ� unrar32.dll �̓���ɂ� unrar.dll ���K�v�ł��B<br>
+		なお unrar32.dll の動作には unrar.dll が必要です。<br>
 		<br>
 		<b>unrar.dll</b><br>
-		��� Eugene Roshal ����<br>
-		��҃y�[�W <a href="http://www.rarlab.com">http://www.rarlab.com</a><br>
+		作者 Eugene Roshal さん<br>
+		作者ページ <a href="http://www.rarlab.com">http://www.rarlab.com</a><br>
 		<br>
-		����ɁuUNZIP32.DLL�v������΁u7-zip32.dll�v�ň����Ȃ��`����ZIP�t�@�C���������邱�Ƃ�����܂��B<br>
+		さらに「UNZIP32.DLL」があれば「7-zip32.dll」で扱えない形式のZIPファイルを扱えることがあります。<br>
 		<br>
 		<b>UNZIP32.DLL</b><br>
-		��� shoda T. ����<br>
-		��҃y�[�W <a href="http://www.csdinc.co.jp/">http://www.csdinc.co.jp/</a><br>
+		作者 shoda T. さん<br>
+		作者ページ <a href="http://www.csdinc.co.jp/">http://www.csdinc.co.jp/</a><br>
 		<br>
-		�unkf32.dll�v������Ε����R�[�h�ϊ����s���܂��B<br>
+		「nkf32.dll」があれば文字コード変換が行えます。<br>
 		<br>
 		<b>nkf32.dll</b><br>
-		��� �s�� �� ����AThe nkf Project.<br>
-		��҃y�[�W <a href="https://ja.osdn.net/projects/nkf/">https://ja.osdn.net/projects/nkf/</a><br>
+		作者 市川 至 さん、The nkf Project.<br>
+		作者ページ <a href="https://ja.osdn.net/projects/nkf/">https://ja.osdn.net/projects/nkf/</a><br>
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="composition">�\���t�@�C��</a></h2>
+	<h2><a name="composition">構成ファイル</a></h2>
 
-	<p>�i�ȉ��̂R�͑S�ē����t�H���_�ɂ���Ă��������j</p>
+	<p>（以下の３つは全て同じフォルダにいれてください）</p>
 	<p>
 		<font size="4"><strong><u>UnifyZip.exe</u></strong></font><br>
-		�E�E�E�A�v���P�[�V�����{��
+		・・・アプリケーション本体
 	</p>
 	<p>
 		<font size="4"><strong><u>UnifyZip.ini</u></strong></font><br>
-		�E�E�E�ݒ�t�@�C��
+		・・・設定ファイル
 	</p>
 	<p>
-		<font size="4"><strong><u>readme.html</u></strong></font><br>
-		�E�E�E�{�t�@�C��
+		<font size="4"><strong><u>index.html</u></strong></font><br>
+		・・・本ファイル
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="installation">�C���X�g�[���E�A���C���X�g�[�����@</a></h2>
-	<p>�C���X�g�[���͓K���ȃt�H���_�փA�[�J�C�u�t�@�C���Ɋ܂܂��S�Ẵt�@�C�������Ă��������B<br>
-		�A�[�J�C�u�̓��e�ɂ��Ắu�\���t�@�C���v�̍����Q�Ƃ��Ă��������B</p>
-	<p>�A���C���X�g�[���́A���̃t�H���_�Ƃ��̒��̑S�Ẵt�@�C�����폜���Ă��������B<br>
-		���W�X�g���͈�ؑ��삵�Ă��܂���B</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<h2><a name="installation">インストール・アンインストール方法</a></h2>
+	<p>インストールは適当なフォルダへアーカイブファイルに含まれる全てのファイルを入れてください。<br>
+		アーカイブの内容については「構成ファイル」の項を参照してください。</p>
+	<p>アンインストールは、そのフォルダとその中の全てのファイルを削除してください。<br>
+		レジストリは一切操作していません。</p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="direction">�g����</a></h2>
+	<h2><a name="direction">使い方</a></h2>
 	<p>
-		�������s������zip(7z, lzh, rar)�t�@�C���܂���<br>
-		�������s������zip(7z, lzh, rar)�t�@�C�����܂܂��t�H���_��<br>
-		UnifyZip.exe�ɃG�N�X�v���[���Ȃǂ���h���b�O�A���h�h���b�v�����<br>
-		�R�}���h�v�����v�g������ď������J�n����܂��B<br>
-		�R�}���h�v�����v�g�ɂ͎��s�̃��O���o�͂���܂��B<br>
+		処理を行いたいzip(7z, lzh, rar)ファイルまたは<br>
+		処理を行いたいzip(7z, lzh, rar)ファイルが含まれるフォルダを<br>
+		UnifyZip.exeにエクスプローラなどからドラッグアンドドロップすると<br>
+		コマンドプロンプトが現れて処理が開始されます。<br>
+		コマンドプロンプトには実行のログが出力されます。<br>
 		<br>
-		�����̃t�@�C����t�H���_���h���b�O�A���h�h���b�v���邱�Ƃ��ł��܂���<br>
-		���܂葽���̃t�@�C����n���ƃG���[���o�܂��B<br>
-		�i���炭Windows�̎d�l�ɂ�鐧���j<br>
+		複数のファイルやフォルダをドラッグアンドドロップすることもできますが<br>
+		あまり多くのファイルを渡すとエラーが出ます。<br>
+		（恐らくWindowsの仕様による制限）<br>
 		<br>
-		�t�H���_���n���ꂽ�ꍇ�͂��̃t�H���_���̃t�@�C�����������܂��B<br>
+		フォルダが渡された場合はそのフォルダ内のファイルを処理します。<br>
 		<br>
-		�e��ݒ�́uUnifyZip.ini�v��ҏW���邱�Ƃōs���܂��B<br>
-		�ڂ����́u�I�v�V�����v�̍����Q�Ƃ��Ă��������B<br>
+		各種設定は「UnifyZip.ini」を編集することで行います。<br>
+		詳しくは「オプション」の項を参照してください。<br>
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="option">�I�v�V����</a></h2>
+	<h2><a name="option">オプション</a></h2>
 	<p>
 		<b>PriorityClass :</b><br>
-		�v���Z�X�̗D��x���w��<br>
+		プロセスの優先度を指定<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�D��x</th>
+				<th>値</th>
+				<th>優先度</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�ʏ�</td>
+				<td>通常</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>��</td>
+				<td>低</td>
 			</tr>
 			<tr>
 				<td>2</td>
-				<td>��</td>
+				<td>高</td>
 			</tr>
 			<tr>
 				<td>3</td>
-				<td>���A���^�C��</td>
+				<td>リアルタイム</td>
 			</tr>
 			<tr>
 				<td>4</td>
-				<td>�ʏ�ȉ�</td>
+				<td>通常以下</td>
 			</tr>
 			<tr>
 				<td>5</td>
-				<td>�ʏ�ȏ�</td>
+				<td>通常以上</td>
 			</tr>
 		</table>
 		<br>
 		<b>SearchSubfolders :</b><br>
-		�t�H���_���n���ꂽ�ꍇ�T�u�t�H���_�ȉ��Ɋ܂܂��t�@�C�����������ď������邩�ۂ�<br>
+		フォルダが渡された場合サブフォルダ以下に含まれるファイルも検索して処理するか否か<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�T�u�t�H���_�ȉ�</th>
+				<th>値</th>
+				<th>サブフォルダ以下</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�������Ȃ�</td>
+				<td>検索しない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>��������</td>
+				<td>検索する</td>
 			</tr>
 		</table>
 		<br>
 		<b>DeletesEmptyFolder :</b><br>
-		��t�H���_���폜���邩�ۂ�<br>
+		空フォルダを削除するか否か<br>
 		<br>
-		��t�H���_�͒ǉ��ݒ�⏜�O�ݒ���s��������<br>
-		��t�H���_�ɂȂ������̂��܂�<br>
+		空フォルダは追加設定や除外設定を行った結果<br>
+		空フォルダになったものも含む<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>��t�H���_</th>
+				<th>値</th>
+				<th>空フォルダ</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�폜���Ȃ�</td>
+				<td>削除しない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�폜����</td>
+				<td>削除する</td>
 			</tr>
 		</table>
 		<br>
 		<b>UsesRecycleBin :</b><br>
-		���̃t�@�C�����폜����ۂ��ݔ��ɑ��邩�ۂ�<br>
+		元のファイルを削除する際ごみ箱に送るか否か<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�폜�̍ۂ��ݔ���</th>
+				<th>値</th>
+				<th>削除の際ごみ箱に</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>���炸�폜</td>
+				<td>送らず削除</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>����</td>
+				<td>送る</td>
 			</tr>
 		</table>
 		<br>
 		<b>RemovesRedundantFolder :</b><br>
-		�璷�t�H���_���폜���邩<br>
+		冗長フォルダを削除するか<br>
 		<br>
-		�Ⴆ�� arc.zip �̓��e��<br>
+		例えば arc.zip の内容が<br>
 		arc.zip\folder1\folder2\file1.txt<br>
 		arc.zip\folder1\folder2\file2.txt<br>
-		�őS�Ăł������ꍇ�A�璷�ȃt�H���_���폜����<br>
+		で全てであった場合、冗長なフォルダを削除して<br>
 		arc.zip\file1.txt<br>
 		arc.zip\file2.txt<br>
-		�̂悤�ɂ��邩�ۂ�<br>
+		のようにするか否か<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�璷�t�H���_</th>
+				<th>値</th>
+				<th>冗長フォルダ</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�폜���Ȃ�</td>
+				<td>削除しない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�폜����</td>
+				<td>削除する</td>
 			</tr>
 			<tr>
 				<td>2</td>
-				<td>�폜����<br>(������A���Ƀt�@�C�������璷�t�H���_���Ɋ�Â����̂ɂ���)</td>
+				<td>削除する<br>(処理後、書庫ファイル名を冗長フォルダ名に基づくものにする)</td>
 			</tr>
 		</table>
 		<br>
-		2�̏ꍇ�̏�����̏��Ƀt�@�C�����͗Ⴆ�ΑO�q�̗�ł���΁ufolder1.zip�v�ƂȂ�<br>
+		2の場合の処理後の書庫ファイル名は例えば前述の例であれば「folder1.zip」となる<br>
 		<br>
 		<b>ShowsProgress :</b><br>
-		�v���O���X�_�C�A���O��\�����邩�ۂ�<br>
+		プログレスダイアログを表示するか否か<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�_�C�A���O</th>
+				<th>値</th>
+				<th>ダイアログ</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�\�����Ȃ�</td>
+				<td>表示しない</td>
 			<tr>
 				<td>1</td>
-				<td>�\������</td>
+				<td>表示する</td>
 			</tr>
 		</table>
 		<br>
-		�\����؂�Ə����ɂ����鎞�Ԃ��v���̊O�Z�k����܂�<br>
+		表示を切ると処理にかかる時間が思いの外短縮されます<br>
 		<br>
 		<b>BatchDecompress :</b><br>
-		�ꊇ�𓀂��s�����ۂ�<br>
+		一括解凍を行うか否か<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>��</th>
+				<th>値</th>
+				<th>解凍</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�K�v�ȃt�@�C���̂�</td>
+				<td>必要なファイルのみ</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�ꊇ</td>
+				<td>一括</td>
 			</tr>
 		</table>
 		<br>
-		�ꊇ�𓀂������̏ꍇ�A�����ɂ������āA���ɂ̒�����ŏI�I�ɕK�v�ȃt�@�C���݂̂��𓀂��܂���<br>
-		�ꊇ�𓀂�L���ɂ���ƁA��x���ɓ��̑S�Ẵt�@�C���E�t�H���_���𓀂�<br>
-		��������s�v�ȃt�@�C���̍폜�Ȃǂ��s���悤�ɂȂ�܂�<br>
-		�ꊇ�𓀂̕����𓀂̑��x�I�ɗL���Ȃ��Ƃ������Ǝv���܂���<br>
-		�s�v�ȃt�@�C���݂̂���ꂽ���ɂ̉𓀂Ɏ��s����悤�ɂȂ��Ă��܂��܂�<br>
-		�܂��A�p�X���[�h�t���̏��ɂ̃p�X���[�h���͂Ɋւ��鏈���͊eDLL�Ɋ��S�Ɉˑ�����悤�ɂȂ�܂�<br>
-		���ʂƂ��Ăł������鏑�ɂɈႢ�͂���܂���<br>
+		一括解凍が無効の場合、処理にあたって、書庫の中から最終的に必要なファイルのみを解凍しますが<br>
+		一括解凍を有効にすると、一度書庫内の全てのファイル・フォルダを解凍し<br>
+		そこから不要なファイルの削除などを行うようになります<br>
+		一括解凍の方が解凍の速度的に有利なことが多いと思われますが<br>
+		不要なファイルのみが壊れた書庫の解凍に失敗するようになってしまいます<br>
+		また、パスワード付きの書庫のパスワード入力に関する処理は各DLLに完全に依存するようになります<br>
+		結果としてできあがる書庫に違いはありません<br>
 		<br>
 		<b>AppendFile :</b><br>
-		������c���t�@�C���𐳋K�\���Ŏw��<br>
+		処理後残すファイルを正規表現で指定<br>
 		<br>
-		�啶���^�������̋�ʂ͂���Ȃ�<br>
-		�w�����ɂ���Ƃ��̃I�v�V�����͖����ɂȂ�<br>
+		大文字／小文字の区別はされない<br>
+		指定を空にするとこのオプションは無効になる<br>
 		<br>
-		�Ⴆ��<br>
+		例えば<br>
 		AppendFile=.*\.jpg|.*\.jpeg<br>
-		�Ƃ���Ɓu.jpg�v���u.jpeg�v�������ɂ��t�@�C�����c��<br>
+		とすると「.jpg」か「.jpeg」が末尾につくファイルを残す<br>
 		<br>
-		���̎w��ɊY������t�@�C������<br>
-		���O�ݒ�t�@�C�������������̂�<br>
-		�ŏI�I�Ɏc��t�@�C���ƂȂ�<br>
+		この指定に該当するファイルから<br>
+		除外設定ファイルを除いたものが<br>
+		最終的に残るファイルとなる<br>
 		<br>
 		<b>ExcludeFile :</b><br>
-		�������菜���t�@�C���𐳋K�\���Ŏw��<br>
+		処理後取り除くファイルを正規表現で指定<br>
 		<br>
-		�啶���^�������̋�ʂ͂���Ȃ�<br>
-		�w�����ɂ���Ƃ��̃I�v�V�����͖����ɂȂ�<br>
+		大文字／小文字の区別はされない<br>
+		指定を空にするとこのオプションは無効になる<br>
 		<br>
-		�Ⴆ��<br>
+		例えば<br>
 		ExcludeFile=.*\.exe<br>
-		�Ƃ���Ɓu.exe�v�������ɂ��t�@�C������菜��<br>
+		とすると「.exe」が末尾につくファイルを取り除く<br>
 		<br>
 		<b>CompressLevel :</b><br>
-		���k���x�����w�肷��<br>
+		圧縮レベルを指定する<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>���k��</th>
+				<th>値</th>
+				<th>圧縮率</th>
 			</tr>
 			<tr>
 				<td>-1</td>
-				<td>�ʏ툳�k</td>
+				<td>通常圧縮</td>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�����k</td>
+				<td>無圧縮</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�ሳ�k</td>
+				<td>低圧縮</td>
 			</tr>
 			<tr>
 				<td>9</td>
-				<td>�����k</td>
+				<td>高圧縮</td>
 			</tr>
 		</table>
 		<br>
-		-1, 1, 0, 9 �ȊO�͖���<br>
+		-1, 1, 0, 9 以外は無効<br>
 		<br>
 		<b>FileTimeMode :</b><br>
-		�t�@�C���̍X�V�����̐ݒ�<br>
+		ファイルの更新日時の設定<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�t�@�C���̍X�V����</th>
+				<th>値</th>
+				<th>ファイルの更新日時</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�ύX���Ȃ�</td>
+				<td>変更しない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�w��̓����ɂ���iFileTime�Ŏw��j</td>
+				<td>指定の日時にする（FileTimeで指定）</td>
 			</tr>
 		</table>
 		<br>
 		<b>FolderTimeMode :</b><br>
-		�t�H���_�̍X�V�����̐ݒ�<br>
+		フォルダの更新日時の設定<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�t�H���_�̍X�V����</th>
+				<th>値</th>
+				<th>フォルダの更新日時</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�ύX���Ȃ�</td>
+				<td>変更しない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�w��̓����ɂ���iFolderTime�Ŏw��j</td>
+				<td>指定の日時にする（FolderTimeで指定）</td>
 			</tr>
 			<tr>
 				<td>2</td>
-				<td>�t�H���_���ōŐV�̍X�V���������t�@�C���E�t�H���_�ɂ��킹��</td>
+				<td>フォルダ内で最新の更新日時を持つファイル・フォルダにあわせる</td>
 			</tr>
 		</table>
 		<br>
 		<b>FileTime :</b><br>
 		<b>FolderTime :</b><br>
-		�t�@�C���E�t�H���_�̍X�V�����̐ݒ�<br>
+		ファイル・フォルダの更新日時の設定<br>
 		<br>
-		FileTimeMode��FolderTimeMode�I�v�V������1�̏ꍇ<br>
-		�t�@�C���E�t�H���_�̍X�V�����������Ŏw�肵�������ɕύX�����<br>
+		FileTimeModeやFolderTimeModeオプションが1の場合<br>
+		ファイル・フォルダの更新日時がここで指定した日時に変更される<br>
 		<br>
 		FileTime=1980/02/21 02:30:12<br>
 		<br>
-		�̂悤�Ɏw�肷��<br>
+		のように指定する<br>
 		<br>
 		<b>FileAttribute :</b><br>
 		<b>FolderAttribute :</b><br>
-		�t�@�C���E�t�H���_�̑����̐ݒ�<br>
+		ファイル・フォルダの属性の設定<br>
 		<br>
-		-1���w�肷��Ƒ����̕ύX�����Ȃ�<br>
-		������<br>
+		-1を指定すると属性の変更をしない<br>
+		属性は<br>
 		<table border="1">
 			<tr>
-				<th>����</th>
-				<th>�l</th>
+				<th>属性</th>
+				<th>値</th>
 			</tr>
 			<tr>
-				<td>�ǂݎ���p</td>
+				<td>読み取り専用</td>
 				<td>1</td>
 			</tr>
 			<tr>
-				<td>�B���t�@�C��</td>
+				<td>隠しファイル</td>
 				<td>2</td>
 			</tr>
 			<tr>
-				<td>�V�X�e���t�@�C��</td>
+				<td>システムファイル</td>
 				<td>4</td>
 			</tr>
 			<tr>
-				<td>�A�[�J�C�u</td>
+				<td>アーカイブ</td>
 				<td>32</td>
 			</tr>
 		</table>
-		�ȏ�̒l�̘a�Ŏw�肷��<br>
+		以上の値の和で指定する<br>
 		<br>
-		�Ⴆ��<br>
+		例えば<br>
 		FileAttribute=33<br>
-		�Ƃ����<br>
-		�t�@�C���̑����́u�ǂݎ���p�v�Ɓu�A�[�J�C�u�v�ƂȂ�<br>
+		とすると<br>
+		ファイルの属性は「読み取り専用」と「アーカイブ」となる<br>
 		<br>
 		<b>RemarkableFile :</b><br>
-		���ڃt�@�C���𐳋K�\���Ŏw��<br>
+		注目ファイルを正規表現で指定<br>
 		<br>
-		�i�啶���^�������̋�ʂ͂���Ȃ��j<br>
-		���ڃt�@�C�����ǂ������邩��<br>
-		WarningLevel�I�v�V�����̐������Q�Ƃ̂���<br>
+		（大文字／小文字の区別はされない）<br>
+		注目ファイルがどう扱われるかは<br>
+		WarningLevelオプションの説明を参照のこと<br>
 		<br>
 		<b>WarningLevel :</b><br>
-		�x�����x���̐ݒ�<br>
+		警告レベルの設定<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th></th>
+				<th>値</th>
+				<th>動作</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�������Ȃ�</td>
+				<td>何もしない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>���ɓ��̃t�@�C�����S�Ē��ڃt�@�C���ł������ꍇ<br>
-					���̎|��m�点�C���ɓ��̃t�@�C���ꗗ��\����<br>
-					���̏��ɂ��������Ȃ�</td>
+				<td>書庫内のファイルが全て注目ファイルであった場合<br>
+					その旨を知らせ，書庫内のファイル一覧を表示し<br>
+					その書庫を処理しない</td>
 			</tr>
 			<tr>
 				<td>2</td>
-				<td>���ɓ��̃t�@�C���ɒ��ڃt�@�C�����������ꍇ<br>
-					���̎|��m�点�C���ɓ��̃t�@�C���ꗗ��\����<br>
-					���̏��ɂ��������Ȃ�</td>
+				<td>書庫内のファイルに注目ファイルがあった場合<br>
+					その旨を知らせ，書庫内のファイル一覧を表示し<br>
+					その書庫を処理しない</td>
 			</tr>
 		</table>
 		<br>
-		�Ⴆ��<br>
+		例えば<br>
 		RemarkableFile=.*\.exe<br>
 		WarningLevel=1<br>
-		�Ƃ����<br>
-		���ɂ��u.exe�v�������ɂ��t�@�C�������ō\������Ă����ꍇ���̏��ɂ��������Ȃ�<br>
+		とすると<br>
+		書庫が「.exe」が末尾につくファイルだけで構成されていた場合その書庫を処理しない<br>
 		<br>
-		���ڃt�@�C���̃`�F�b�N�͏����O�A������ɍs����<br>
+		注目ファイルのチェックは処理前、処理後に行われる<br>
 		<br>
 		<b>RecyclesIndividualFiles :</b><br>
-		���ɓ��̃t�@�C�����폜����ۂ��ݔ��ɑ��邩�ۂ�<br>
+		書庫内のファイルを削除する際ごみ箱に送るか否か<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�폜�̍ۂ��ݔ���</th>
+				<th>値</th>
+				<th>削除の際ごみ箱に</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>���炸�폜</td>
+				<td>送らず削除</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>����</td>
+				<td>送る</td>
 			</tr>
 		</table>
 		<br>
-		BatchDecompress�I�v�V������1�̏ꍇ�̂ݗL��<br>
+		BatchDecompressオプションが1の場合のみ有効<br>
 		<br>
 		<b>ExitsImmediately :</b><br>
-		������G���^�[�L�[�̓��͂�҂����ɏI�����邩�ۂ�<br>
+		処理後エンターキーの入力を待たずに終了するか否か<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>������G���^�[�L�[�̓���</th>
+				<th>値</th>
+				<th>処理後エンターキーの入力</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�҂��ďI��</td>
+				<td>待って終了</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�҂����ɏI��</td>
+				<td>待たずに終了</td>
 			</tr>
 		</table>
 		<br>
 		<b>PreCheck :</b><br>
-		�����O�ɁA���ɂ������ς݂��ǂ����̃`�F�b�N���s�����ۂ�<br>
+		処理前に、書庫が処理済みかどうかのチェックを行うか否か<br>
 		<br>
-		�`�F�b�N�̌��ʏ����ς݂ł���Ɣ��肳�ꂽ�ꍇ�͏������s��Ȃ��B<br>
-		�������A���̃`�F�b�N�͕s���S�ł��邽��<br>
-		�����ς݂łȂ����ɂ������ς݂Ɣ��肵�Ă��܂����Ƃ�����B<br>
+		チェックの結果処理済みであると判定された場合は処理を行わない。<br>
+		ただし、このチェックは不完全であるため<br>
+		処理済みでない書庫を処理済みと判定してしまうことがある。<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>���ɂ������ς݂��ǂ����̃`�F�b�N</th>
+				<th>値</th>
+				<th>書庫が処理済みかどうかのチェック</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�s��Ȃ�</td>
+				<td>行わない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�s��</td>
+				<td>行う</td>
 			</tr>
 		</table>
 		<br>
 		<b>IgnoresEncryptedFiles :</b><br>
-		�Í������ꂽ�t�@�C���𖳎����邩���Ȃ���<br>
+		暗号化されたファイルを無視するかしないか<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�Í������ꂽ�t�@�C��</th>
+				<th>値</th>
+				<th>暗号化されたファイル</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�������Ȃ�</td>
+				<td>無視しない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>��������</td>
+				<td>無視する</td>
 			</tr>
 		</table>
 		<br>
 		<b>Compress7Zip :</b><br>
-		���k��7-zip32.dll���g�p���邩�A�{�̂ōs����<br>
+		圧縮に7-zip32.dllを使用するか、本体で行うか<br>
 		<br>
-		ZIP���ɍ쐬�Ŗ�肪���������ꍇ�ɐ؂�ւ���<br>
+		ZIP書庫作成で問題が発生した場合に切り替える<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>ZIP����</th>
+				<th>値</th>
+				<th>ZIP書庫</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>7-zip32.dll�ō쐬����</td>
+				<td>7-zip32.dllで作成する</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�{�̂ō쐬����</td>
+				<td>本体で作成する</td>
 			</tr>
 		</table>
 		<br>
 		<b>OutputTextFile :</b><br>
-		�������ʂ��t�@�C���ɏo�͂��邩�A�R���\�[���ɕ\�����邩<br>
+		処理結果をファイルに出力するか、コンソールに表示するか<br>
 		<br>
-		�R���\�[���ňꕔ�̕����������ĕ������m�F�������ꍇ�ɂ�<br>
-		�t�@�C���ɏo�͂���B<br>
-		�i�t�@�C���o�͎���ExitsImmediately=1�����������j<br>
+		コンソールで一部の文字が化けて部分を確認したい場合には<br>
+		ファイルに出力する。<br>
+		（ファイル出力時はExitsImmediately=1が強制される）<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>��������</th>
+				<th>値</th>
+				<th>処理結果</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�R���\�[���ɕ\�����邩</td>
+				<td>コンソールに表示するか</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�t�@�C���ɏo�͂���</td>
+				<td>ファイルに出力する</td>
 			</tr>
 		</table>
 		<br>
 		<b>ConvertFileName :</b><br>
-		�t�@�C�����E�t�H���_���̕����R�[�h�ϊ����邩<br>
+		ファイル名・フォルダ名の文字コード変換するか<br>
 		<br>
 		<table border="1">
 			<tr>
-				<th>�l</th>
-				<th>�����R�[�h</th>
+				<th>値</th>
+				<th>文字コード</th>
 			</tr>
 			<tr>
 				<td>0</td>
-				<td>�ϊ����Ȃ�</td>
+				<td>変換しない</td>
 			</tr>
 			<tr>
 				<td>1</td>
-				<td>�ϊ�����</td>
+				<td>変換する</td>
 			</tr>
 		</table>
 		<br>
 		<b>NkfOption :</b><br>
-		nkf�֎w�肷��I�v�V�������w��ł���B<br>
+		nkfへ指定するオプションを指定できる。<br>
 		<br>
-		�W���ł͈ȉ����w�肵�Ă���B<br>
-		���p�J�i �� �S�p�J�i�@(-X)<br>
-		�S�p�p�� �� ���p�p�� �@(-Z0)<br>
-		�S�p�X�y�[�X �� ���p�X�y�[�X �@(-Z1)<br>
-		���������� �� �����ςݕ����@(--ic=UTF8-MAC)<br>
+		標準では以下を指定している。<br>
+		半角カナ ⇒ 全角カナ　(-X)<br>
+		全角英数 ⇒ 半角英数 　(-Z0)<br>
+		全角スペース ⇒ 半角スペース 　(-Z1)<br>
+		結合文字列 ⇒ 合成済み文字　(--ic=UTF8-MAC)<br>
 
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="advice">�A�h�o�C�X</a></h2>
+	<h2><a name="advice">アドバイス</a></h2>
 	<p>
-		�uUnifyZip�v�ɂď������s����<br>
-		���e�������ł���̂Ƀt�@�C�������قȂ��Ă���t�@�C����������悤�ɂȂ邩������܂���B<br>
+		「UnifyZip」にて処理を行うと<br>
+		内容が同じであるのにファイル名が異なっているファイルが見つかるようになるかもしれません。<br>
 		<br>
-		�uUnDup�v���̃\�t�g��p�����<br>
-		�����������t�@�C�����̈قȂ铯���e�̃t�@�C���������폜�Ȃǂ��s�����Ƃ��ł��܂��B<br>
+		「UnDup」等のソフトを用いれば<br>
+		そういったファイル名の異なる同内容のファイルを見つけ削除などを行うことができます。<br>
 		<br>
 		UnDup<br>
-		��� Sim-G����<br>
-		��҃y�[�W <a href="http://simg.infoseek.livedoor.com/">http://simg.infoseek.livedoor.com/</a><br>
+		作者 Sim-Gさん<br>
+		作者ページ <a href="http://simg.infoseek.livedoor.com/">http://simg.infoseek.livedoor.com/</a><br>
 		<br>
-		���āA�����t�@�C�����i�[���Ă���͂��̏��ɂ��o�C�i���I�Ɉ�v���Ȃ��̂͂Ȃ��ł��傤���B<br>
-		�璷�ȃt�H���_���܂�ł�����A��t�H���_����������A�]�v�ȃt�@�C������������<br>
-		�Ƃ��������Ƃ��炻���Ȃ邱�Ƃ͂�����񂠂�̂ł��傤�B<br>
-		�������A�����łȂ��Ƃ����ɂ���v���Ȃ��P�[�X������܂��B<br>
-		����́A���ɓ��̃t�@�C���̍X�V�����⑮�����قȂ��Ă���P�[�X�ł��B<br>
-		���Ƀt�@�C���́A���Ɋ܂܂��t�@�C���E�t�H���_�̍X�V�����⑮����ێ����Ă��邽�߁A<br>
-		���Ɋ܂܂��t�@�C���E�t�H���_�̍X�V�����⑮�������ɂɂ����Ƃ��ɈقȂ��Ă����ꍇ�A<br>
-		�������e�̃t�@�C���E�t�H���_�ł����Ă��������܂Ƃ߂č�������ɂ̓o�C�i���I�Ɉ�v���܂���B<br>
-		�ǂ�����P�[�X��<br>
-		�E�i�[�����t�H���_�̍X�V�������قȂ��Ă���<br>
-		�E�i�[�����t�@�C���́u�A�[�J�C�u�v�������قȂ��Ă���<br>
-		�Ȃǂł��B<br>
-		�t�H���_�̍X�V�����͉𓀂��������ŕς��\��������̂�<br>
-		���鏑�ɂ��𓀂��Ĉ��k���������ł��ł������ɂ͌��̏��ɂƈ�v���Ȃ��������蓾�܂��B<br>
+		さて、同じファイルを格納してあるはずの書庫がバイナリ的に一致しないのはなぜでしょうか。<br>
+		冗長なフォルダを含んでいたり、空フォルダがあったり、余計なファイルがあったり<br>
+		といったことからそうなることはもちろんあるのでしょう。<br>
+		しかし、そうでなくとも書庫が一致しないケースがあります。<br>
+		それは、書庫内のファイルの更新日時や属性が異なっているケースです。<br>
+		書庫ファイルは、中に含まれるファイル・フォルダの更新日時や属性を保持しているため、<br>
+		中に含まれるファイル・フォルダの更新日時や属性が書庫にしたときに異なっていた場合、<br>
+		同じ内容のファイル・フォルダであってもそれらをまとめて作った書庫はバイナリ的に一致しません。<br>
+		良くあるケースは<br>
+		・格納したフォルダの更新日時が異なっている<br>
+		・格納したファイルの「アーカイブ」属性が異なっている<br>
+		などです。<br>
+		フォルダの更新日時は解凍しただけで変わる可能性があるので<br>
+		ある書庫を解凍して圧縮しただけでもできた書庫は元の書庫と一致しない事もあり得ます。<br>
 		<br>
-		���Ȃ݂ɁA������Ԃ̐ݒ肪�l�̂��E�߂̐ݒ�ł��B<br>
+		ちなみに、初期状態の設定が僕のお薦めの設定です。<br>
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="important">���ӎ���</a></h2>
+	<h2><a name="important">注意事項</a></h2>
 	<p>
-		UnifyZip �̓���ɂ́u7-zip32.dll�v�����K�v�ł��B<br>
-		�Ȃ��A�𓀂ɂ��Ắu7-zip32.dll�v���ɗ����Ă���֌W��<br>
-		�����Ȃ���ނ� zip �t�@�C��������܂��B<br>
-		�������A���ۂɉ𓀂Ɏ��s����P�[�X�Ƃ��Ă�<br>
-		�����Ȃ���ނ� zip �t�@�C���ł��邽�߂ɂ����Ȃ����<br>
-		�t�@�C�������Ă��邽�߂Ɏ��s����ق��������Ǝv���܂��B<br>
+		UnifyZip の動作には「7-zip32.dll」等が必要です。<br>
+		なお、解凍については「7-zip32.dll」等に頼っている関係上<br>
+		扱えない種類の zip ファイルもあります。<br>
+		しかし、実際に解凍に失敗するケースとしては<br>
+		扱えない種類の zip ファイルであるためにそうなるよりも<br>
+		ファイルが壊れているために失敗するほうが多いと思います。<br>
 		<br>
-		��҂̃}�V������rar�t�@�C�������������ꍇ<br>
-		��x F5 �L�[�������Ȃ��ƃG�N�X�v���[����ɂł��������� zip ���\������܂���B<br>
-		�������ۂ��N����悤�ł����炻�̂悤�ɑΏ����Ă݂Ă��������B<br>
+		作者のマシンだとrarファイルを処理した場合<br>
+		一度 F5 キーを押さないとエクスプローラ上にできあがった zip が表示されません。<br>
+		同じ現象が起こるようでしたらそのように対処してみてください。<br>
 		<br>
-		Version 2.18 ��� UnifyZip �{�̂ň��k���s���悤�ɂȂ�܂����B<br>
-		����ɔ����A�ȑO�̃o�[�W�����ō��ꂽ���̂Ƃ͈قȂ鏑�ɂ��쐬�����ꍇ������܂��B<br>
-		���ɓ����ړI�Ƃ��Ă���ȏ�A�����������ύX�͔������������̂ł���<br>
-		���ꂷ��Ȃ�΁A�������������Ǝv������̂ɓ��ꂵ�����ƍl���A���s�ɓ��ݐ؂�܂����B<br>
-		�쐬����鏑�ɂ� <a href="http://www.pkware.com/">PKWARE</a> �� <a
+		Version 2.18 より UnifyZip 本体で圧縮を行うようになりました。<br>
+		それに伴い、以前のバージョンで作られたものとは異なる書庫が作成される場合があります。<br>
+		書庫統一を目的としている以上、こういった変更は避けたかったのですが<br>
+		統一するならば、自分が正しいと思えるものに統一したいと考え、実行に踏み切りました。<br>
+		作成される書庫は <a href="http://www.pkware.com/">PKWARE</a> の <a
 			href="http://www.pkware.com/business_and_developers/developer/popups/appnote.txt">.ZIP File Format
-			Specification</a> �ɏ�������悤�S�����Ă��܂��B<br>
-		���ɓ��̃t�@�C���̕��я��ɂ��Ă͓��Ɍ��y����Ă��Ȃ��悤�Ȃ̂�<br>
-		Windows �̃G�N�X�v���[���Ɠ��l�̊�Ń\�[�g����悤�ɂ��Ă��܂��B<br>
-		�u�����ł��ĂȂ���v�u�嗬�̌`���͂����Ȃ��Ă���v�u�����̉��߂͈Ⴄ�̂ł́v<br>
-		�Ƃ�������񂪂���܂����琥���҂܂ŁB<br>
+			Specification</a> に準拠するよう心がけています。<br>
+		書庫内のファイルの並び順については特に言及されていないようなので<br>
+		Windows のエクスプローラと同様の基準でソートするようにしています。<br>
+		「準拠できてないよ」「主流の形式はこうなっている」「そこの解釈は違うのでは」<br>
+		といった情報がありましたら是非作者まで。<br>
 	</p>
 	<p>
-		Version 2.28 ��� UNICODE�ɑΉ����܂����B<br>
+		Version 2.28 より UNICODEに対応しました。<br>
 		<br>
-		�ݒ�t�@�C���iUnifyZip.ini�j�̃G���R�[�h��UTF-16 LE�iBOM�L��j�ɕύX���Ă��܂��B<br>
-		�Â��܂܁iShift_JIS�j�ł����삵�܂����A�ꕔ�̋@�\����������܂��B<br>
-		��菜���t�@�C���̐��K�\���Ȃǂ�UNICODE�������w��ł��Ȃ��ׂł��B<br>
+		設定ファイル（UnifyZip.ini）のエンコードをUTF-16 LE（BOM有り）に変更しています。<br>
+		古いまま（Shift_JIS）でも動作しますが、一部の機能が制限されます。<br>
+		取り除くファイルの正規表現などにUNICODE文字が指定できない為です。<br>
 		<br>
-		UNICODE�n�ŕs������������ꍇ�ɂ́A7-zip32.dll�ň��k���s���悤�ɐݒ�t�@�C���ύX���ĉ������B<br>
-		���P����\��������܂��B<br>
+		UNICODE系で不具合が発生した場合には、7-zip32.dllで圧縮を行うように設定ファイル変更して下さい。<br>
+		改善する可能性があります。<br>
 		<br>
-		�R���\�[���ւ̌��ʏo�͂ŕ����������Ă��鎖������܂���<br>
-		�v���O��������͐���ɏo�͂��Ă��܂��B<br>
-		�R���\�[���ł̓t�H���g�����N�����삵�Ă��Ȃ��Ɛ�������܂��B<br>
-		�ݒ�Ńt�@�C���o�͂ɐ؂�ւ��鎖�ŁA���������������ʂ��m�F�ł��܂��B<br>
+		コンソールへの結果出力で文字化けしている事がありますが<br>
+		プログラムからは正常に出力しています。<br>
+		コンソールではフォントリンクが動作していないと推測されます。<br>
+		設定でファイル出力に切り替える事で、文字化け無く結果を確認できます。<br>
 		<br>
-		nkf(Network Kanji Filter)���g�p����<br>
-		���ɖ��⏑�ɓ��̃t�H���_�A�t�@�C�����̕����R�[�h�ϊ��ɑΉ����܂����B<br>
-		�I�v�V�����̕ύX�ɂ��Ή����Ă��܂������񂪂���A���͂�UTF-8�܂���UTF8-MAC�A�o�͂�UTF-16LE���w�肵�ĉ������B<br>
+		nkf(Network Kanji Filter)を使用した<br>
+		書庫名や書庫内のフォルダ、ファイル名の文字コード変換に対応しました。<br>
+		オプションの変更にも対応していますが制約があり、入力はUTF-8またはUTF8-MAC、出力はUTF-16LEを指定して下さい。<br>
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="copyright">���쌠</a></h2>
+	<h2><a name="copyright">著作権</a></h2>
 	<p>
-		�uUnifyZip�v�̒��쌠��Kurima���ۗL���Ă��܂��B<br>
-		�]�ځE�z�z�͓��e�ɕύX�������Ȃ����莩�R�ɍs�Ȃ��Ă��������B<br>
-		�G�����ւ̌f�ڂɂ��܂��Ă͎���ł��\���܂���̂Ń��[���ł��m�点���������B<br>
+		「UnifyZip」の著作権はKurimaが保有しています。<br>
+		転載・配布は内容に変更を加えない限り自由に行なってください。<br>
+		雑誌等への掲載につきましては事後でも構いませんのでメールでお知らせください。<br>
 		<br>
 		e-mail : <a href="mailto:KurimaKDV@hotmail.com">KurimaKDV@hotmail.com</a><br>
 		home page : <a href="http://kurima.sakura.ne.jp/">http://kurima.sakura.ne.jp/</a><br>
 		<br>
-		Version 2.28 �� UNICODE�Ή��͂Ђ�߂��s���Ă��܂��B<br>
+		Version 2.28 の UNICODE対応はひらめが行っています。<br>
 		e-mail : <a href="mailto:tekkui@outlook.jp">tekkui@outlook.jp</a><br>
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="exemption">�Ɛ�</a></h2>
-	<p>���̃v���O�������g�p�������Ƃɂ���Đ����������Ȃ鑹�Q���A��҂͖ƐӂƂ����Ă��������܂��B<br>
-		�v���O������ɂ���A�����Ȃ�o�O�A���ׂ���҂͂�����������`���𕉂��܂���B</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<h2><a name="exemption">免責</a></h2>
+	<p>このプログラムを使用したことによって生じたいかなる損害も、作者は免責とさせていただきます。<br>
+		プログラム上にある、いかなるバグ、欠陥も作者はそれを訂正する義務を負いません。</p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="support">�T�|�[�g</a></h2>
-	<p>�uUnifyZip�v�ɕs��𔭌������ꍇ�́A�z�[���y�[�W�̌f���ɏ������ނ����L���Ƀ��[���𑗂��Ă��������B�Ȃ�ׂ��Ώ��������Ǝv���܂��B<br>
-		�܂��A����ȋ@�\��ǉ����Ăق����A���̋@�\�͗v��Ȃ��A�Ƃ������ӌ����ǂ��ǂ����񂹂��������B<br>
+	<h2><a name="support">サポート</a></h2>
+	<p>「UnifyZip」に不具合を発見した場合は、ホームページの掲示板に書き込むか下記宛にメールを送ってください。なるべく対処したいと思います。<br>
+		また、こんな機能を追加してほしい、この機能は要らない、といった意見もどしどしお寄せください。<br>
 		<br>
 		e-mail : <a href="mailto:KurimaKDV@hotmail.com">KurimaKDV@hotmail.com</a><br>
 		home page : <a href="http://kurima.sakura.ne.jp/">http://kurima.sakura.ne.jp/</a><br>
+		<br>
+		UNICODE関連の不具合、意見などはひらめへメールを送って下さい。<br>
+		e-mail : <a href="mailto:tekkui@outlook.jp">tekkui@outlook.jp</a><br>
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
-	<h2><a name="history">�X�V����</a></h2>
+	<h2><a name="history">更新履歴</a></h2>
 	<p>
 		2005/02/28<br>
-		�@- Version 2.00
+		　- Version 2.00
 		<ul>
-			<li>����</li>
+			<li>初版</li>
 		</ul>
 
 		2005/03/08<br>
-		�@- Version 2.01
+		　- Version 2.01
 		<ul>
-			<li>���K�\���ɂ��}�b�`���O�͑啶������������ʂ��Ȃ��悤�ɂ��� </li>
-			<li>���ɂɊ܂܂��t�@�C�����ɂ���Ă͉𓀂Ɏ��s����̂��C��</li>
-			<li>�������s�v�ȏ��ɂ��ǂ������O�Ƀ`�F�b�N�����ʂɉ����ď������X�L�b�v����悤�ɂ����i���k���x�� 0 �Ɍ���j</li>
+			<li>正規表現によるマッチングは大文字小文字を区別しないようにした </li>
+			<li>書庫に含まれるファイル名によっては解凍に失敗するのを修正</li>
+			<li>処理が不要な書庫かどうか事前にチェックし結果に応じて処理をスキップするようにした（圧縮レベル 0 に限る）</li>
 		</ul>
 
 		2005/03/09<br>
-		�@- Version 2.02
+		　- Version 2.02
 		<ul>
-			<li>RAR�`���ɑΉ�</li>
+			<li>RAR形式に対応</li>
 		</ul>
 
 		2005/04/03<br>
-		�@- Version 2.03
+		　- Version 2.03
 		<ul>
-			<li>�p�X���[�h��ZIP�̉𓀂œƎ��̃p�X���[�h���̓_�C�A���O�������悤�ɂ���</li>
-			<li>�p�X���[�h��ZIP�̉𓀂ŏ��ɓ��̃t�@�C���ЂƂЂƂɑ΂��ăp�X���[�h�𕷂���镔�������P</li>
+			<li>パスワードつきZIPの解凍で独自のパスワード入力ダイアログをだすようにした</li>
+			<li>パスワードつきZIPの解凍で書庫内のファイルひとつひとつに対してパスワードを聞かれる部分を改善</li>
 		</ul>
 
 		2005/04/13<br>
-		�@- Version 2.04
+		　- Version 2.04
 		<ul>
-			<li>UNZIP32.DLL�ɑΉ�</li>
+			<li>UNZIP32.DLLに対応</li>
 		</ul>
 
 		2005/07/03<br>
-		�@- Version 2.05
+		　- Version 2.05
 		<ul>
-			<li>���e�͏����ς݂����g���q���u.zip�v�ƂȂ��Ă��Ȃ����ɂ̊g���q���u.zip�v�Ƀ��l�[������悤�ɂ���<br>
-				�i�ȑO�͈�؎���������������X�L�b�v���Ă����j</li>
-			<li>�������s�v���ǂ����̃`�F�b�N����茵���������ɍs���悤�ɂ���<br>
-				�i�t�@�C����������茵���Ƀ`�F�b�N, version needed to extract �̃`�F�b�N,�t�@�C���̕��я��̃`�F�b�N�j</li>
+			<li>内容は処理済みだが拡張子が「.zip」となっていない書庫の拡張子を「.zip」にリネームするようにした<br>
+				（以前は一切手を加えず処理をスキップしていた）</li>
+			<li>処理が不要かどうかのチェックをより厳密かつ高速に行うようにした<br>
+				（ファイル属性をより厳密にチェック, version needed to extract のチェック,ファイルの並び順のチェック）</li>
 		</ul>
 
 		2005/07/05<br>
-		�@- Version 2.06
+		　- Version 2.06
 		<ul>
-			<li>�ꊇ�𓀂̃I�v�V�����iBatchDecompress�j��ǉ�<br>
+			<li>一括解凍のオプション（BatchDecompress）を追加<br>
 		</ul>
 
 		2005/07/10<br>
-		�@- Version 2.07
+		　- Version 2.07
 		<ul>
-			<li>��t�H���_�̔�����ԈႦ�ď����Ɏ��s���邱�Ƃ��������̂��C��<br>
-			<li>�s���ȃt�@�C����n�����Ƃ��ɏꍇ�ɂ���ċ����I�����Ă��܂��̂��C��<br>
+			<li>空フォルダの判定を間違えて処理に失敗することがあったのを修正<br>
+			<li>不正なファイルを渡したときに場合によって強制終了してしまうのを修正<br>
 		</ul>
 
 		2005/07/15<br>
-		�@- Version 2.08
+		　- Version 2.08
 		<ul>
-			<li>�T�u�t�H���_�ȉ������̃I�v�V�����iSearchSubfolders�j��ǉ�<br>
+			<li>サブフォルダ以下検索のオプション（SearchSubfolders）を追加<br>
 		</ul>
 
 		2005/08/02<br>
-		�@- Version 2.09
+		　- Version 2.09
 		<ul>
-			<li>�ꊇ�𓀂̃I�v�V�����g�p�����O�Ώۂ̃t�@�C�����ǂݎ���p���ƍ폜�Ɏ��s����̂��C��<br>
+			<li>一括解凍のオプション使用時除外対象のファイルが読み取り専用だと削除に失敗するのを修正<br>
 		</ul>
 
 		2005/08/10<br>
-		�@- Version 2.10
+		　- Version 2.10
 		<ul>
-			<li>���ɓ��̃t�H���_���ɂ���Ă͏������I���Ȃ������������̂��C��<br>
+			<li>書庫内のフォルダ名によっては処理が終わらない事があったのを修正<br>
 		</ul>
 
 		2005/09/25<br>
-		�@- Version 2.11
+		　- Version 2.11
 		<ul>
-			<li>���ɓ��̃t�@�C�����̒����ɂ���Ă̓G���[���N���鎖���������̂��C��<br>
+			<li>書庫内のファイル名の長さによってはエラーが起きる事があったのを修正<br>
 		</ul>
 
 		2005/10/23<br>
-		�@- Version 2.12
+		　- Version 2.12
 		<ul>
-			<li>�uUNZIP32.DLL�v��p���������ŏ��ɂł͂Ȃ��t�@�C�������ɂƌ��Ȃ������������̂��C��<br>
+			<li>「UNZIP32.DLL」を用いた処理で書庫ではないファイルを書庫と見なす事があったのを修正<br>
 		</ul>
 
 		2005/10/27<br>
-		�@- Version 2.13
+		　- Version 2.13
 		<ul>
-			<li>�t�@�C���̕��я����������Ȃ��Ă��������s�v���ǂ����̃`�F�b�N�ɒʂ��Ă��܂��Ă����̂��C��<br>
+			<li>ファイルの並び順が正しくなくても処理が不要かどうかのチェックに通ってしまっていたのを修正<br>
 		</ul>
 
 		2005/11/09<br>
-		�@- Version 2.14
+		　- Version 2.14
 		<ul>
-			<li>���ɓ��̓ǂݎ���p�̃t�@�C�����폜�ł��Ȃ������������̂��C��<br>
-			<li>�v���Z�X�̗D�揇�ʃN���X���w�肷��I�v�V�����iPriorityClass�j��ǉ�<br>
+			<li>書庫内の読み取り専用のファイルが削除できない事があったのを修正<br>
+			<li>プロセスの優先順位クラスを指定するオプション（PriorityClass）を追加<br>
 		</ul>
 
 		2005/11/16<br>
-		�@- Version 2.15
+		　- Version 2.15
 		<ul>
-			<li>�G���[�ƂȂ肻���ȕ����ɉ��p�R�[�h��ǉ�<br>
+			<li>エラーとなりそうな部分に回避用コードを追加<br>
 		</ul>
 
 		2005/11/18<br>
-		�@- Version 2.16
+		　- Version 2.16
 		<ul>
-			<li>BatchDecompress=0 �Ő������������ł��Ȃ������������̂��C��<br>
+			<li>BatchDecompress=0 で正しい処理ができない事があったのを修正<br>
 		</ul>
 
 		2005/11/29<br>
-		�@- Version 2.17
+		　- Version 2.17
 		<ul>
-			<li>�uUNZIP32.DLL�v��p���������ŏ��ɓ��̃t�@�C�������s�����ƈُ�I�����鎖�������̂Ŏ��O�Ƀ`�F�b�N���ĉ������悤�ɂ���<br>
+			<li>「UNZIP32.DLL」を用いた処理で書庫内のファイル名が不正だと異常終了する事あったので事前にチェックして回避するようにした<br>
 		</ul>
 
 		2006/02/12<br>
-		�@- Version 2.18
+		　- Version 2.18
 		<ul>
-			<li>�u7-zip32.dll�v��p���Ă������k������ UnifyZip �{�̂ōs���悤�ɂ���<br>
+			<li>「7-zip32.dll」を用いていた圧縮処理を UnifyZip 本体で行うようにした<br>
 		</ul>
 
 		2006/02/14<br>
-		�@- Version 2.19
+		　- Version 2.19
 		<ul>
-			<li>���ɓ��ɃT�C�Y 0 �̃t�@�C��������ƈ��k�����Ɏ��s����̂��C��<br>
-			<li>�����ς݃t�@�C���̃`�F�b�N�ƈ��k�������኱������<br>
+			<li>書庫内にサイズ 0 のファイルがあると圧縮処理に失敗するのを修正<br>
+			<li>処理済みファイルのチェックと圧縮処理を若干高速化<br>
 		</ul>
 
 		2006/02/19<br>
-		�@- Version 2.20
+		　- Version 2.20
 		<ul>
-			<li>�K�v�ȃt�@�C���̂݉𓀂��Ɓu7-zip32.dll�iVersion 4.31.00.01�j�v�ł̉𓀂Ɏ��s����̂��C��<br>
-			<li>�K�v�ȃt�@�C���̂݉𓀂��Ə��ɂɂ���Ă͏璷�ȃt�H���_�̌��o�Ɏ��s����̂��C��<br>
+			<li>必要なファイルのみ解凍だと「7-zip32.dll（Version 4.31.00.01）」での解凍に失敗するのを修正<br>
+			<li>必要なファイルのみ解凍だと書庫によっては冗長なフォルダの検出に失敗するのを修正<br>
 		</ul>
 
 		2006/02/23<br>
-		�@- Version 2.21
+		　- Version 2.21
 		<ul>
-			<li>�x���I�v�V�����iRemarkableFile, WarningLevel�j��ǉ�<br>
+			<li>警告オプション（RemarkableFile, WarningLevel）を追加<br>
 		</ul>
 
 		2006/03/10<br>
-		�@- Version 2.22
+		　- Version 2.22
 		<ul>
-			<li>���ɂ̏��������ɂ̖��O���ɍs���悤�ɂ���<br>
-			<li>�����ς݂Ɣ��肵�����ɂɂ��Ă����ڃt�@�C���̃`�F�b�N���s���悤�ɂ���<br>
-			<li>������ɂ����ڃt�@�C���̃`�F�b�N���s���悤�ɂ���<br>
-			<li>���ɓ��̕s�v�ȃt�@�C�����S�~���ɑ���I�v�V�����iRecyclesIndividualFiles�j��ǉ�<br>
+			<li>書庫の処理を書庫の名前順に行うようにした<br>
+			<li>処理済みと判定した書庫についても注目ファイルのチェックを行うようにした<br>
+			<li>処理後にも注目ファイルのチェックを行うようにした<br>
+			<li>書庫内の不要なファイルをゴミ箱に送るオプション（RecyclesIndividualFiles）を追加<br>
 		</ul>
 
 		2006/04/12<br>
-		�@- Version 2.23
+		　- Version 2.23
 		<ul>
-			<li>��̏��ɂ������͉��ċ�Ɍ����鏑�ɂł��邩�`�F�b�N����悤�ɂ���<br>
-			<li>������G���^�[�L�[�̓��͂�҂����ɏI�����邩�ۂ��̃I�v�V�����iExitsImmediately�j��ǉ�<br>
+			<li>空の書庫もしくは壊れて空に見える書庫であるかチェックするようにした<br>
+			<li>処理後エンターキーの入力を待たずに終了するか否かのオプション（ExitsImmediately）を追加<br>
 		</ul>
 
 		2007/01/16<br>
-		�@- Version 2.24
+		　- Version 2.24
 		<ul>
-			<li>���ɂ������ς݂��ǂ����̃`�F�b�N���s�����ۂ��̃I�v�V�����iPreCheck�j��ǉ�<br>
+			<li>書庫が処理済みかどうかのチェックを行うか否かのオプション（PreCheck）を追加<br>
 		</ul>
 
 		2008/01/05<br>
-		�@- Version 2.25
+		　- Version 2.25
 		<ul>
-			<li>�I�v�V���� RemovesRedundantFolder �ɏ�����A���Ƀt�@�C�������璷�t�H���_���Ɋ�Â����̂ɂ���w���ǉ�<br>
-			<li>������A���Ƀt�@�C�����̃��l�[���Ɏ��s�����ꍇ�A���Ԃ������ă��g���C����悤�ɂ���<br>
+			<li>オプション RemovesRedundantFolder に処理後、書庫ファイル名を冗長フォルダ名に基づくものにする指定を追加<br>
+			<li>処理後、書庫ファイル名のリネームに失敗した場合、時間をおいてリトライするようにした<br>
 		</ul>
 
 		2008/01/07<br>
-		�@- Version 2.26
+		　- Version 2.26
 		<ul>
-			<li>Version 2.25 �Œǉ������w�肾�Ə璷�t�H���_�������ꍇ���Ƀt�@�C�������g���q�݂̂ɂȂ��Ă��܂��s����C��<br>
+			<li>Version 2.25 で追加した指定だと冗長フォルダが無い場合書庫ファイル名が拡張子のみになってしまう不具合を修正<br>
 		</ul>
 
 		2014/05/20<br>
-		�@- Version 2.27
+		　- Version 2.27
 		<ul>
-			<li>�V�����o�[�W������ UNRAR32.DLL(version 0.13) �ɑΉ�<br>
+			<li>新しいバージョンの UNRAR32.DLL(version 0.13) に対応<br>
 		</ul>
 
 		2019/02/28<br>
-		�@- Version 2.28 a1
+		　- Version 2.28 a1
 		<ul>
-			<li>�t�@�C������UNICODE���܂ޏ��ɑΉ�<br>
-			<li>7-zip32.dll�ɂ��UNICODE ZIP���ɍ쐬<br>
-			<li>���K�\����UNICODE�Ή�<br>
-			<li>�R���\�[���֏o�͂���郍�O��UNICODE�Ή�<br>
-			<li>Windows10 1809�̃R���\�[���Ń��O����������������֑Ή�<br>
+			<li>ファイル名にUNICODEを含む書庫対応<br>
+			<li>7-zip32.dllによるUNICODE ZIP書庫作成<br>
+			<li>正規表現のUNICODE対応<br>
+			<li>コンソールへ出力されるログのUNICODE対応<br>
+			<li>Windows10 1809のコンソールでログが文字化けする問題へ対応<br>
 		</ul>
 
 		2019/03/12<br>
-		�@- Version 2.28 a2
+		　- Version 2.28 a2
 		<ul>
-			<li>�{�̂ɂ��ZIP���ɍ쐬��UNICODE�Ή�<br>
-			<li>7-zip32.dll�ɂ��UNICODE ZIP���ɍ쐬<br>
-			<li>�����O�t�@�C���l�[���̐���i259�����j�ɋ߂��ꍇ�ɏ����Ɏ��s������֑Ή�<br>
+			<li>本体によるZIP書庫作成のUNICODE対応<br>
+			<li>7-zip32.dllによるUNICODE ZIP書庫作成<br>
+			<li>ロングファイルネームの制約（259文字）に近い場合に処理に失敗する問題へ対応<br>
 		</ul>
 
 		2019/03/15<br>
-		�@- Version 2.28 a3
+		　- Version 2.28 a3
 		<ul>
-			<li>�����k�̏ꍇ�̎��O������UNICODE�Ή�<br>
+			<li>無圧縮の場合の自前処理のUNICODE対応<br>
 		</ul>
 
 		2019/03/19<br>
-		�@- Version 2.28 a4
+		　- Version 2.28 a4
 		<ul>
-			<li>nkf32.dll�ɂ�鏑�ɖ��A���ɓ��̃t�H���_�A�t�@�C�����̕����R�[�h�ϊ��ɑΉ�<br>
+			<li>nkf32.dllによる書庫名、書庫内のフォルダ、ファイル名の文字コード変換に対応<br>
 		</ul>
 	</p>
-	<p><a href="#index">�ڎ���</a></p>
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
 	<!--
-		<h2><a name="plan">�\��</a></h2>
+		<h2><a name="plan">予定</a></h2>
 		<ul>
-			<li>GUI�쐬</li>
+			<li>GUI作成</li>
 		</ul>
-		�c���C�ƃ��N�G�X�g������΁c�B
-		<p><a href="#index">�ڎ���</a></p>
+		…やる気とリクエストがあれば…。
+		<p><a href="#index">目次へ</a></p>
 		<hr>
 		-->
 
-	<h2><a name="acknowledgments">�ӎ�</a></h2>
-	����e�X�g�����A�I�m�ȃA�h�o�C�X�⊴�z�����ꂽ yusuke�� �ɂ��̏���؂�Ă����\���グ�܂��B
-	<p><a href="#index">�ڎ���</a></p>
+	<h2><a name="acknowledgments">謝辞</a></h2>
+	動作テストをし、的確なアドバイスや感想をくれた yusuke氏 にこの場を借りてお礼を申し上げます。
+	<p><a href="#index">目次へ</a></p>
 	<hr>
 
 </body>
