@@ -44,7 +44,6 @@ ArchiveDll::~ArchiveDll() {
 
 // 指定のDLLで初期化
 bool ArchiveDll::init(ArchiveDllID::ArchiveDllID archiveDllID) {
-
 	archiveDllID_ = archiveDllID;
 
 	if (mArchiveHandle != NULL) {
@@ -113,7 +112,6 @@ FARPROC ArchiveDll::getFuncAddress(LPCTSTR funcName) {
 
 // 順序数  1
 int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
-
 	rOutput.Empty();
 
 #ifdef _UNICODE
@@ -204,7 +202,6 @@ LPCTSTR ArchiveDll::getArchiveFilename() {
 // -3 : ユーザーキャンセル
 // -4 : その他のエラー
 int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFile) {
-
 	String commandLine;
 
 	// スペースを含む場合ダブルクォートで囲む
@@ -214,7 +211,6 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 	String dest = destPath;
 
 	if (archiveDllID_ == ArchiveDllID::SEVEN_ZIP) {
-
 		commandLine.Cat(_T("x "));
 
 		commandLine.Cat(archive.c_str());
@@ -240,7 +236,6 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 		}
 
 	} else if (archiveDllID_  == ArchiveDllID::UNLHA) {
-
 		commandLine.Cat(_T("e -x1"));
 
 		// 属性をそのままに隠し属性・システム属性等全てのファイルを解凍
@@ -274,7 +269,6 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 
 
 	} else if (archiveDllID_ == ArchiveDllID::UNRAR) {
-
 		commandLine.Cat(_T("-x "));
 
 		if (showsProgress == false) {
@@ -371,7 +365,6 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 // -1 : パスワードが間違っている
 // -2 : その他のエラー
 int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, LPCTSTR password) {
-	
 	// スペースを含む場合ダブルクォートで囲む
 	String archiveFilename(archiveFilename_);
 	DoubleQuoteString(archiveFilename);
@@ -440,7 +433,6 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 		commandLine.Format(_T("e %s %s %s %s"), switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 
 	} else if (archiveDllID_ == ArchiveDllID::UNZIP) {
-
 		if (showsProgress == false) {
 			switchString.Cat(_T("--i "));
 		}
@@ -504,7 +496,6 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 // 指定フォルダ内を指定ファイル名で圧縮
 // 現在 7-zip32.dll にのみ対応
 bool ArchiveDll::compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, bool showsProgress) {
-
 		String filename(destPath);
 		DoubleQuoteString(filename);
 
@@ -679,7 +670,6 @@ void ArchiveDllManager::releaseArchiveDll(ArchiveDllID::ArchiveDllID archiveDllI
 }
 
 ArchiveDll* ArchiveDllManager::getSuitableArchiveDll(LPCTSTR filename) {
-
 	int id = -1;
 
 	// 拡張子から適当なDLLを探す
@@ -689,20 +679,14 @@ ArchiveDll* ArchiveDllManager::getSuitableArchiveDll(LPCTSTR filename) {
 	if (lstrcmpi(ext.c_str(), _T(".zip")) == 0 ||
 		lstrcmpi(ext.c_str(), _T(".jar")) == 0 ||
 		lstrcmpi(ext.c_str(), _T(".7z")) == 0) {
-
 		id = ArchiveDllID::SEVEN_ZIP;
 //		id = ArchiveDllID::UNZIP;
-
 	} else if (lstrcmpi(ext.c_str(), _T(".lzh")) == 0 ||
 		lstrcmpi(ext.c_str(), _T(".lha")) == 0 ||
 		lstrcmpi(ext.c_str(), _T(".lzs")) == 0) {
-
 		id = ArchiveDllID::UNLHA;
-
 	} else if (lstrcmpi(ext.c_str(), _T(".rar")) == 0) {
-
 		id = ArchiveDllID::UNRAR;
-
 	}
 
 	if (id != -1) {

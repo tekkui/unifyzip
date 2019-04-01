@@ -151,7 +151,6 @@ void FixPath(String& Path)
 	// 最初に「\」があったら取り除く
 	// ただし2つ以上「\」が続く場合はネットワークパスと考え2つ残す
 	if(n == 0 || n == 2){
-
 	}else if(n == 1){
 		Path.Delete(0, 1);
 	}else{
@@ -360,7 +359,6 @@ bool RemoveExtension(String& path)
 
 // 拡張子を得る(先頭に'.'を含む)
 void GetExtention(LPCTSTR filename, String& ext) {
-
 	String str = filename;
 
 	int nPos0, nPos1;
@@ -614,7 +612,6 @@ bool IsFileName(LPCTSTR pszFileName)
 		//	  || c==_TCHAR(',')  || c==_TCHAR(';')  || c==_TCHAR('*') || c==_TCHAR('?')
 		//	  || c==_TCHAR('"')  || c==_TCHAR('<')  || c==_TCHAR('>') || c==_TCHAR('|')){
 		//	return false;
-
 		}else if(c==_TCHAR('\t') || c==_TCHAR('\\') || c==_TCHAR('/')  || c==_TCHAR(':')  || c==_TCHAR('*') 
 			  || c==_TCHAR('?')  || c==_TCHAR('"')  || c==_TCHAR('<')  || c==_TCHAR('>')  || c==_TCHAR('|')){
 			return false;
@@ -670,7 +667,6 @@ void GetFileName(LPCTSTR path, String& filename)
 // フォルダはそのフォルダに含まれるファイルごと削除する
 // 
 bool DeleteFileOrFolder(LPCTSTR filename, bool usesRecycleBin) {
-
 	TCHAR* deletePath = new TCHAR [_tcslen(filename) + 2];
 
 	_tcscpy(deletePath, filename);
@@ -1022,7 +1018,6 @@ bool FileEnumerator::enumerate(
 	LPCTSTR pattern, 
 	bool searchesSubfolders,
 	vector<String>& v) {
-
 	v.clear();
 	return enumerateSub(path, pattern, searchesSubfolders, v);
 }
@@ -1032,7 +1027,6 @@ bool FileEnumerator::enumerateSub(
 	LPCTSTR pattern, 
 	bool searchesSubfolders, 
 	vector<String>& v) {
-
 	String p;
 	WIN32_FIND_DATA fd;
 	HANDLE hSearch;

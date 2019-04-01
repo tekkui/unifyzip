@@ -82,7 +82,6 @@ LPTSTR strrstrex(LPCTSTR pszString1, LPCTSTR pszString2) {
 	// よって、前方から検索していき、最後に見つかったのを返すしかない。
 	LPTSTR  pszHit = NULL;
 	for ( ; *pszString1; pszString1++) {
-
 		if (*pszString1 == *pszString2 && _tcscmp(pszString1, pszString2) == 0) {
 			pszHit = (LPTSTR)pszString1;
 		}
@@ -184,7 +183,6 @@ void MakeUpper(LPTSTR psz)
 	for(;;){
 		if(*psz == '\0') return;
 		if(IsLower(psz)){
-
 #ifdef _UNICODE
 			if (_TCHAR('a') <= (*psz) && (*psz) <= _TCHAR('z')) {
 				*(++psz) += (_TCHAR('A') - _TCHAR('a'));
@@ -198,7 +196,6 @@ void MakeUpper(LPTSTR psz)
 				*psz += ('A' - 'a');
 			}
 #endif
-
 		}
 		psz++;
 	}

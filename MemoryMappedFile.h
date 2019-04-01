@@ -155,7 +155,6 @@ private:
 class ViewOfFile {
 public:
 	ViewOfFile(HANDLE hFileMappingObject, UINT32 fileOffset, UINT32 numberOfBytesToMap) {
-	
 		SYSTEM_INFO si;
 		GetSystemInfo(&si);
 		UINT32 g = si.dwAllocationGranularity;

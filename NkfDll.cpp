@@ -32,7 +32,6 @@ bool NkfDll::init(String& option) {
 	{
 		return false;
 	}
-	
 }
 
 void NkfDll::Option(String& option) {

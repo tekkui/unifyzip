@@ -231,7 +231,6 @@ bool String::Reserve(int nSize)
 
 		m_nMaxBufLen = n;
 		m_nBufLen = n - nOffset;
-
 	}else{
 		// ÉÅÉÇÉäñ¢ämï€ÇÃèÍçá
 
@@ -358,7 +357,6 @@ int String::Replace( TCHAR chOld, TCHAR chNew ) {
 
 // íuä∑
 int String::Replace(LPCTSTR pszOld, LPCTSTR pszNew) {
-
 	int oldLen = lstrlen(pszOld);
 	int newLen = lstrlen(pszNew);
 
