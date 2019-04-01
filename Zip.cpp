@@ -136,8 +136,6 @@ int DecompressSub(const void* pInput, UINT32 inputSize, Buffer& outputBuffer, UI
 	status = Z_OK;
 
 	while (status != Z_STREAM_END) {
-
-
 /*
 		if (z.avail_in == 0) {  // 入力残量がゼロになれば
 			// 入力ポインタをセット
@@ -261,7 +259,6 @@ int Decompress(LPCTSTR zipFileName, LPCTSTR destPath) {
 		}
 	}
 	return 0;
-
 }
 
 
@@ -287,7 +284,6 @@ bool CompressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength) {
 		if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0) {
 			// ルート及びカレントでないフォルダかどうかチェック
 			if (lstrcmp(fd.cFileName,_T("."))!=0 && lstrcmp(fd.cFileName,_T(".."))!=0) {
-
 				String path = pszDir;
 				CatPath(path, fd.cFileName);
 
@@ -738,7 +734,6 @@ bool ZipWriter::addLackFolder()
 	String path;
 	list<LocalFileData>::iterator it;	
 	for (it=localFileData_.begin(); it!=localFileData_.end(); ++it) {
-
 		// 階層の違い
 		int difference;
 
@@ -797,8 +792,6 @@ bool ZipWriter::addLackFolder()
 			it = localFileData_.insert(it, lfd);
 			it++;
 		}
-
-
 	}
 	return true;
 }
@@ -908,7 +901,6 @@ int ZipWriter::close()
 	}
 
 	for (it=localFileData_.begin(); it!=localFileData_.end(); ++it) {
-
 		FILE* fin=NULL;
 		int size_read;
 		zip_fileinfo zi;
@@ -981,7 +973,6 @@ int ZipWriter::close()
 
 				}
 			} while ((err == ZIP_OK) && (size_read>0));
-
 			if (fin) {
 				fclose(fin);
 			}
@@ -1049,8 +1040,6 @@ int ZipWriter::closeSub()
 
 		list<LocalFileData>::iterator it;
 		for (it = localFileData_.begin(); it != localFileData_.end(); ++it) {
-
-
 			UINT32 crc;
 
 			FILETIME ft;

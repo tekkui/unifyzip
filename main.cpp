@@ -42,7 +42,6 @@ using namespace KSDK;
 // アーカイブに格納されるファイル・フォルダの情報
 class IndividualInfo {
 public:
-
 	IndividualInfo(INDIVIDUALINFO& rIndividualInfo, DWORD attribute, bool isEncrypted) {
 		// INDIVIDUALINFO 内の属性はフォルダ属性が正確でなかったりするので
 		// 別に取得したもので指定する
@@ -401,7 +400,6 @@ bool initialize()
 void analyzePath(vector<String>& src, vector<String>& dest) {
 	vector<String>::iterator it;
 	for (it=src.begin(); it!=src.end(); ++it) {
-
 		switch(GetPathAttribute(it->c_str())) {
 		case PATH_INVALID:
 			// 無効なパス
@@ -468,7 +466,6 @@ struct FileSortCriterion : public binary_function <String, String, bool> {
 #include <fstream>
 int main(int, char*, char*) 
 {
-
 	if (!initialize()) {
 		return 0;
 	}
@@ -694,7 +691,6 @@ bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath)
 
 			g_compressFileList.push_back(boost::shared_ptr<IndividualInfo>(new IndividualInfo(destPath.c_str(), fd.ftLastWriteTime, fd.dwFileAttributes, 0, false)));
 		}
-
 	} while (FindNextFile(hSearch,&fd)!=0);
 
 	FindClose(hSearch);
@@ -707,7 +703,6 @@ bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath)
 
 // リストから空フォルダを取り除く
 bool deleteEmptyFolder(LPCTSTR basePath) {
-
 	if (g_compressFileList.empty()) {
 		return true;
 	}
@@ -724,7 +719,6 @@ bool deleteEmptyFolder(LPCTSTR basePath) {
 			if (next == g_compressFileList.end()
 			 || (_tcsncmp((*cur)->getFullPath(), (*next)->getFullPath(), lstrlen((*cur)->getFullPath())) != 0)
 			 || (*((*next)->getFullPath() + lstrlen((*cur)->getFullPath())) != _TCHAR('\\')) ) {
-
 				if (g_BatchDecompress) {
 					String path = basePath;
 					CatPath(path, (*cur)->getFullPath());
@@ -753,7 +747,6 @@ bool deleteEmptyFolder(LPCTSTR basePath) {
 
 // リストに空フォルダがあればfalseを返す
 bool ExistsEmptyFolder() {
-
 	if (g_compressFileList.empty()) {
 		return false;
 	}
@@ -834,7 +827,6 @@ void GetRedundantPath(String& rRedundantPath) {
 
 // wstring にMBCS文字列をUNICODEに変換してセットする
 void setMultiByteString(wstring& rWString, const char* string) {
-
 	rWString.erase();
 
 	// Unicodeに必要な文字数の取得
@@ -1001,7 +993,6 @@ bool CheckAppendFile(LPCTSTR basePath) {
 
 // 追加ファイルをチェック
 bool ExistsNotAppendFile() {
-
 	#ifdef _UNICODE
 		wstring append(g_AppendFile.c_str());
 	#else
@@ -1046,7 +1037,6 @@ bool ExistsNotAppendFile() {
 
 // 除外ファイルをチェック
 bool CheckExcludeFile(LPCTSTR basePath) {
-
 	if (g_ExcludeFile.IsEmpty()) return true;
 
 	#ifdef _UNICODE
@@ -1188,7 +1178,6 @@ void StringToFileTime(LPCTSTR fileTime, FILETIME& rFileTime) {
 
 // 文字列でファイルの更新日時を設定する
 bool SetFileLastWriteTime(LPCTSTR filename, LPCTSTR lastWriteTime) {
-
 	FILETIME ft;
 
 	StringToFileTime(lastWriteTime, ft);
@@ -1225,13 +1214,11 @@ DWORD MyFileAttributeToFileAttribute(int attribute, bool isFolder) {
 
 
 bool AddLackFolder() {
-
 	bool adds = false;
 	
 	String path;
 	list<boost::shared_ptr<IndividualInfo> >::iterator it;
 	for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-
 		if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 			// フォルダを見つけたらパスを記憶
 			// ただし、２階層一気に追加される可能性もあるので
@@ -1335,7 +1322,6 @@ int isProcessedArchive(LPCTSTR filename)
 
 	int localFileNumber = zip.getLocalFileNumber();
 	for (int i=0; i<localFileNumber; ++i) {
-
 		boost::shared_ptr<LocalFile> p = zip.getLocalFile(i);
 		
 		int compressLevel;
@@ -1451,7 +1437,6 @@ int isProcessedArchive(LPCTSTR filename)
 		// 更新日時のチェック
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 				if (g_FolderTimeMode == 0) continue;
 
@@ -1462,12 +1447,10 @@ int isProcessedArchive(LPCTSTR filename)
 						return 1;
 					}					
 				} else if (g_FolderTimeMode == 2) {
-
 					// フォルダの更新日時よりも新しいファイル・フォルダが
 					// フォルダ以下にあったら中止
 					// フォルダ以下の最新のファイル・フォルダとフォルダの更新日時が
 					// 一致しない場合も中止
-
 					FILETIME ft;
 					ft.dwHighDateTime = 0;
 					ft.dwLowDateTime = 0;
@@ -1548,7 +1531,6 @@ INT_PTR CALLBACK PasswordDialogProc(HWND hwndDlg,
 	UINT uMsg,
 	WPARAM wParam,
 	LPARAM /* lParam */) {
-
 	switch (uMsg) {
 	case WM_INITDIALOG:
 		SetWindowText(GetDlgItem(hwndDlg, IDC_STATIC1), g_archive.c_str());
@@ -1842,7 +1824,6 @@ bool process(LPCTSTR filename)
 
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 				// フォルダはパスがかかっていても関係ない
-
 				// UNLHA32.dll はフォルダを解凍できないようなので自前で作成
 				if (CreateDirectory(destPath.c_str(), NULL) == 0) {
 					cout << _T("解凍時にエラーが発生しました") << endl;
@@ -1914,9 +1895,9 @@ bool process(LPCTSTR filename)
 	if (g_FolderTimeMode != 2 || g_FileTimeMode != 0) {
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-
 			String path(temp_folder.getPath());
-			if (lstrlen((*it)->getFullPath()) <= redundantPathLen) continue;
+			if (lstrlen((*it)->getFullPath()) <= redundantPathLen)
+				continue;
 			
 			if (g_BatchDecompress) {
 				CatPath(path, (*it)->getFullPath());
@@ -1926,7 +1907,8 @@ bool process(LPCTSTR filename)
 
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 				// フォルダの場合
-				if (g_FolderTimeMode != 0 && g_FolderTimeMode != 1) continue;
+				if (g_FolderTimeMode != 0 && g_FolderTimeMode != 1)
+					continue;
 
 				DWORD attribute = (*it)->getAttribute();
 
@@ -2003,9 +1985,9 @@ bool process(LPCTSTR filename)
 	if (g_FolderAttribute != -1 || g_FileAttribute != -1) {
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-
 			String path(temp_folder.getPath());
-			if (lstrlen((*it)->getFullPath()) <= redundantPathLen) continue;
+			if (lstrlen((*it)->getFullPath()) <= redundantPathLen)
+				continue;
 
 			if (g_BatchDecompress) {
 				CatPath(path, (*it)->getFullPath());
@@ -2050,11 +2032,9 @@ bool process(LPCTSTR filename)
 	}
 
 	if (g_ConvertFileName) {
-
 		// ファイル名の文字変換
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-
 			String path(temp_folder.getPath());
 			if (lstrlen((*it)->getFullPath()) <= redundantPathLen) continue;
 
@@ -2100,9 +2080,9 @@ bool process(LPCTSTR filename)
 		// フォルダ名の文字変換
 		list<boost::shared_ptr<IndividualInfo> >::reverse_iterator ir;
 		for (ir = g_compressFileList.rbegin() ; ir != g_compressFileList.rend() ; ++ir) {
-
 			String path(temp_folder.getPath());
-			if (lstrlen((*ir)->getFullPath()) <= redundantPathLen) continue;
+			if (lstrlen((*ir)->getFullPath()) <= redundantPathLen)
+				continue;
 
 			if (g_BatchDecompress) {
 				CatPath(path, (*ir)->getFullPath());
@@ -2216,7 +2196,6 @@ bool process(LPCTSTR filename)
 			} else {
 				b = compress(temp_folder.getPath(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
 			}
-
 		}
 		else
 		{
@@ -2310,7 +2289,6 @@ void setFolderTime(LPCTSTR path) {
 }
 
 bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime) {
-
 	rNewestFileTime.dwLowDateTime = 0;
 	rNewestFileTime.dwHighDateTime = 0;
 
@@ -2326,7 +2304,8 @@ bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime) {
 
 	hSearch = FindFirstFile(searchPath.c_str(), &fd);
 
-	if (hSearch==INVALID_HANDLE_VALUE) return false;
+	if (hSearch==INVALID_HANDLE_VALUE)
+		return false;
 
 	do {
 		if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0){
@@ -2420,13 +2399,13 @@ bool compressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength)
 
 	hSearch = FindFirstFile(searchPath.c_str(), &fd);
 
-	if (hSearch==INVALID_HANDLE_VALUE) return false;
+	if (hSearch==INVALID_HANDLE_VALUE)
+		return false;
 
 	do {
 		if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0) {
 			// ルート及びカレントでないフォルダかどうかチェック
 			if (lstrcmp(fd.cFileName,_T("."))!=0 && lstrcmp(fd.cFileName,_T(".."))!=0) {
-
 				String path = pszDir;
 				CatPath(path, fd.cFileName);
 

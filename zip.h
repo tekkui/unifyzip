@@ -153,6 +153,7 @@ public:
 	LPCTSTR getName() {
 		return name_.c_str();
 	}
+
 private:
 	String name_;
 	std::vector<LocalFileInfo> fileInfo_;
