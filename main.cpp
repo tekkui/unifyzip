@@ -1420,7 +1420,6 @@ int isProcessedArchive(LPCTSTR filename)
 		// 属性のチェック
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 				if (g_FolderAttribute == -1) continue;
 				DWORD attribute = MyFileAttributeToFileAttribute(g_FolderAttribute, true);
@@ -1813,7 +1812,6 @@ bool process(LPCTSTR filename)
 
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-
 			String extractFilename = (*it)->getFullPath();
 			if (extractFilename.GetLength() <= redundantPathLen) continue;
 

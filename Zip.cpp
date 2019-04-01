@@ -970,7 +970,6 @@ int ZipWriter::close()
 						_tprintf(_T("error in writing %s in the zipfile\n"),
 							it->srcFileName.c_str());
 					}
-
 				}
 			} while ((err == ZIP_OK) && (size_read>0));
 			if (fin) {
