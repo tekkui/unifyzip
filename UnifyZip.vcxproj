@@ -61,7 +61,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\boost\include\boost-1_69;..\zlib-1.2.11;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\boost\include\boost-1_69;zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)UnifyZip.exe</OutputFile>
@@ -69,11 +69,19 @@
       <ProgramDatabaseFile>$(OutDir)UnifyZip.pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>..\boost\lib;..\zlib-1.2.11\contrib\vstudio\vc14\x86\ZlibStatDebug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\boost\lib;zlib\contrib\vstudio\vc14\x86\ZlibStatDebug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <IgnoreSpecificDefaultLibraries>nafxcwd.lib;libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <PreBuildEvent>
+      <Command>MSBuild zlib\contrib\vstudio\vc14\zlibstat.vcxproj /property:Configuration=Debug;Platform="Win32"
+MSBuild zlib\contrib\vstudio\vc14\minizip.vcxproj /property:Configuration=Debug;Platform="Win32"
+</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>zlib</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -82,7 +90,7 @@
       <PrecompiledHeader />
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
-      <AdditionalIncludeDirectories>..\boost\include\boost-1_69;..\zlib-1.2.11;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\boost\include\boost-1_69;zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)UnifyZip.exe</OutputFile>
@@ -91,12 +99,18 @@
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <TargetMachine>MachineX86</TargetMachine>
-      <AdditionalLibraryDirectories>..\boost\lib;..\zlib-1.2.11\contrib\vstudio\vc14\x86\ZlibStatRelease;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\boost\lib;zlib\contrib\vstudio\vc14\x86\ZlibStatRelease;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
+    <PreBuildEvent>
+      <Command>MSBuild zlib\contrib\vstudio\vc14\zlibstat.vcxproj /property:Configuration=Release;Platform="Win32"
+MSBuild zlib\contrib\vstudio\vc14\minizip.vcxproj /property:Configuration=Release;Platform="Win32"
+</Command>
+      <Message>zlib</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\zlib-1.2.11\contrib\minizip\iowin32.c" />
+    <ClCompile Include="zlib\contrib\minizip\iowin32.c" />
     <ClCompile Include="ArchiveDll.cpp" />
     <ClCompile Include="CommandLine.cpp" />
     <ClCompile Include="Error.cpp" />

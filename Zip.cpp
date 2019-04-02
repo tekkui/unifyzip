@@ -11,8 +11,8 @@
 #pragma comment(lib, "zlibstat.lib")
 
 //#include "../zlib/contrib/minizip/zip.h"
-#include "../zlib-1.2.11/contrib/minizip/zip.h"
-#include "../zlib-1.2.11/contrib/minizip/iowin32.h"
+#include "zlib/contrib/minizip/zip.h"
+#include "zlib/contrib/minizip/iowin32.h"
 
 #include "StrFunc.h"
 #include "PathFunc.h"
