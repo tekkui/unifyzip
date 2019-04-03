@@ -75,12 +75,12 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>MSBuild zlib\contrib\vstudio\vc14\minizip.vcxproj /property:Configuration=Debug;Platform="Win32"
-MSBuild zlib\contrib\vstudio\vc14\zlibstat.vcxproj /property:Configuration=Debug;Platform="Win32"
-</Command>
+      <Command>
+      </Command>
     </PreBuildEvent>
     <PreBuildEvent>
-      <Message>zlib</Message>
+      <Message>
+      </Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -103,10 +103,10 @@ MSBuild zlib\contrib\vstudio\vc14\zlibstat.vcxproj /property:Configuration=Debug
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
     <PreBuildEvent>
-      <Command>MSBuild zlib\contrib\vstudio\vc14\minizip.vcxproj /property:Configuration=Release;Platform="Win32"
-MSBuild zlib\contrib\vstudio\vc14\zlibstat.vcxproj /property:Configuration=Release;Platform="Win32"
-</Command>
-      <Message>zlib</Message>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -1,0 +1,15 @@
+version: 2.28.{build}
+branches:
+  only:
+  - /master/
+image: Visual Studio 2017
+configuration: Release
+platform: x86
+before_build:
+- cmd: >-
+    git submodule init
+
+    git submodule update
+build:
+  project: UnifyZip.sln
+  verbosity: minimal
