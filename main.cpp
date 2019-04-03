@@ -262,6 +262,7 @@ bool initialize()
 	// ライブラリのバグがあるので 
 	// Visual C++ 2005 Express Edition ではとりあえず使えない
 	//_tsetlocale( LC_ALL, _T("japanese") );
+	SetConsoleOutputCP(CP_UTF8);
 
 	SetCurrentDirectoryEx(_T(""));
 
