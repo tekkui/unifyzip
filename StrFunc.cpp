@@ -4,11 +4,11 @@
 
 namespace KSDK {
 
-// �Q�o�C�g�������܂ޕ�����̒�����w��̕����������A�ʒu��Ԃ��B
+// ２バイト文字を含む文字列の中から指定の文字を検索、位置を返す。
 LPCTSTR strchrex(LPCTSTR pszSrc, TCHAR c)
 {
 #ifdef _UNICODE
-	// Unicode ���ƃ��C�u�����֐����g����
+	// Unicode だとライブラリ関数が使える
 	return _tcschr(pszSrc, c);
 #else
 	for ( ; *pszSrc; pszSrc++) {
@@ -26,14 +26,14 @@ LPCTSTR strchrex(LPCTSTR pszSrc, TCHAR c)
 
 
 
-// �Q�o�C�g�������܂ޕ�����̒�����w��̕�������납�猟���A�ʒu��Ԃ��B
+// ２バイト文字を含む文字列の中から指定の文字を後ろから検索、位置を返す。
 LPCTSTR strrchrex(LPCTSTR pszSrc, TCHAR c)
 {
-	// �������A���ۂ͌�납��T�����Ƃ͕s�\
-	// 2�o�C�g������1�o�C�g�ڂ�2�o�C�g������2�o�C�g�ڂɂ��g���邱�Ƃ�����̂ŁB
-	// ����āA�O�����猟�����Ă����A�Ō�Ɍ��������̂�Ԃ������Ȃ��B
+	// しかし、実際は後ろから探すことは不可能
+	// 2バイト文字の1バイト目は2バイト文字の2バイト目にも使われることがあるので。
+	// よって、前方から検索していき、最後に見つかったのを返すしかない。
 #ifdef _UNICODE
-	// Unicode ���ƃ��C�u�����֐����g����
+	// Unicode だとライブラリ関数が使える
 	return _tcsrchr(pszSrc, c);
 #else
 	LPTSTR pszHit = NULL;
@@ -52,10 +52,10 @@ LPCTSTR strrchrex(LPCTSTR pszSrc, TCHAR c)
 
 
 
-// �Q�o�C�g�������܂ޕ�����̒�����w��̕�����������A�ʒu��Ԃ��B
+// ２バイト文字を含む文字列の中から指定の文字列を検索、位置を返す。
 LPCTSTR strstrex(LPCTSTR pszString1, LPCTSTR pszString2) {
 #ifdef _UNICODE
-	// Unicode ���ƃ��C�u�����֐����g����
+	// Unicode だとライブラリ関数が使える
 	return _tcsstr(pszString1, pszString2);
 #else
 	int nLen1 = (int)_tcslen(pszString1);
@@ -75,11 +75,11 @@ LPCTSTR strstrex(LPCTSTR pszString1, LPCTSTR pszString2) {
 
 
 
-// ������̒����當���񂪍Ō�Ɍ��������ʒu��Ԃ�
+// 文字列の中から文字列が最後に見つかった位置を返す
 LPTSTR strrstrex(LPCTSTR pszString1, LPCTSTR pszString2) {
-	// �������A���ۂ͌�납��T�����Ƃ͕s�\
-	// 2�o�C�g������1�o�C�g�ڂ�2�o�C�g������2�o�C�g�ڂɂ��g���邱�Ƃ�����̂ŁB
-	// ����āA�O�����猟�����Ă����A�Ō�Ɍ��������̂�Ԃ������Ȃ��B
+	// しかし、実際は後ろから探すことは不可能
+	// 2バイト文字の1バイト目は2バイト文字の2バイト目にも使われることがあるので。
+	// よって、前方から検索していき、最後に見つかったのを返すしかない。
 	LPTSTR  pszHit = NULL;
 	for ( ; *pszString1; pszString1++) {
 		if (*pszString1 == *pszString2 && _tcscmp(pszString1, pszString2) == 0) {
@@ -92,7 +92,7 @@ LPTSTR strrstrex(LPCTSTR pszString1, LPCTSTR pszString2) {
 
 
 
-// 0xFF���Ƃ�C����̐��l�萔��int�ɕϊ�
+// 0xFFだとかC言語の数値定数をintに変換
 int StringToInteger(LPCTSTR psz)
 {
 	TCHAR c;
@@ -103,9 +103,9 @@ int StringToInteger(LPCTSTR psz)
 
 	if(!IsDigit(c)) return 0;
 
-	// �萔
+	// 定数
 	if(c == _TCHAR('0')){
-		// 0 �� 8�i�� �� 16�i��
+		// 0 か 8進数 か 16進数
 		
 		c = *(psz+1);
 		if(_TCHAR('0') <= c && c <= _TCHAR('7')){
@@ -119,7 +119,7 @@ int StringToInteger(LPCTSTR psz)
 				}
 			}
 		}else if(c == _TCHAR('x') || c == _TCHAR('X')){
-			psz+=2;// psz��0x�̎�������
+			psz+=2;// pszは0xの次をさす
 			for(;;){
 				c = *psz++;
 				if(isxdigit(c)){
@@ -141,7 +141,7 @@ int StringToInteger(LPCTSTR psz)
 			return 0;
 		}
 	}else{
-		// 10�i��
+		// 10進数
 		for(;;){
 			c = *psz++;
 			if(IsDigit(c)){
@@ -154,16 +154,16 @@ int StringToInteger(LPCTSTR psz)
 	}
 }
 
-// ������̍ŏ��̕��������������ǂ����`�F�b�N����
-// �S�p�̃A���t�@�x�b�g���`�F�b�N����
-// Shift-JIS�p
+// 文字列の最初の文字が小文字かどうかチェックする
+// 全角のアルファベットもチェックする
+// Shift-JIS用
 bool IsLower(LPCTSTR psz)
 {
 	TCHAR c;
 	c = *psz;
 
 #ifdef _UNICODE
-	return (_TCHAR('a') <= c && c <= _TCHAR('z')) || (_TCHAR('��') <= c && c <= _TCHAR('��'));
+	return (_TCHAR('a') <= c && c <= _TCHAR('z')) || (_TCHAR('ａ') <= c && c <= _TCHAR('ｚ'));
 #else
 	if(IsKanji(c)){
 		if(c == 0x82){
@@ -177,7 +177,7 @@ bool IsLower(LPCTSTR psz)
 #endif
 }
 
-// �v����m�F
+// 要動作確認
 void MakeUpper(LPTSTR psz)
 {
 	for(;;){
@@ -186,8 +186,8 @@ void MakeUpper(LPTSTR psz)
 #ifdef _UNICODE
 			if (_TCHAR('a') <= (*psz) && (*psz) <= _TCHAR('z')) {
 				*(++psz) += (_TCHAR('A') - _TCHAR('a'));
-			} else if (_TCHAR('��') <= (*psz) && (*psz) <= _TCHAR('��')) {
-				*(++psz) += (_TCHAR('�`') - _TCHAR('��'));
+			} else if (_TCHAR('ａ') <= (*psz) && (*psz) <= _TCHAR('ｚ')) {
+				*(++psz) += (_TCHAR('Ａ') - _TCHAR('ａ'));
 			}
 #else
 			if(IsKanji(*psz)){

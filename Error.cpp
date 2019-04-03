@@ -2,18 +2,18 @@
 
 
 #include <stdio.h>
-#define ANSI            /* UNIX ƒo[ƒWƒ‡ƒ“‚Å‚ÍƒRƒƒ“ƒg ƒAƒEƒg‚µ‚Ä‚­‚¾‚³‚¢B */
-#ifdef ANSI             /* ANSI ŒİŠ·ƒo[ƒWƒ‡ƒ“ */
+#define ANSI            /* UNIX ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã§ã¯ã‚³ãƒ¡ãƒ³ãƒˆ ã‚¢ã‚¦ãƒˆã—ã¦ãã ã•ã„ã€‚ */
+#ifdef ANSI             /* ANSI äº’æ›ãƒãƒ¼ã‚¸ãƒ§ãƒ³ */
 #include <stdarg.h>
 int average( int first, ... );
-#else                   /* UNIX ŒİŠ·ƒo[ƒWƒ‡ƒ“ */
+#else                   /* UNIX äº’æ›ãƒãƒ¼ã‚¸ãƒ§ãƒ³ */
 #include <varargs.h>
 int average( va_list );
 #endif
 
 #include <Windows.h>
 
-#include <time.h>		// debug—p‚É“ú•t‚Ìo—Í‚ğ‚·‚é‚Ì‚Å
+#include <time.h>		// debugç”¨ã«æ—¥ä»˜æ™‚åˆ»ã®å‡ºåŠ›ã‚’ã™ã‚‹ã®ã§
 
 #include <tchar.h>
 
@@ -21,9 +21,9 @@ int average( va_list );
 
 bool bOutputErrorlog = 
 #ifdef _DEBUG
-	true;  // ƒfƒoƒbƒOƒ‚[ƒh‚Å‚ÍƒfƒtƒHƒ‹ƒg‚Åtrue
+	true;  // ãƒ‡ãƒãƒƒã‚°ãƒ¢ãƒ¼ãƒ‰ã§ã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§true
 #else
-	false; // ƒŠƒŠ[ƒXƒ‚[ƒh‚Å‚ÍƒfƒtƒHƒ‹ƒg‚Åfalse
+	false; // ãƒªãƒªãƒ¼ã‚¹ãƒ¢ãƒ¼ãƒ‰ã§ã¯ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã§false
 #endif
 
 TCHAR szErrorMessage[256];
@@ -43,10 +43,10 @@ void InnerLog(LPCTSTR szFormat, ...)
 	TCHAR szTime[256];
 	TCHAR szText[256];
 
-	_tstrdate(szDate);// “ú•t
-	_tstrtime(szTime);// 
+	_tstrdate(szDate);// æ—¥ä»˜
+	_tstrtime(szTime);// æ™‚åˆ»
 
-	va_list marker;	// ‰Â•ÏŒÂˆø”ƒŠƒXƒg‚Ìæ“ª‚ğ¦‚·
+	va_list marker;	// å¯å¤‰å€‹å¼•æ•°ãƒªã‚¹ãƒˆã®å…ˆé ­ã‚’ç¤ºã™
 	va_start(marker, szFormat);
 	_vstprintf(szText, szFormat, marker);
 	va_end(marker);
@@ -55,22 +55,22 @@ void InnerLog(LPCTSTR szFormat, ...)
 
 	if (!bOutputErrorlog) return;
 
-	//ƒfƒoƒbƒK‚É•¶š‚ğo—Í	
+	//ãƒ‡ãƒãƒƒã‚¬ã«æ–‡å­—ã‚’å‡ºåŠ›	
 	OutputDebugString(szErrorMessage);
 }
 
 
 
-// ƒGƒ‰[ƒƒbƒZ[ƒW‚Ì•\¦
+// ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è¡¨ç¤º
 void SDKGetLastErrorMessage()
 {
-	// •¶š—ñ‚ğ•\¦‚·‚éB
+	// æ–‡å­—åˆ—ã‚’è¡¨ç¤ºã™ã‚‹ã€‚
 	MessageBox(NULL, szErrorMessage, _T("Error"), MB_OK | MB_ICONINFORMATION);
 }
 
 
 
-// ƒGƒ‰[ƒƒbƒZ[ƒW‚Ì•\¦
+// ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®è¡¨ç¤º
 void GetLastErrorMssage()
 {
 	LPVOID lpMsgBuf;
@@ -81,15 +81,15 @@ void GetLastErrorMssage()
 		FORMAT_MESSAGE_IGNORE_INSERTS,
 		NULL,
 		GetLastError(),
-		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // Šù’è‚ÌŒ¾Œê
+		MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), // æ—¢å®šã®è¨€èª
 		(LPTSTR) &lpMsgBuf,
 		0,
 		NULL
 		);
 
-	// •¶š—ñ‚ğ•\¦‚·‚éB
+	// æ–‡å­—åˆ—ã‚’è¡¨ç¤ºã™ã‚‹ã€‚
 	MessageBox(NULL, (LPCTSTR)lpMsgBuf, _T("Error"), MB_OK | MB_ICONINFORMATION);
 
-	// ƒoƒbƒtƒ@‚ğ‰ğ•ú‚·‚éB
+	// ãƒãƒƒãƒ•ã‚¡ã‚’è§£æ”¾ã™ã‚‹ã€‚
 	LocalFree(lpMsgBuf);
 }

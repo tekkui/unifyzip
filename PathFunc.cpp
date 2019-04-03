@@ -22,16 +22,16 @@ char* GetFullPath(const char* pszFile, const char* pszDefPath, const char* pszDe
 
 	*pszPath = _TCHAR('\0');
 	if(!IsFullPathEx(pszFile)){
-		// �t�@�C���̎w�肪���΃p�X�̏ꍇ�f�t�H���g�̃p�X������
+		// ファイルの指定が相対パスの場合デフォルトのパスをつける
 		if(pszDefPath != NULL && *pszDefPath != _TCHAR('\0')){
 			strcpy(pszPath, pszDefPath);
-			// �p�X�̍Ō�Ɂu\�v������
+			// パスの最後に「\」をつける
 			if(strrchrex(pszPath, _TCHAR('\\')) != pszPath + strlen(pszPath)-1) strcat(pszPath, _T("\\"));
 		}
 	}
 	strcat(pszPath, pszFile);
 
-	// �g���q�̎w�肪�����ꍇ�̓f�t�H���g�̊g���q������
+	// 拡張子の指定が無い場合はデフォルトの拡張子をつける
 	psz = strrchrex(pszFile, _TCHAR('\\'));
 	if(psz == NULL){psz = (char*)pszFile;}
 	if(strrchrex(psz, _TCHAR('.')) == NULL){
@@ -43,7 +43,7 @@ char* GetFullPath(const char* pszFile, const char* pszDefPath, const char* pszDe
 */
 
 
-// ���΃p�X�ɃJ�����g�f�B���N�g�������ăt���p�X�ɂ���
+// 相対パスにカレントディレクトリをつけてフルパスにする
 bool GetFullPath(String& Path) {
 	String Temp;
 
@@ -92,8 +92,8 @@ bool IsFullPathEx(LPCTSTR pszPath)
 }
 
 /*
-// ���ꂪ�t�@�C���̃p�X���`�F�b�N����
-// �i�P�Ɋg���q�����邩�`�F�b�N���邾���j
+// それがファイルのパスかチェックする
+// （単に拡張子があるかチェックするだけ）
 bool IsFilePath(LPCTSTR pszPath)
 {
 	char* psz;
@@ -111,10 +111,10 @@ bool IsFilePath(LPCTSTR pszPath)
 */
 
 
-// �w��̃t�@�C�������݂��邩
-// �f�B���N�g�����w��\
-// �t���p�X�łȂ��ꍇ�J�����g�f�B���N�g���ȉ��̂��̂Ƃ݂Ȃ����
-// NULL ���w�肵���ꍇ false ��Ԃ�
+// 指定のファイルが存在するか
+// ディレクトリも指定可能
+// フルパスでない場合カレントディレクトリ以下のものとみなされる
+// NULL を指定した場合 false を返す
 bool FileExists(LPCTSTR pszPath)
 {
 	return (GetPathAttribute(pszPath) != PATH_INVALID);
@@ -122,7 +122,7 @@ bool FileExists(LPCTSTR pszPath)
 
 
 
-// �擪�̃X�y�[�X �����̃X�y�[�X�ƃs���I�h ���폜
+// 先頭のスペース 末尾のスペースとピリオド を削除
 void FixFileName(String& FileName)
 {
 	FileName.TrimLeft(_TCHAR(' '));
@@ -131,10 +131,10 @@ void FixFileName(String& FileName)
 
 
 
-// �������`���ɂ���
-// �i�ŏ��Ɂu\�v�����������菜���j
-// �i������2�ȏ�u\�v�������ꍇ�̓l�b�g���[�N�p�X�ƍl��2�c���j
-// �i�Ō�Ɂu\�v�����������菜�� ������ �uc:\�v�̗l�Ƀ��[�g�̏ꍇ�͂����Ȃ�Ȃ��j
+// 正しい形式にする
+// （最初に「\」があったら取り除く）
+// （ただし2つ以上「\」が続く場合はネットワークパスと考え2つ残す）
+// （最後に「\」があったら取り除く ただし 「c:\」の様にルートの場合はそうならない）
 void FixPath(String& Path)
 {
 	int nPos = 0;
@@ -148,8 +148,8 @@ void FixPath(String& Path)
 		}
 	}
 
-	// �ŏ��Ɂu\�v�����������菜��
-	// ������2�ȏ�u\�v�������ꍇ�̓l�b�g���[�N�p�X�ƍl��2�c��
+	// 最初に「\」があったら取り除く
+	// ただし2つ以上「\」が続く場合はネットワークパスと考え2つ残す
 	if(n == 0 || n == 2){
 	}else if(n == 1){
 		Path.Delete(0, 1);
@@ -157,8 +157,8 @@ void FixPath(String& Path)
 		Path.Delete(0, n - 2);
 	}
 
-	// �Ō�Ɂu\�v�����������菜��
-	// �uc:\�v�̗l�Ƀ��[�g�̏ꍇ�͂����Ȃ�Ȃ�
+	// 最後に「\」があったら取り除く
+	// 「c:\」の様にルートの場合はそうならない
 	if(Path.ReverseFind(_TCHAR('\\')) == Path.GetLength()-1){
 		if(!IsFullPath(Path.c_str()) || Path.GetLength() != (int)_tcslen(_T("C:\\"))){
 			Path.Delete(Path.GetLength()-1, 1);
@@ -167,8 +167,8 @@ void FixPath(String& Path)
 }
 
 
-// �e�X�g�ς�
-// �T�C�Y�����Ȃ��Ō��ʂ� String �ɕԂ� GetCurrentDirectory()
+// テスト済み
+// サイズ制限なしで結果を String に返す GetCurrentDirectory()
 void GetCurrentDirectory(String& string)
 {
 	DWORD dwSize;
@@ -180,21 +180,21 @@ void GetCurrentDirectory(String& string)
 	for(;;){
 		pszString = new TCHAR [dwSize];
 
-		// �֐�����������ƃo�b�t�@�ɏ������܂ꂽ������ (�I�[�� NULL ����������) ���Ԃ�
-		// �o�b�t�@�̃T�C�Y�������������Ƃ��͕K�v�ȃo�b�t�@�̃T�C�Y (�I�[�� NULL �������܂�)���Ԃ�
+		// 関数が成功するとバッファに書き込まれた文字数 (終端の NULL 文字を除く) が返る
+		// バッファのサイズが小さかったときは必要なバッファのサイズ (終端の NULL 文字を含む)が返る
 		dwRet = ::GetCurrentDirectory(dwSize, pszString);
 
 		if(dwRet == 0){
-			// �G���[
+			// エラー
 			string.Empty();
 			delete [] pszString;
 			return;
 		}else if(dwRet > dwSize){
-			// �o�b�t�@������������
+			// バッファが小さかった
 			dwSize = dwRet;
 			delete [] pszString;
 		}else{
-			// ����
+			// 成功
 			break;
 		}
 	}
@@ -203,8 +203,8 @@ void GetCurrentDirectory(String& string)
 }
 
 
-// �e�X�g�ς�
-// �T�C�Y�����Ȃ��Ō��ʂ� String �ɕԂ� GetModuleFileName()
+// テスト済み
+// サイズ制限なしで結果を String に返す GetModuleFileName()
 void GetModuleFileName(HMODULE hModule, String& filename)
 {
 	DWORD dwSize = 256;
@@ -214,22 +214,22 @@ void GetModuleFileName(HMODULE hModule, String& filename)
 	for(;;){
 		pszString = new TCHAR [dwSize];
 
-		// �R�s�[���ꂽ������̒����������P�ʁiNULL�������������������j�ŕԂ�
-		// ���ʂ����������ꍇ�؂�̂Ă���
-		// �؂�̂Ă��ꍇ�I�[��NULL�����͕t���Ȃ�
+		// コピーされた文字列の長さが文字単位（NULL文字を除いた文字数）で返る
+		// 結果が長すぎた場合切り捨てられる
+		// 切り捨てた場合終端にNULL文字は付かない
 		dwRet = ::GetModuleFileName(hModule, pszString, dwSize);
 
 		if(dwRet == 0){
-			// �G���[
+			// エラー
 			delete [] pszString;
 			filename.Empty();
 			return;
 		}else if(dwRet == dwSize){
-			// �o�b�t�@������������
+			// バッファが小さかった
 			delete [] pszString;
 			dwSize*=2;
 		}else{
-			// ����
+			// 成功
 			break;
 		}
 	}
@@ -237,22 +237,22 @@ void GetModuleFileName(HMODULE hModule, String& filename)
 	delete [] pszString;
 }
 
-// MAX_PATH�𒴂��钷���̃p�X��
-// ���C�h���� (W) �o�[�W������ API �֐��ɓn���Ƃ���
-// �t�H�[�}�b�g�ɕϊ�����
+// MAX_PATHを超える長さのパスを
+// ワイド文字 (W) バージョンの API 関数に渡すときの
+// フォーマットに変換する
 void FormatTooLongPath(String& String)
 {
 	if(String.GetLength() <= MAX_PATH) return;
 
 	if(IsUNCPath(String.c_str())){
-		String.Delete(0, 1);// �擪��\���ЂƂ���
+		String.Delete(0, 1);// 先頭の\をひとつ消す
 		String.Insert(0, _T("\\\\?\\UNC"));
 	}else{
 		String.Insert(0, _T("\\\\?\\"));
 	}
 }
 
-// �w��̃p�X���t�H���_���t�@�C������Ԃ�
+// 指定のパスがフォルダかファイルかを返す
 PathAttribute GetPathAttribute(LPCTSTR pszPath)
 {
 	String Path;
@@ -276,44 +276,44 @@ PathAttribute GetPathAttribute(LPCTSTR pszPath)
 	}
 }
 
-// �f�B���N�g���̍쐬�i�����K�w�̃f�B���N�g�����쐬�\�j
-// �t���p�X�̂ݑΉ�
+// ディレクトリの作成（複数階層のディレクトリも作成可能）
+// フルパスのみ対応
 bool CreateDirectoryEx(LPCTSTR path) 
 {
 	String temp = path;
 	LPCTSTR p;
 
-	// ���̃f�B���N�g�������ɑ��݂���ꍇ�͏I��
+	// そのディレクトリが既に存在する場合は終了
 	if(FileExists(path)) return true;
 
-	// ���[�g�f�B���N�g�����牺�ʃf�B���N�g���Ɍ�������
-	// ���̃f�B���N�g�������邩�`�F�b�N�Ȃ���΍쐬
-	// ���J��Ԃ�
+	// ルートディレクトリから下位ディレクトリに向かって
+	// そのディレクトリがあるかチェックなければ作成
+	// を繰り返す
 
-	// �͂��߂́u\�v�̈ʒu�𓾂�
-	// �u\�v��������Ȃ��ꍇ�͕s���ȃp�X
-	// �͂��߂́u\�v�̓h���C�u���̎��ɂ���͂��Ȃ̂�2�Ԗڈȍ~��\�ŋ�؂��Ă���
+	// はじめの「\」の位置を得る
+	// 「\」が見つからない場合は不正なパス
+	// はじめの「\」はドライブ名の次にあるはずなので2番目以降の\で区切っていく
 
 	if((p = strchrex(path, _TCHAR('\\'))) == NULL) return false;
 
 	temp.NCopy(path, (int)(p-path+1));
 
-	// �h���C�u�̑��݂��m�F
+	// ドライブの存在を確認
 	if(FileExists(temp.c_str()) == false) return false;
 
 	for(;;){
 		if((p = strchrex(p+1, _TCHAR('\\'))) == NULL) break;
 		temp.NCopy(path, (int)(p-path));
 		if(!FileExists(temp.c_str())){
-			// �w�肵���f�B���N�g�������݂��Ȃ�������쐬
-			// �f�B���N�g���̍쐬�Ɏ��s������I��
+			// 指定したディレクトリが存在しなかったら作成
+			// ディレクトリの作成に失敗したら終了
 			if(CreateDirectory(temp.c_str(), NULL) == 0) return false;
 		}
 	}
 
-	// �w��̃f�B���N�g���̃��[�g�f�B���N�g���܂ł͍쐬���ꂽ�͂��Ȃ̂�
-	// �Ō�Ɏw��̃f�B���N�g�����쐬����
-	// �f�B���N�g���̍쐬�Ɏ��s������I��
+	// 指定のディレクトリのルートディレクトリまでは作成されたはずなので
+	// 最後に指定のディレクトリを作成する
+	// ディレクトリの作成に失敗したら終了
 	if (CreateDirectory(path, NULL) == 0) {
 		return false;
 	}
@@ -322,15 +322,15 @@ bool CreateDirectoryEx(LPCTSTR path)
 }
 
 
-// �p�X����t�@�C��������菜��
-// �L���ȃp�X�ł��邩�͊m���߂Ȃ�
+// パスからファイル名を取り除く
+// 有効なパスであるかは確かめない
 bool RemoveFileName(String& path)
 {
 	return (StripPath(path, 1) == 1);
 }
 
-// �t���p�X����t�@�C��������菜��
-// �L���ȁi���݂���j�p�X�ɂ��Ă̂ݗL��
+// フルパスからファイル名を取り除く
+// 有効な（存在する）パスについてのみ有効
 bool RemoveFileNameEx(String& path)
 {
 	switch(GetPathAttribute(path.c_str())){
@@ -342,8 +342,8 @@ bool RemoveFileNameEx(String& path)
 	return false;
 }
 
-// �p�X����g���q����菜��
-// �L���ȃp�X�ł��邩�͊m���߂Ȃ�
+// パスから拡張子を取り除く
+// 有効なパスであるかは確かめない
 bool RemoveExtension(String& path)
 {
 	int nPos0, nPos1;
@@ -357,7 +357,7 @@ bool RemoveExtension(String& path)
 	return true;
 }
 
-// �g���q�𓾂�(�擪��'.'���܂�)
+// 拡張子を得る(先頭に'.'を含む)
 void GetExtention(LPCTSTR filename, String& ext) {
 	String str = filename;
 
@@ -375,10 +375,10 @@ void GetExtention(LPCTSTR filename, String& ext) {
 	}
 }
 
-// �J�����g�f�B���N�g���ݒ�
-// ��΃p�X�ł��A���΃p�X�i�󕶎���ł��j�ł��w��\
-// "\\data" �Ƃ� "C:\\data" �Ƃ������悤�Ɏw�肷��
-// ��΃p�X�łȂ��ꍇexe�t�@�C�����܂ރt�H���_����̑��΃p�X�Ƃ݂Ȃ�
+// カレントディレクトリ設定
+// 絶対パスでも、相対パス（空文字列でも可）でも指定可能
+// "\\data" とか "C:\\data" といったように指定する
+// 絶対パスでない場合exeファイルを含むフォルダからの相対パスとみなす
 bool SetCurrentDirectoryEx(LPCTSTR pszDir)
 {		
 	if(IsFullPathEx(pszDir)){
@@ -393,27 +393,27 @@ bool SetCurrentDirectoryEx(LPCTSTR pszDir)
 }
 
 /*
-// �p�X�̒ǉ�
+// パスの追加
 void CatPath(char* pszPath1, const char* pszPath2)
 {
 	if(*pszPath2 == _TCHAR('\0')) return;
 
-	// �󕶎���łȂ��čŌ�Ɂu\�v���Ȃ����������
+	// 空文字列でなくて最後に「\」がなかったらつける
 	DWORD dwLen = strlen(pszPath1);
 	if(	*pszPath1 != _TCHAR('\0')
 	 && strrchrex(pszPath1, _TCHAR('\\')) != pszPath1 + dwLen-1){
-		strcat(pszPath1,"\\"); // ��������t�@�C�����쐬
+		strcat(pszPath1,"\\"); // 検索するファイル名作成
 	}
 	strcat(pszPath1, pszPath2);
 }
 */
 
-// �p�X�̒ǉ�
+// パスの追加
 void CatPath(String& String, LPCTSTR pszPath)
 {
 	if(*pszPath == _TCHAR('\0')) return;
 
-	// �󕶎���łȂ��čŌ�Ɂu\�v���Ȃ����������
+	// 空文字列でなくて最後に「\」がなかったらつける
 	int nLen = lstrlen(String.c_str());
 	if(	!String.IsEmpty()
 	 && strrchrex(String.c_str(), _TCHAR('\\')) != String.c_str() + (nLen-1) ){
@@ -422,10 +422,10 @@ void CatPath(String& String, LPCTSTR pszPath)
 	String+=pszPath;
 }
 
-// �t�H���_���󂩂ǂ������ׂ�
-// TODO �V�X�e�������̃t�@�C���͖�������悤�ɂ���H
+// フォルダが空かどうか調べる
+// TODO システム属性のファイルは無視するようにする？
 bool IsEmptyFolder(LPCTSTR pszPath) {
-	// �u�w�肳�ꂽ�t�@�C����������܂���B�v�� GetLastError() ���Ԃ��l
+	// 「指定されたファイルが見つかりません。」で GetLastError() が返す値
 	static const DWORD FILE_NOT_FOUND = 0x00000002;
 
 	WIN32_FIND_DATA fFind;
@@ -433,9 +433,9 @@ bool IsEmptyFolder(LPCTSTR pszPath) {
 	HANDLE hSearch;
 	bool bFind;
 
-	bFind = false;// �w��t�H���_���ɉ��炩�̃t�@�C���E�t�H���_����������
+	bFind = false;// 指定フォルダ内に何らかのファイル・フォルダを見つけたか
 
-	// �T���p�X���쐬
+	// 探索パスを作成
 	Path = pszPath;
 	FormatTooLongPath(Path);
 	CatPath(Path, _T("*"));
@@ -444,7 +444,7 @@ bool IsEmptyFolder(LPCTSTR pszPath) {
 
 	if (hSearch == INVALID_HANDLE_VALUE) {
 		if (GetLastError() == FILE_NOT_FOUND) {
-			// ���[�g�f�B���N�g���ł��t�@�C�����S�����݂��Ȃ��ꍇ
+			// ルートディレクトリでかつファイルが全く存在しない場合
 			return true;
 		} else {
 			return false;
@@ -452,15 +452,15 @@ bool IsEmptyFolder(LPCTSTR pszPath) {
 	}
 
 	do{
-		// �f�B���N�g�����A���ʂ̃t�@�C����
-		if((fFind.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0){// �f�B���N�g���ł�����
-			// ���[�g�y�уJ�����g�łȂ��t�H���_���ǂ����`�F�b�N
+		// ディレクトリか、普通のファイルか
+		if((fFind.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0){// ディレクトリであった
+			// ルート及びカレントでないフォルダかどうかチェック
 			if(	_tcscmp(fFind.cFileName, _T(".")) != 0 &&
 				_tcscmp(fFind.cFileName, _T("..")) != 0) {
 				bFind = true;
 				break;
 			}
-		}else{// ���ʂ̃t�@�C���ł�����
+		}else{// 普通のファイルであった
 			bFind = true;
 			break;
 		}
@@ -471,15 +471,15 @@ bool IsEmptyFolder(LPCTSTR pszPath) {
 	return  !bFind;
 }
 
-// 2�̃p�X�̐擪���狤�ʂ���p�X�̒�����Ԃ�
-// �u���ʂ���p�X�v�Ȃ̂ő啶���������̈Ⴂ�͖�������
-// �S�p�A���t�@�x�b�g�ɂ��čl����K�v����
+// 2つのパスの先頭から共通するパスの長さを返す
+// 「共通するパス」なので大文字小文字の違いは無視する
+// 全角アルファベットについて考える必要あり
 int PathCommonPrefixLen(const char* psz1, const char* psz2)
 {
 	char *p1, *p2;
 	char c1, c2;
-	char* pBS;		// �Ō�́u\�v�̈ʒu
-	bool bKanji;	// 2�o�C�g������2�����ڂ�
+	char* pBS;		// 最後の「\」の位置
+	bool bKanji;	// 2バイト文字の2文字目か
 
 	bKanji = false;
 
@@ -502,8 +502,8 @@ int PathCommonPrefixLen(const char* psz1, const char* psz2)
 			if(c1 != c2) break;
 			bKanji = false;
 		}else{
-			if(c1 >= _TCHAR('A') && c1 <= _TCHAR('Z')) c1 = c1 + (_TCHAR('a') - _TCHAR('A'));	// c1����������
-			if(c2 >= _TCHAR('A') && c2 <= _TCHAR('Z')) c2 = c2 + (_TCHAR('a') - _TCHAR('A'));	// c2����������
+			if(c1 >= _TCHAR('A') && c1 <= _TCHAR('Z')) c1 = c1 + (_TCHAR('a') - _TCHAR('A'));	// c1を小文字化
+			if(c2 >= _TCHAR('A') && c2 <= _TCHAR('Z')) c2 = c2 + (_TCHAR('a') - _TCHAR('A'));	// c2を小文字化
 			if(c1 != c2) break;
 			if(c1 == _TCHAR('\\')) pBS = p1;
 			bKanji = IsKanji(c1);
@@ -515,10 +515,10 @@ int PathCommonPrefixLen(const char* psz1, const char* psz2)
 }
 
 /*
-// �w�肵���p�X�𒷂��p�X�ɕϊ�����
-// UNC�p�X�̏ꍇ��
-// �c��̕����񂪁uC:�v�ƂȂ����Ƃ�FindFirstFile�Ɏ��s����Ƃ����
-// �������K�v������
+// 指定したパスを長いパスに変換する
+// UNCパスの場合と
+// 残りの文字列が「C:」となったときFindFirstFileに失敗するところを
+// 見直す必要がある
 bool GetLongPathName(const char* pszShortPath, char* pszLongPath)
 {
 	WIN32_FIND_DATA wfd;
@@ -532,7 +532,7 @@ bool GetLongPathName(const char* pszShortPath, char* pszLongPath)
 	if(!FileExists(pszShortPath)) return false;
 
 	if(IsUNCPath(pszShortPath)){
-		// UNC�p�X�̏ꍇ�͂��̂܂�
+		// UNCパスの場合はそのまま
 		return true;
 	}else{
 		szLongPath[0] = _TCHAR('\0');
@@ -573,7 +573,7 @@ bool GetLongPathName(const char* pszShortPath, char* pszLongPath)
 	return true;
 }
 
-// �w�肵���p�X�𒷂��p�X�ɕϊ�����
+// 指定したパスを長いパスに変換する
 bool GetLongPathName(char* pszPath)
 {
 	return (GetLongPathName(pszPath, pszPath));
@@ -581,19 +581,19 @@ bool GetLongPathName(char* pszPath)
 */
 
 
-// �w�肳�ꂽ�����񂪃t�@�C�����Ƃ��Đ�������
-// �i�t�@�C�����Ɏg���Ȃ��������g���Ă��Ȃ����j�`�F�b�N
-// �t�@�C���Ɏg���Ȃ�������
-// WinXP���ƁuTAB�v�u\�v�u/�v�u:�v�u*�v�u?�v�u"�v�u<�v�u>�v�u|�v
-// Win98SE���Ƃ���Ɂu,�v�u;�v�������
-// �i�ǂ���烍���O�t�@�C���l�[���ɂ����Ắu,�v���u;�v���g����͗l�j
-// ��̕������擪�Ƀs���I�h������ꍇ�s���Ƃ���
+// 指定された文字列がファイル名として正しいか
+// （ファイル名に使えない文字が使われていないか）チェック
+// ファイルに使えない文字は
+// WinXPだと「TAB」「\」「/」「:」「*」「?」「"」「<」「>」「|」
+// Win98SEだとさらに「,」「;」が加わる
+// （どうやらロングファイルネームにおいては「,」も「;」も使える模様）
+// 空の文字列や先頭にピリオドがある場合不正とする
 bool IsFileName(LPCTSTR pszFileName)
 {
 	LPTSTR p;
 	TCHAR c;
 
-	// ��̕������擪�Ƀs���I�h������ꍇ�s���Ƃ���
+	// 空の文字列や先頭にピリオドがある場合不正とする
 	if(*pszFileName == _TCHAR('\0') || *pszFileName == _TCHAR('.')) return false;
 
 	p = const_cast<LPTSTR>(pszFileName);
@@ -620,22 +620,22 @@ bool IsFileName(LPCTSTR pszFileName)
 	return true;
 }
 
-// �p�X��\�������񂩂�X�y�[�X��������
-// �X�y�[�X���������������ꍇ
-// ������S�̂��_�u���N�H�[�e�[�V�����}�[�N�ň͂�
+// パスを表す文字列からスペースを検索し
+// スペース文字が見つかった場合
+// 文字列全体をダブルクォーテーションマークで囲む
 void QuotePath(String& Path)
 {
 	if(Path.IsEmpty()) return;
 
-	// �X�y�[�X���܂ނ�
+	// スペースを含むか
 	if(Path.Find(_TCHAR(' ')) == -1) return;
 
 	Path.Insert(0, _TCHAR('\"'));
 	Path += _TCHAR('\"');
 }
 
-// �p�X�̍Ō��'\\'�̌��Ԃ�
-// '\\'�������ꍇ�͂��̂܂ܕԂ�
+// パスの最後の'\\'の後を返す
+// '\\'が無い場合はそのまま返す
 LPCTSTR GetFileName(LPCTSTR Path)
 {
 	LPCTSTR p;
@@ -661,10 +661,10 @@ void GetFileName(LPCTSTR path, String& filename)
 #include <shellapi.h>
 #pragma comment(lib,"shell32.lib")
 
-// �t�@�C����t�H���_�̍폜
-// ���ݔ��ɑ��邱�Ƃ��ł���
-// �ǂݎ���p�̃t�@�C�����폜�ł���
-// �t�H���_�͂��̃t�H���_�Ɋ܂܂��t�@�C�����ƍ폜����
+// ファイルやフォルダの削除
+// ごみ箱に送ることもできる
+// 読み取り専用のファイルも削除できる
+// フォルダはそのフォルダに含まれるファイルごと削除する
 // 
 bool DeleteFileOrFolder(LPCTSTR filename, bool usesRecycleBin) {
 	TCHAR* deletePath = new TCHAR [_tcslen(filename) + 2];
@@ -679,18 +679,18 @@ bool DeleteFileOrFolder(LPCTSTR filename, bool usesRecycleBin) {
 	fileOp.pTo = NULL;
 	fileOp.fFlags = FOF_NOCONFIRMATION | FOF_SILENT;
 
-	// SHFileOperation() �̏I�������̒l�Œm�邽��
+	// SHFileOperation() の終了をこの値で知るため
 	fileOp.fAnyOperationsAborted = TRUE;
 
 	if (usesRecycleBin) fileOp.fFlags |= FOF_ALLOWUNDO;
 	if (SHFileOperation(&fileOp) != 0) {
-		// �t�@�C���폜���s
+		// ファイル削除失敗
 		delete [] deletePath;
 		return false;
 	}
 	
 	while (fileOp.fAnyOperationsAborted == TRUE) {
-		MessageBox(NULL, _T("SHFileOperation() �̓r���ł�\n\n���̃��b�Z�[�W���o�����Ƃ���҂܂ł��A��������\n�\�t�g�̉��P�Ɍq����܂�"), _T("Notice"), MB_OK);
+		MessageBox(NULL, _T("SHFileOperation() の途中です\n\nこのメッセージが出たことを作者までご連絡下さい\nソフトの改善に繋がります"), _T("Notice"), MB_OK);
 		Sleep(1);
 	}
 
@@ -699,12 +699,12 @@ bool DeleteFileOrFolder(LPCTSTR filename, bool usesRecycleBin) {
 	return true;
 }
 
-// �p�X�̔�r
-// �ȗ������p�X�ɑΉ����Ă��Ȃ�
-// �啶����������\��/�Ȃǂɂ͑Ή�
-// ���̊֐����g���ă\�[�g�����
-// �t�H���_�̒���ɂ��̃t�H���_�Ɋ܂܂��t�@�C���E�t�H���_�����������ۏ؂����
-// �i�������r�̍� '\\' �� '/' �� '\0' �̎��ɏ��������̂Ƃ��Ĉ������߁j
+// パスの比較
+// 省略したパスに対応していない
+// 大文字小文字や\と/などには対応
+// この関数を使ってソートすると
+// フォルダの直後にそのフォルダに含まれるファイル・フォルダが続く事が保証される
+// （文字列比較の際 '\\' や '/' を '\0' の次に小さいものとして扱うため）
 int ComparePath(LPCTSTR path1, LPCTSTR path2) {
 	#ifdef _UNICODE
 		TCHAR str1[2];
@@ -736,7 +736,7 @@ int ComparePath(LPCTSTR path1, LPCTSTR path2) {
 					return r;
 				}
 
-				// '\\' �� '/' �� '\0' �̎��ɏ��������̂Ƃ��Ĉ���
+				// '\\' と '/' を '\0' の次に小さいものとして扱う
 				if (str1[0] == _TCHAR('\\') || str1[0] == _TCHAR('/')) {
 					return -1;
 				}
@@ -761,7 +761,7 @@ int ComparePath(LPCTSTR path1, LPCTSTR path2) {
 					return r;
 				}
 
-				// '\\' �� '/' �� '\0' �̎��ɏ��������̂Ƃ��Ĉ���
+				// '\\' と '/' を '\0' の次に小さいものとして扱う
 				if (b1 == false && (str1[0] == _TCHAR('\\') || str1[0] == _TCHAR('/'))) {
 					return -1;
 				}
@@ -786,9 +786,9 @@ int ComparePath(LPCTSTR path1, LPCTSTR path2) {
 }
 
 
-// �G�N�X�v���[���Ɠ����\�[�g���������邽�߂̃p�X��r
-// �t�H���_�Ƀt�H���_���̃t�@�C�����������Ƃ��ۏ؂����
-// "<" ���Z�q�Ƃ��Ďg��
+// エクスプローラと同じソートを実現するためのパス比較
+// フォルダにフォルダ内のファイルが続くことが保証される
+// "<" 演算子として使う
 bool ComparePath(LPCTSTR path1, LPCTSTR path2, bool isFolder1, bool isFolder2)
 {
 	struct PathAndAttribute {
@@ -801,7 +801,7 @@ bool ComparePath(LPCTSTR path1, LPCTSTR path2, bool isFolder1, bool isFolder2)
 
 	int r = ComparePath(path1, path2);
 	if (r == 0) {
-		// path1 �������t�H���_�Ȃ� true
+		// path1 だけがフォルダなら true
 		return (isFolder1 && !isFolder2);
 	} else if (r < 0) {
 		if (isFolder1) return (r < 0);
@@ -817,8 +817,8 @@ bool ComparePath(LPCTSTR path1, LPCTSTR path2, bool isFolder1, bool isFolder2)
 		largeOne.isFolder = isFolder1;
 	}
 
-	// ��r�̌��ʏ������̂��t�@�C���ł���΃t�H���_�D��ɂ���s����t�]�����蓾��
-	// ��r�̂��ߐe�t�H���_�ɂ͖����� '\\' ���c���Ă���
+	// 比較の結果小さいのがファイルであればフォルダ優先にする都合上逆転があり得る
+	// 比較のため親フォルダには末尾に '\\' を残しておく
 	String s1 = smallOne.path;
 	String p1(s1);
 	int n1 = p1.ReverseFind(_TCHAR('\\'));
@@ -828,7 +828,7 @@ bool ComparePath(LPCTSTR path1, LPCTSTR path2, bool isFolder1, bool isFolder2)
 	String s2 = largeOne.path;
 	String p2(s2);
 	p2.MakeLeft(p1.GetLength());
-	// ��������ɂ���Ă͂Q�o�C�g�����̂P�o�C�g�ڂŐ؂邱�ƂɂȂ�̂��C�����������c
+	// ↑文字列によっては２バイト文字の１バイト目で切ることになるのが気持ち悪いが…
 
 	if (lstrcmpi(p1.c_str(), p2.c_str()) == 0) {
 		if ((largeOne.isFolder)
@@ -843,8 +843,8 @@ bool ComparePath(LPCTSTR path1, LPCTSTR path2, bool isFolder1, bool isFolder2)
 }
 
 
-// �t�@�C�����������łȂ��t�@�C�����ɕς���
-// �g���q��ۂ��ăt�@�C�����̏I���Ɂu(1)�v����t����
+// ファイル名を既存でないファイル名に変える
+// 拡張子を保ってファイル名の終わりに「(1)」等を付ける
 bool EvacuateFileName(String& rFilename) {
 	if (!FileExists(rFilename.c_str())) return true;
 
@@ -864,7 +864,7 @@ bool EvacuateFileName(String& rFilename) {
 	return true;
 }
 
-// �t�H���_���������łȂ��t�H���_���ɕς���
+// フォルダ名を既存でないフォルダ名に変える
 bool EvacuateFolderName(String& folderName) {
 	if (!FileExists(folderName.c_str())) return true;
 	String path;
@@ -877,18 +877,18 @@ bool EvacuateFolderName(String& folderName) {
 	return true;
 }
 
-// �p�X�̐[���𓾂�
-// �󕶎��񂾂Ɛ[���� 0
-// ��̃t�H���_���Ȃ���ΐ[���� 1
-// '\\' ������Ԃ悤�ȃp�X�ɂ͑Ή����Ă��Ȃ�
+// パスの深さを得る
+// 空文字列だと深さは 0
+// 上のフォルダがなければ深さは 1
+// '\\' が二つ並ぶようなパスには対応していない
 int PathGetDepth(LPCTSTR path) 
 {
 	if (path == NULL || *path == '\0') {
 		return 0;
 	}
 
-	// �Z�p���[�^�𐔂���
-	// �����������̃Z�p���[�^�͖���
+	// セパレータを数える
+	// ただし末尾のセパレータは無視
 	String str(path);
 	int depth = 1;
 	for (;;) {
@@ -900,20 +900,20 @@ int PathGetDepth(LPCTSTR path)
 	return depth;
 }
 
-// �w��̒i���p�X�����
-// ������i����Ԃ�
+// 指定の段数パスを削る
+// 削った段数を返す
 int StripPath(String& path, int n)
 {
 	if (n <= 0) return 0;
 	int d = PathGetDepth(path.c_str());
 
-	// �S�����̂�
+	// 全部削るのか
 	if (n >= d) {
 		path.Empty();
 		return d;
 	}
 
-	// �����ڂ̃Z�p���[�^�܂Ŏc���΂����̂�
+	// いくつ目のセパレータまで残せばいいのか
 	int dd = d-n;
 	int len = 0;
 
@@ -948,12 +948,12 @@ int GetCommonPrefix(LPCTSTR path1, LPCTSTR path2, String& commonPrefix)
 
 
 
-// �p�X������� "\\..\\" ��W�J����
-// �p�X�̋�؂蕶���� '\\'
-// ��΃p�X�ł����Ă����΃p�X�ł����Ă�
-// �w�肵��������̊K�w�ɂ͋삯�オ��Ȃ�
-// '.' �݂̂ō\�����ꂽ�G�������g�̌�ɕ����� '\\' ���A�����Ă��Ă�
-// ��̂ݎ�菜�����
+// パス文字列の "\\..\\" を展開する
+// パスの区切り文字は '\\'
+// 絶対パスであっても相対パスであっても
+// 指定したよりも上の階層には駆け上がれない
+// '.' のみで構成されたエレメントの後に複数の '\\' が連続していても
+// 一つのみ取り除かれる
 bool expandPath(LPCTSTR srcPath, String& dstPath) {
 	String src = srcPath;
 
@@ -994,14 +994,14 @@ bool expandPath(LPCTSTR srcPath, String& dstPath) {
 					}
 					elements.pop_back();
 				} else {
-					// pop ����v�f���Ȃ���΃G���[���o��
+					// pop する要素がなければエラーを出す
 					return false;
 				}
 			}
 		}
 	}
 
-	// elements ��S�Č������Ċ���
+	// elements を全て結合して完成
 	dstPath.Empty();
 	vector<boost::shared_ptr<String> >::iterator it;
 	for (it = elements.begin(); it != elements.end(); ++it) {
@@ -1031,7 +1031,7 @@ bool FileEnumerator::enumerateSub(
 	WIN32_FIND_DATA fd;
 	HANDLE hSearch;
 
-	// �T���p�X���쐬
+	// 探索パスを作成
 	p = path;
 	CatPath(p, pattern);
 
@@ -1042,11 +1042,11 @@ bool FileEnumerator::enumerateSub(
 	}
 
 	do{
-		// �f�B���N�g�����A���ʂ̃t�@�C����
+		// ディレクトリか、普通のファイルか
 		if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-			// �f�B���N�g���ł�����
+			// ディレクトリであった
 
-			// ���[�g�y�уJ�����g�łȂ��t�H���_���ǂ����`�F�b�N
+			// ルート及びカレントでないフォルダかどうかチェック
 			if (lstrcmp(fd.cFileName,_T(".")) == 0 || lstrcmp(fd.cFileName, _T("..")) == 0) {
 				 continue;
 			}
@@ -1062,7 +1062,7 @@ bool FileEnumerator::enumerateSub(
 				}
 			}
 		} else {
-			// ���ʂ̃t�@�C���ł�����
+			// 普通のファイルであった
 			p = path;
 			CatPath(p, fd.cFileName);
 			v.push_back(p);

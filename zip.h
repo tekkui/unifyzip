@@ -1,6 +1,6 @@
-// Zipƒtƒ@ƒCƒ‹ˆ—
-// Œ»İ‚Í–³ˆ³k‚Ì‚İ‘Î‰
-// USE_ZIP_DETAIL_INFO ‚ğ’è‹`‚·‚é‚Æ local file ‚ÌÚ×î•ñ‚ª“¾‚ç‚ê‚é
+// Zipãƒ•ã‚¡ã‚¤ãƒ«å‡¦ç†
+// ç¾åœ¨ã¯ç„¡åœ§ç¸®ã®ã¿å¯¾å¿œ
+// USE_ZIP_DETAIL_INFO ã‚’å®šç¾©ã™ã‚‹ã¨ local file ã®è©³ç´°æƒ…å ±ãŒå¾—ã‚‰ã‚Œã‚‹
 #ifndef __ZIP_H__
 #define __ZIP_H__
 
@@ -18,9 +18,9 @@ bool Compress(LPCTSTR srcPath, LPCTSTR dstPath, int compressLevel);
 int Decompress(LPCTSTR zipFileName, LPCTSTR destPath);
 
 struct LocalFileInfo {
-	String fileName;	// –¼‘O
-	UINT32 fileDataPos;	// ƒA[ƒJƒCƒu“à‚Å‚Ìƒtƒ@ƒCƒ‹ƒf[ƒ^‚ÌˆÊ’u
-	UINT32 fileSize;	// ƒTƒCƒY
+	String fileName;	// åå‰
+	UINT32 fileDataPos;	// ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–å†…ã§ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ãƒ¼ã‚¿ã®ä½ç½®
+	UINT32 fileSize;	// ã‚µã‚¤ã‚º
 
 	UINT32 externalFileAttributes;
 
@@ -37,7 +37,7 @@ struct LocalFileInfo {
 };
 
 
-// Zip“à‚ÌŒÂX‚Ìƒtƒ@ƒCƒ‹‚ğ“Ç‚Şˆ×‚ÌƒNƒ‰ƒX
+// Zipå†…ã®å€‹ã€…ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èª­ã‚€ç‚ºã®ã‚¯ãƒ©ã‚¹
 class LocalFile : boost::noncopyable {
 public:
 	LocalFile(ReadOnlyMemoryMappedFileEx* pMemoryMappedFile, LocalFileInfo* pInfo) {
@@ -63,7 +63,7 @@ public:
 		return pInfo_->externalFileAttributes;
 	}
 
-	// Zip ƒtƒ@ƒCƒ‹‚Ì‰½ˆ‚Éƒtƒ@ƒCƒ‹ƒf[ƒ^‚ª‚ ‚é‚Ì‚©
+	// Zip ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½•å‡¦ã«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ãƒ¼ã‚¿ãŒã‚ã‚‹ã®ã‹
 	UINT32 getFileOffset() {
 		return pInfo_->fileDataPos;
 	}
@@ -103,10 +103,10 @@ public:
 	}
 //#endif
 
-	// ƒ|ƒCƒ“ƒ^‚Íæ“¾‚Å‚«‚È‚¢•û‚ª‚¢‚¢‚Á‚Û‚¢‚©c
-	// ƒoƒbƒtƒ@—pˆÓ‚µ‚Ä‚»‚±‚Éread()‚³‚¹‚Ä‘ã—p‚·‚×‚«‚©‚à
-	// –³ˆ³k‚Å‚È‚¢‚Æƒ|ƒCƒ“ƒ^[æ“¾‚µ‚Ä‚àˆ³kÏ‚İƒf[ƒ^QÆ‚·‚é‚±‚Æ‚É‚È‚é‚µ
-	// LocalFile ‚P‚Â‚ÌƒTƒCƒY•ªƒ}ƒbƒsƒ“ƒO‚·‚é
+	// ãƒã‚¤ãƒ³ã‚¿ã¯å–å¾—ã§ããªã„æ–¹ãŒã„ã„ã£ã½ã„ã‹â€¦
+	// ãƒãƒƒãƒ•ã‚¡ç”¨æ„ã—ã¦ãã“ã«read()ã•ã›ã¦ä»£ç”¨ã™ã¹ãã‹ã‚‚
+	// ç„¡åœ§ç¸®ã§ãªã„ã¨ãƒã‚¤ãƒ³ã‚¿ãƒ¼å–å¾—ã—ã¦ã‚‚åœ§ç¸®æ¸ˆã¿ãƒ‡ãƒ¼ã‚¿å‚ç…§ã™ã‚‹ã“ã¨ã«ãªã‚‹ã—
+	// LocalFile ï¼‘ã¤ã®ã‚µã‚¤ã‚ºåˆ†ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹
 	void* getPointer() {
 		if (!pView_) {
 			pView_ = pMemoryMappedFile_->map(pInfo_->fileDataPos, pInfo_->fileSize);
@@ -125,7 +125,7 @@ private:
 	UINT8* p_;
 	boost::shared_ptr<ViewOfFile> pView_;
 
-	// ƒ|ƒCƒ“ƒ^æ“¾‚Ì‚½‚ßƒƒ‚ƒŠƒ}ƒbƒv‚³‚ê‚½’·‚³
+	// ãƒã‚¤ãƒ³ã‚¿å–å¾—ã®ãŸã‚ãƒ¡ãƒ¢ãƒªãƒãƒƒãƒ—ã•ã‚ŒãŸé•·ã•
 	UINT32 mappedSize_;
 };
 
@@ -136,12 +136,12 @@ public:
 		close();
 	}
 
-	// ƒA[ƒJƒCƒuƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
-	// “à‘ ƒtƒ@ƒCƒ‹‚Ìî•ñæ“¾
+	// ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
+	// å†…è”µãƒ•ã‚¡ã‚¤ãƒ«ã®æƒ…å ±å–å¾—
 	bool open(LPCTSTR fileName);
 	void close();
 
-	// “à‘ ƒtƒ@ƒCƒ‹‚Ö‚ÌƒAƒNƒZƒbƒT‚ğ“¾‚é
+	// å†…è”µãƒ•ã‚¡ã‚¤ãƒ«ã¸ã®ã‚¢ã‚¯ã‚»ãƒƒã‚µã‚’å¾—ã‚‹
 	boost::shared_ptr<LocalFile> getLocalFile(LPCTSTR fileName);
 
 	boost::shared_ptr<LocalFile> getLocalFile(int index);
@@ -170,7 +170,7 @@ private:
 	ZipReaderManager(const ZipReaderManager&);
 	const ZipReaderManager& operator=(const ZipReaderManager&);
 
-	// ‘ŒÉ‚Ì”‚Í‚»‚¤‘½‚­‚È‚¢‚¾‚ë‚¤‚©‚ç‘ŒÉ‚ÌŒŸõ‚àüŒ`’Tõ‚Å\•ª
+	// æ›¸åº«ã®æ•°ã¯ãã†å¤šããªã„ã ã‚ã†ã‹ã‚‰æ›¸åº«ã®æ¤œç´¢ã‚‚ç·šå½¢æ¢ç´¢ã§ååˆ†
 	std::vector< boost::shared_ptr<ZipReader> > archives_;
 };
 
@@ -182,7 +182,7 @@ public:
 		DWORD fileAttributes;
 		FILETIME lastWriteTime;
 
-		// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ÍƒtƒHƒ‹ƒ_‚Ìê‡ 0 ‚É‚·‚é‚±‚Æ
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã¯ãƒ•ã‚©ãƒ«ãƒ€ã®å ´åˆ 0 ã«ã™ã‚‹ã“ã¨
 		UINT32 fileSize;
 	};
 
@@ -203,10 +203,10 @@ public:
 		return isOpen_;
 	}
 
-	// -1: ƒfƒtƒHƒ‹ƒg
-	//  0: –³ˆ³k
-	//  1: ‚‘¬
-	//  9: ‚ˆ³k
+	// -1: ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆ
+	//  0: ç„¡åœ§ç¸®
+	//  1: é«˜é€Ÿ
+	//  9: é«˜åœ§ç¸®
 	bool setCompressLevel(int compressLevel);
 
 	bool addLackFolder();

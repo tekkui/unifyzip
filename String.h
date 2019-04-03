@@ -3,21 +3,21 @@
 												2003.08.30 (c)YOSHIDA Kurima
 ================================================================================
  Content:
-	©ì•¶š—ñƒNƒ‰ƒX
+	è‡ªä½œæ–‡å­—åˆ—ã‚¯ãƒ©ã‚¹
 	
  Notes:
-	MakeMid()‚ğ•¶š—ñ‚ÌˆÚ“®‚ğ‚¹‚¸‚É
-	•¶š—ñ‚Ìæ“ª‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ï‚¦‚é–‚Å‚â‚Á‚Ä‚¢‚é‚Ì‚Å‚‘¬‚È‚Ì‚ª“Á’¥
+	MakeMid()ã‚’æ–‡å­—åˆ—ã®ç§»å‹•ã‚’ã›ãšã«
+	æ–‡å­—åˆ—ã®å…ˆé ­ã®ãƒã‚¤ãƒ³ã‚¿ã‚’å¤‰ãˆã‚‹äº‹ã§ã‚„ã£ã¦ã„ã‚‹ã®ã§é«˜é€Ÿãªã®ãŒç‰¹å¾´
 
-	‚Ü‚½UnicodeEANSI—¼‘Î‰‚Å‚ ‚è
-	SHIFT-JIS ‚Ì‚QƒoƒCƒg–Ú‚ÉŠÖ‚·‚é‘Î‰‚à‚È‚³‚ê‚Ä‚¢‚é
+	ã¾ãŸUnicodeãƒ»ANSIä¸¡å¯¾å¿œã§ã‚ã‚Š
+	SHIFT-JIS ã®ï¼’ãƒã‚¤ãƒˆç›®ã«é–¢ã™ã‚‹å¯¾å¿œã‚‚ãªã•ã‚Œã¦ã„ã‚‹
 
-	’·‚³‚Ì’PˆÊ‚Í‘S‚Ä•¶š”’PˆÊ
-	ƒ}ƒ‹ƒ`ƒoƒCƒg•¶š‚Í2•¶š‚Æ‚µ‚Äˆµ‚í‚ê‚é‚Ì‚Å’ˆÓ
+	é•·ã•ã®å˜ä½ã¯å…¨ã¦æ–‡å­—æ•°å˜ä½
+	ãƒãƒ«ãƒãƒã‚¤ãƒˆæ–‡å­—ã¯2æ–‡å­—ã¨ã—ã¦æ‰±ã‚ã‚Œã‚‹ã®ã§æ³¨æ„
 
 	TODO:
-		MakeLeft -> Left‚Ìƒ`ƒFƒbƒN
-		format ‚É Boost ‚ğ—p‚¢‚éH
+		MakeLeft -> Leftã®ãƒã‚§ãƒƒã‚¯
+		format ã« Boost ã‚’ç”¨ã„ã‚‹ï¼Ÿ
 
 
 
@@ -58,26 +58,26 @@ public:
 	void Empty(void);
 	bool Reserve(int nSize);
 
-	LPCTSTR c_str(void) const {return (LPCTSTR)m_pszStr;}	// •¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
-	bool IsEmpty(void) const {return m_nStrLen == 0;}		// •¶š—ñ‚ª‹ó‚©
-	int GetLength(void) const {return m_nStrLen;}			// •¶š—ñ’·‚³i•¶š”’PˆÊj
+	LPCTSTR c_str(void) const {return (LPCTSTR)m_pszStr;}	// æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+	bool IsEmpty(void) const {return m_nStrLen == 0;}		// æ–‡å­—åˆ—ãŒç©ºã‹
+	int GetLength(void) const {return m_nStrLen;}			// æ–‡å­—åˆ—é•·ã•ï¼ˆæ–‡å­—æ•°å˜ä½ï¼‰
 
-	// •¶š”z—ñ
+	// æ–‡å­—é…åˆ—
 	TCHAR GetAt(int nIndex) const {return *(m_pszStr + nIndex);}
 
-	// ’Šo
+	// æŠ½å‡º
 	int MakeMid(int nFirst);
 	int MakeMid(int nFirst, int nCount);
 	int MakeLeft(int nCount);
 
-	// ‚»‚Ì‘¼‚Ì•ÏŠ·	
-	void MakeUpper();// ‘å•¶š‰»
+	// ãã®ä»–ã®å¤‰æ›	
+	void MakeUpper();// å¤§æ–‡å­—åŒ–
 	void MakeLower();
-	int Replace( TCHAR chOld, TCHAR chNew );	// ’uŠ·
+	int Replace( TCHAR chOld, TCHAR chNew );	// ç½®æ›
 	int Replace(LPCTSTR pszOld, LPCTSTR pszNew);
-	int Insert( int nIndex, TCHAR ch );			// ‘}“ü
+	int Insert( int nIndex, TCHAR ch );			// æŒ¿å…¥
 	int Insert( int nIndex, LPCTSTR pstr );
-	int Delete( int nIndex, int nCount = 1 );	// íœ
+	int Delete( int nIndex, int nCount = 1 );	// å‰Šé™¤
 	void Format( LPCTSTR lpszFormat, ...);
 	void FormatV( LPCTSTR lpszFormat, va_list argList);
 	void TrimLeft( TCHAR chTarget );
@@ -86,19 +86,19 @@ public:
 	void TrimRight( LPCTSTR lpszTargets );
 
 
-	// ŒŸõ
+	// æ¤œç´¢
 	int Find( TCHAR ch, int nStart = 0) const;
 	int Find( LPCTSTR lpszSub, int nStart = 0) const;
 	int ReverseFind( TCHAR ch) const;
 	int FindOneOf( LPCTSTR lpszCharSet ) const;
 
-	// ƒoƒbƒtƒ@ ƒAƒNƒZƒX
+	// ãƒãƒƒãƒ•ã‚¡ ã‚¢ã‚¯ã‚»ã‚¹
 	LPTSTR GetBuffer(int nMinBufLength);
 	void ReleaseBuffer(int nNewLength = -1);
 
-	// ƒIƒyƒŒ[ƒ^
+	// ã‚ªãƒšãƒ¬ãƒ¼ã‚¿
 
-	// ©“®•ÏŠ·
+	// è‡ªå‹•å¤‰æ›
 	//operator LPCTSTR() const {return (LPCTSTR)m_pszStr;}
 
 	String& operator=(const String& String){return Copy(String.c_str());}
@@ -106,16 +106,16 @@ public:
 	String& operator=(int n){return Copy(n);}
 	String& operator=(TCHAR c){return Copy(c);}
 
-	// u[]v‰‰Zq
+	// ã€Œ[]ã€æ¼”ç®—å­
 	TCHAR operator []( int nIndex ) const{return GetAt(nIndex);}
 
-	// u+=v‰‰Zq
+	// ã€Œ+=ã€æ¼”ç®—å­
 	const String& operator +=( const String& String ){return Cat(String.c_str());}
 	const String& operator +=( LPCTSTR pszString ){return Cat(pszString);}
 	const String& operator +=( int n ){return Cat(n);}
 	const String& operator +=( TCHAR ch ){return Cat(ch);}
 
-	// ”äŠr‰‰Zq
+	// æ¯”è¼ƒæ¼”ç®—å­
 	bool operator==(LPCTSTR pszString ) const {return m_pszStr && lstrcmp( m_pszStr, pszString ) == 0; }
 	bool operator!=(LPCTSTR pszString ) const {return m_pszStr && lstrcmp( m_pszStr, pszString ) != 0; }
 	bool operator< (LPCTSTR pszString ) const {return m_pszStr && lstrcmp( m_pszStr, pszString ) < 0; }
@@ -133,22 +133,22 @@ public:
 
 	// UNICODE
 	String& Utf8Copy(const char * utf8str);
-	LPCTSTR utf8_str(void);		// UTF8•¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
-	int GetUtf8Length(void);	// UTF8•¶š—ñ‚Ì’·‚³iƒoƒCƒg’PˆÊj
-	LPCSTR ansi_str(void);		// ANSI•¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·
-	int GetAnsiLength(void);	// ANSI•¶š—ñ‚Ì’·‚³iƒoƒCƒg’PˆÊj
+	LPCTSTR utf8_str(void);		// UTF8æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+	int GetUtf8Length(void);	// UTF8æ–‡å­—åˆ—ã®é•·ã•ï¼ˆãƒã‚¤ãƒˆå˜ä½ï¼‰
+	LPCSTR ansi_str(void);		// ANSIæ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™
+	int GetAnsiLength(void);	// ANSIæ–‡å­—åˆ—ã®é•·ã•ï¼ˆãƒã‚¤ãƒˆå˜ä½ï¼‰
 
 protected:
-	// ÀÛ‚É‚ÍI’[•¶š‚ª‚ ‚é‚Ì‚Å m_nBufLen - 1 •¶š‚¾‚¯
-	// ƒƒ‚ƒŠ‚ğŠg’£‚¹‚¸‚ÉŠi”[‚Å‚«‚é‚±‚Æ‚É‚È‚é
+	// å®Ÿéš›ã«ã¯çµ‚ç«¯æ–‡å­—ãŒã‚ã‚‹ã®ã§ m_nBufLen - 1 æ–‡å­—ã ã‘
+	// ãƒ¡ãƒ¢ãƒªã‚’æ‹¡å¼µã›ãšã«æ ¼ç´ã§ãã‚‹ã“ã¨ã«ãªã‚‹
 
-	LPTSTR m_pszBuf;	// Šm•Û‚µ‚Ä‚¢‚éƒƒ‚ƒŠ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	LPTSTR m_pszStr;	// •¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	LPTSTR m_utf8Str;	// UTF8•¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	LPSTR m_ansiStr;	// ANSI•¶š—ñ‚Ö‚Ìƒ|ƒCƒ“ƒ^
-	int m_nMaxBufLen;	// Šm•Û‚µ‚Ä‚¢‚éƒƒ‚ƒŠ—Êi•¶š”’PˆÊj
-	int m_nBufLen;		// •¶š—ñ‚ªg—p‚Å‚«‚éƒƒ‚ƒŠ—Êi•¶š”’PˆÊj
-	int m_nStrLen;		// •¶š—ñ‚Ì’·‚³i•¶š”’PˆÊj
+	LPTSTR m_pszBuf;	// ç¢ºä¿ã—ã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	LPTSTR m_pszStr;	// æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	LPTSTR m_utf8Str;	// UTF8æ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	LPSTR m_ansiStr;	// ANSIæ–‡å­—åˆ—ã¸ã®ãƒã‚¤ãƒ³ã‚¿
+	int m_nMaxBufLen;	// ç¢ºä¿ã—ã¦ã„ã‚‹ãƒ¡ãƒ¢ãƒªé‡ï¼ˆæ–‡å­—æ•°å˜ä½ï¼‰
+	int m_nBufLen;		// æ–‡å­—åˆ—ãŒä½¿ç”¨ã§ãã‚‹ãƒ¡ãƒ¢ãƒªé‡ï¼ˆæ–‡å­—æ•°å˜ä½ï¼‰
+	int m_nStrLen;		// æ–‡å­—åˆ—ã®é•·ã•ï¼ˆæ–‡å­—æ•°å˜ä½ï¼‰
 };
 
 } // end of namespace KSDK

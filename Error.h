@@ -3,11 +3,11 @@
 												2003.02.20 (c)YOSHIDA Kurima
 ===============================================================================
  Content:
-	�G���[���O�o�͊֐��Q
+	エラーログ出力関数群
 
  Notes:
-	_DEBUG����`����Ă���Ƃ��̂ݗL������
-	EnableOutputErrorlog()��Release�����o�͉\
+	_DEBUGが定義されているときのみ有効だが
+	EnableOutputErrorlog()でRelease時も出力可能
 
  Sample:
 
@@ -18,16 +18,16 @@
 
 
 
-// Release�r���h�ł��G���[�̏o�͂�L���ɂ���
+// Releaseビルドでもエラーの出力を有効にする
 void EnableOutputErrorlog(bool b);
 
-// ���b�Z�[�W�ɓ��t�����������ăf�o�b�K�ɏo��
+// メッセージに日付時刻を加えてデバッガに出力
 void InnerLog(const char* szFormat, ...);
 
-// InnerLog()�ōŌ�ɏo�͂����������MessageBox()�ŕ\��
+// InnerLog()で最後に出力した文字列をMessageBox()で表示
 void SDKGetLastErrorMssage();
 
-// GetLastError()�����s���G���[�R�[�h�ɑΉ�����G���[�������MessageBox()�ŕ\��
+// GetLastError()を実行しエラーコードに対応するエラー文字列をMessageBox()で表示
 void GetLastErrorMssage();
 
 

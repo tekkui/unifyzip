@@ -39,12 +39,12 @@ using namespace KSDK;
 #define ofs wofs
 #endif
 
-// ƒA[ƒJƒCƒu‚ÉŠi”[‚³‚ê‚éƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚Ìî•ñ
+// ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã«æ ¼ç´ã•ã‚Œã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã®æƒ…å ±
 class IndividualInfo {
 public:
 	IndividualInfo(INDIVIDUALINFO& rIndividualInfo, DWORD attribute, bool isEncrypted) {
-		// INDIVIDUALINFO “à‚Ì‘®«‚ÍƒtƒHƒ‹ƒ_‘®«‚ª³Šm‚Å‚È‚©‚Á‚½‚è‚·‚é‚Ì‚Å
-		// •Ê‚Éæ“¾‚µ‚½‚à‚Ì‚Åw’è‚·‚é
+		// INDIVIDUALINFO å†…ã®å±æ€§ã¯ãƒ•ã‚©ãƒ«ãƒ€å±æ€§ãŒæ­£ç¢ºã§ãªã‹ã£ãŸã‚Šã™ã‚‹ã®ã§
+		// åˆ¥ã«å–å¾—ã—ãŸã‚‚ã®ã§æŒ‡å®šã™ã‚‹
 
 #ifdef _UNICODE
 		fullPath_.Utf8Copy(rIndividualInfo.szFileName);
@@ -52,10 +52,10 @@ public:
 		fullPath_ = rIndividualInfo.szFileName;
 #endif
 
-		// UNLHA ‚Å‚ÍƒpƒX‚ÌƒZƒpƒŒ[ƒ^‚ª '/' ‚È‚Ì‚Å '\\' ‚É•ÏŠ·
+		// UNLHA ã§ã¯ãƒ‘ã‚¹ã®ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ãŒ '/' ãªã®ã§ '\\' ã«å¤‰æ›
 		fullPath_.Replace(_TCHAR('/'), _TCHAR('\\'));
 
-		// ––”ö‚Ì'\\'‚ğæ‚èœ‚­
+		// æœ«å°¾ã®'\\'ã‚’å–ã‚Šé™¤ã
 		fullPath_.TrimRight(_TCHAR('\\'));
 
 		GetFileName(fullPath_.c_str(), filename_);
@@ -66,7 +66,7 @@ public:
 
 		isEncrypted_ = isEncrypted;
 
-		// wRatio ‚Æ szMode ‚©‚çˆ³kƒŒƒxƒ‹‚ğ”»’f‚·‚é
+		// wRatio ã¨ szMode ã‹ã‚‰åœ§ç¸®ãƒ¬ãƒ™ãƒ«ã‚’åˆ¤æ–­ã™ã‚‹
 #ifdef _UNICODE
 		String szMode;
 		szMode.Utf8Copy(rIndividualInfo.szMode);
@@ -83,15 +83,15 @@ public:
 	IndividualInfo(LPCTSTR fullPath, DWORD attribute, bool isEncrypted) {
 		fullPath_ = fullPath;
 
-		// UNLHA ‚Å‚ÍƒpƒX‚ÌƒZƒpƒŒ[ƒ^‚ª '/' ‚È‚Ì‚Å '\\' ‚É•ÏŠ·
+		// UNLHA ã§ã¯ãƒ‘ã‚¹ã®ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ãŒ '/' ãªã®ã§ '\\' ã«å¤‰æ›
 		fullPath_.Replace(_TCHAR('/'), _TCHAR('\\'));
 
-		// ––”ö‚Ì'\\'‚ğæ‚èœ‚­
+		// æœ«å°¾ã®'\\'ã‚’å–ã‚Šé™¤ã
 		fullPath_.TrimRight(_TCHAR('\\'));
 
 		GetFileName(fullPath_.c_str(), filename_);
 
-		// XV‚ÍŒ»İ‚ğ“ü‚ê‚Ä‚¨‚­
+		// æ›´æ–°æ™‚åˆ»ã¯ç¾åœ¨æ™‚åˆ»ã‚’å…¥ã‚Œã¦ãŠã
 		SYSTEMTIME st;
 		GetSystemTime(&st);
 		FILETIME ft;
@@ -105,7 +105,7 @@ public:
 		compressLevel_ = -1;
 	}
 
-	// fileName ‚Í ‘ŒÉ“à‚Ìƒtƒ‹ƒpƒXiƒpƒX‚ÌƒZƒpƒŒ[ƒ^‚Í '\\'j
+	// fileName ã¯ æ›¸åº«å†…ã®ãƒ•ãƒ«ãƒ‘ã‚¹ï¼ˆãƒ‘ã‚¹ã®ã‚»ãƒ‘ãƒ¬ãƒ¼ã‚¿ã¯ '\\'ï¼‰
 	IndividualInfo(LPCTSTR fileName, FILETIME fileTime, DWORD attribute, int compressLevel, bool isEncrypted) {
 		fullPath_ = fileName;
 		GetFileName(fullPath_.c_str(), filename_);
@@ -140,36 +140,36 @@ private:
 	String fullPath_;
 	FILETIME lastWriteTime_;
 
-	// ƒtƒ@ƒCƒ‹‘®«‚âAƒtƒ@ƒCƒ‹‚©ƒtƒHƒ‹ƒ_‚©
+	// ãƒ•ã‚¡ã‚¤ãƒ«å±æ€§ã‚„ã€ãƒ•ã‚¡ã‚¤ãƒ«ã‹ãƒ•ã‚©ãƒ«ãƒ€ã‹
 	DWORD attribute_;
 
-	// ˆ³kƒŒƒxƒ‹
-	// -1 ‚¾‚Æ•s–¾
+	// åœ§ç¸®ãƒ¬ãƒ™ãƒ«
+	// -1 ã ã¨ä¸æ˜
 	int compressLevel_;
 
-	// ˆÃ†‰»‚³‚ê‚Ä‚¢‚é‚©
+	// æš—å·åŒ–ã•ã‚Œã¦ã„ã‚‹ã‹
 	bool isEncrypted_;
 };
 
 
-// temp ƒtƒHƒ‹ƒ_‚ğ“¾‚é
+// temp ãƒ•ã‚©ãƒ«ãƒ€ã‚’å¾—ã‚‹
 bool getTemporaryPath(String& dest);
 
-// ‰Šú‰»
+// åˆæœŸåŒ–
 bool initialize();
 
-// ‘ŒÉ‚ğˆ—‚·‚é
+// æ›¸åº«ã‚’å‡¦ç†ã™ã‚‹
 bool process(LPCTSTR filename);
 
 void analyzePath(vector<String>& src, vector<String>& dest);
 bool analyzePathSub(LPCTSTR src, vector<String>& dest);
 
-// w’è‚ÌƒtƒHƒ‹ƒ_“àiƒTƒuƒtƒHƒ‹ƒ_ŠÜ‚Şj‚ÌƒtƒHƒ‹ƒ_‚ÌXV“ú‚ğ
-// ƒtƒHƒ‹ƒ_“à‚ÌÅV‚ÌXV“ú‚ğ‚Âƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚Æˆê’v‚³‚¹‚é
+// æŒ‡å®šã®ãƒ•ã‚©ãƒ«ãƒ€å†…ï¼ˆã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€å«ã‚€ï¼‰ã®ãƒ•ã‚©ãƒ«ãƒ€ã®æ›´æ–°æ—¥æ™‚ã‚’
+// ãƒ•ã‚©ãƒ«ãƒ€å†…ã®æœ€æ–°ã®æ›´æ–°æ—¥æ™‚ã‚’æŒã¤ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã¨ä¸€è‡´ã•ã›ã‚‹
 void setFolderTime(LPCTSTR path);
 bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime);
 
-// ç’·ƒtƒHƒ‹ƒ_‚ÌƒpƒX‚ğ“¾‚é
+// å†—é•·ãƒ•ã‚©ãƒ«ãƒ€ã®ãƒ‘ã‚¹ã‚’å¾—ã‚‹
 void GetRedundantPath(String& rRedundantPath);
 
 bool AddLackFolder();
@@ -177,7 +177,7 @@ bool AddLackFolder();
 bool GetIndividualInfo(LPCTSTR path);
 bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath);
 
-// ƒtƒHƒ‹ƒ_“à‚ğˆ³k
+// ãƒ•ã‚©ãƒ«ãƒ€å†…ã‚’åœ§ç¸®
 bool compress(LPCTSTR srcPath, LPCTSTR dstPath, int compressLevel, bool showsProgress);
 bool compressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength);
 
@@ -188,7 +188,7 @@ list<boost::shared_ptr<IndividualInfo> > g_compressFileList;
 
 ArchiveDllManager g_ArchiveDllManager;
 
-// ŠeíƒIƒvƒVƒ‡ƒ“
+// å„ç¨®ã‚ªãƒ—ã‚·ãƒ§ãƒ³
 int g_PriorityClass;
 
 bool g_DeletesEmptyFolder;
@@ -198,7 +198,7 @@ bool g_ShowsProgress;
 String g_AppendFile;
 String g_ExcludeFile;
 String g_RemarkableFile;
-int g_CompressLevel;	// ˆ³kƒŒƒxƒ‹ = [ -1 | 1 | 0 | 9 ]
+int g_CompressLevel;	// åœ§ç¸®ãƒ¬ãƒ™ãƒ« = [ -1 | 1 | 0 | 9 ]
 
 int g_FileTimeMode;
 int g_FolderTimeMode;
@@ -240,14 +240,14 @@ enum FileAttribute {
 
 std::wofstream wofs;
 
-// temp ƒtƒHƒ‹ƒ_‚ğ“¾‚é
+// temp ãƒ•ã‚©ãƒ«ãƒ€ã‚’å¾—ã‚‹
 bool getTemporaryPath(String& dest) {
 	const DWORD LEN = 512;
 	TCHAR path[LEN+1];
 	dest.Empty();
 	DWORD ret = ::GetTempPath(LEN, path);
 
-	// ’ZkŒ`‚È‚Ì‚Å
+	// çŸ­ç¸®å½¢ãªã®ã§
 	TCHAR longPath[LEN+1];
 	GetLongPathName(path, longPath, LEN);
 
@@ -258,15 +258,15 @@ bool getTemporaryPath(String& dest) {
 
 bool initialize() 
 {
-	// ƒƒP[ƒ‹‚Ìİ’è
-	// ƒ‰ƒCƒuƒ‰ƒŠ‚ÌƒoƒO‚ª‚ ‚é‚Ì‚Å 
-	// Visual C++ 2005 Express Edition ‚Å‚Í‚Æ‚è‚ ‚¦‚¸g‚¦‚È‚¢
+	// ãƒ­ã‚±ãƒ¼ãƒ«ã®è¨­å®š
+	// ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®ãƒã‚°ãŒã‚ã‚‹ã®ã§ 
+	// Visual C++ 2005 Express Edition ã§ã¯ã¨ã‚Šã‚ãˆãšä½¿ãˆãªã„
 	//_tsetlocale( LC_ALL, _T("japanese") );
 	SetConsoleOutputCP(CP_UTF8);
 
 	SetCurrentDirectoryEx(_T(""));
 
-	// iniƒtƒ@ƒCƒ‹‚æ‚èİ’è‚ğ“Ç‚İ‚Ş
+	// iniãƒ•ã‚¡ã‚¤ãƒ«ã‚ˆã‚Šè¨­å®šã‚’èª­ã¿è¾¼ã‚€
 	Profile profile;
 	String Path;
 	GetModuleFileName(NULL, Path);
@@ -338,7 +338,7 @@ bool initialize()
 		profile.GetString(_T("Setting"), _T("NkfOption"), _T(""), g_NkfOption);
 		nkf = new NkfDll;
 		if (!nkf->init(g_NkfOption)) {
-			cout << _T("nkf32.dll‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ") << endl;
+			cout << _T("nkf32.dllãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“") << endl;
 			return false;
 		}
 	}
@@ -348,7 +348,7 @@ bool initialize()
 		g_CompressLevel != 1 && 
 		g_CompressLevel != 9) 
 	{
-		cout << _T("ˆ³kƒŒƒxƒ‹‚Ìw’è‚ª•s³") << endl;
+		cout << _T("åœ§ç¸®ãƒ¬ãƒ™ãƒ«ã®æŒ‡å®šãŒä¸æ­£") << endl;
 		return false;
 	}
 
@@ -356,11 +356,11 @@ bool initialize()
 		g_WarningLevel != 1 && 
 		g_WarningLevel != 2) 
 	{
-		cout << _T("ŒxƒŒƒxƒ‹‚Ìw’è‚ª•s³") << endl;
+		cout << _T("è­¦å‘Šãƒ¬ãƒ™ãƒ«ã®æŒ‡å®šãŒä¸æ­£") << endl;
 		return false;
 	}
 
-	// ƒvƒƒZƒX‚Ì—Dæ‡ˆÊƒNƒ‰ƒX‚ğİ’è
+	// ãƒ—ãƒ­ã‚»ã‚¹ã®å„ªå…ˆé †ä½ã‚¯ãƒ©ã‚¹ã‚’è¨­å®š
 	HANDLE hProcess = GetCurrentProcess();
 	DWORD priorityClass = NORMAL_PRIORITY_CLASS;
 	switch (g_PriorityClass) {
@@ -383,13 +383,13 @@ bool initialize()
 		priorityClass = ABOVE_NORMAL_PRIORITY_CLASS;
 		break;
 	default:
-		cout << _T("ƒvƒƒZƒX‚Ì—Dæ“x‚Ìw’è‚ª•s³") << endl;
+		cout << _T("ãƒ—ãƒ­ã‚»ã‚¹ã®å„ªå…ˆåº¦ã®æŒ‡å®šãŒä¸æ­£") << endl;
 		break;
 	}
 
 	if (priorityClass != NORMAL_PRIORITY_CLASS) {
 		if (SetPriorityClass(hProcess, priorityClass) == 0) {
-			cout << _T("ƒvƒƒZƒX‚Ì—Dæ‡ˆÊƒNƒ‰ƒX‚Ìİ’è‚É¸”s") << endl;
+			cout << _T("ãƒ—ãƒ­ã‚»ã‚¹ã®å„ªå…ˆé †ä½ã‚¯ãƒ©ã‚¹ã®è¨­å®šã«å¤±æ•—") << endl;
 		}
 	}
 
@@ -403,13 +403,13 @@ void analyzePath(vector<String>& src, vector<String>& dest) {
 	for (it=src.begin(); it!=src.end(); ++it) {
 		switch(GetPathAttribute(it->c_str())) {
 		case PATH_INVALID:
-			// –³Œø‚ÈƒpƒX
+			// ç„¡åŠ¹ãªãƒ‘ã‚¹
 			break;
 		case PATH_FILE:
 			dest.push_back(*it);
 			break;
 		case PATH_FOLDER:
-			// ƒtƒHƒ‹ƒ_“à‚Ìƒtƒ@ƒCƒ‹‚ğ’Ç‰Á
+			// ãƒ•ã‚©ãƒ«ãƒ€å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ 
 			analyzePathSub(it->c_str(), dest);
 			break;
 		}
@@ -420,7 +420,7 @@ bool analyzePathSub(LPCTSTR src, vector<String>& dest) {
 	WIN32_FIND_DATA fd;
 	HANDLE hSearch;
 
-	// ’TõƒpƒX‚ğì¬
+	// æ¢ç´¢ãƒ‘ã‚¹ã‚’ä½œæˆ
 	String path(src);
 	FormatTooLongPath(path);
 	CatPath(path, _T("*.*"));
@@ -433,7 +433,7 @@ bool analyzePathSub(LPCTSTR src, vector<String>& dest) {
 	do{
 		if ( (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0 ){
 			if (g_SearchSubfolders) {
-				// ƒ‹[ƒg‹y‚ÑƒJƒŒƒ“ƒg‚Å‚È‚¢ƒtƒHƒ‹ƒ_‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+				// ãƒ«ãƒ¼ãƒˆåŠã³ã‚«ãƒ¬ãƒ³ãƒˆã§ãªã„ãƒ•ã‚©ãƒ«ãƒ€ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
 				if (lstrcmp(fd.cFileName,_T("."))!=0 && lstrcmp(fd.cFileName,_T("..")) != 0) {
 					String searchPath(src);
 					CatPath(searchPath, fd.cFileName);
@@ -472,7 +472,7 @@ int main(int, char*, char*)
 	}
 
 #ifdef _DEBUG
-	cout << _T("ƒvƒƒZƒX‚ÉƒAƒ^ƒbƒ`‚µ‚Ä‰º‚³‚¢") << endl;
+	cout << _T("ãƒ—ãƒ­ã‚»ã‚¹ã«ã‚¢ã‚¿ãƒƒãƒã—ã¦ä¸‹ã•ã„") << endl;
 	getchar();
 #endif
 
@@ -480,7 +480,7 @@ int main(int, char*, char*)
 	vector<String> files;
 	String str;
 
-	// ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Éƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚Ìw’è‚Í‚È‚¢‚©
+	// ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã«ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã®æŒ‡å®šã¯ãªã„ã‹
 	void* pv;
 	pv = AllocCommandLine();
 	int u = GetStringFromCommandLine(pv, 0xFFFFFFFF, str);
@@ -504,8 +504,8 @@ int main(int, char*, char*)
 	}
 	#endif
 
-	// ‚±‚±‚Å files ‚É‚Íƒtƒ@ƒCƒ‹‚Ì‚İ‚ÅƒtƒHƒ‹ƒ_‚ÍŠÜ‚Ü‚ê‚Ä‚¢‚È‚¢‚Í‚¸
-	// ƒGƒNƒXƒvƒ[ƒ‰‚Æ“¯‚¶‚Éƒ\[ƒg
+	// ã“ã“ã§ files ã«ã¯ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿ã§ãƒ•ã‚©ãƒ«ãƒ€ã¯å«ã¾ã‚Œã¦ã„ãªã„ã¯ãš
+	// ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ã¨åŒã˜ã«ã‚½ãƒ¼ãƒˆ
 	sort(files.begin(), files.end(), FileSortCriterion());
 
 	vector<String>::iterator it;
@@ -516,11 +516,11 @@ int main(int, char*, char*)
 	}
 
 	if (g_ExitsImmediately) {
-		cout << _T("Š®—¹") << endl;
+		cout << _T("å®Œäº†") << endl;
 	}
 	else
 	{
-		cout << _T("ƒGƒ“ƒ^[ƒL[‚ğ‰Ÿ‚µ‚Ä‚­‚¾‚³‚¢ I—¹‚µ‚Ü‚·") << endl;
+		cout << _T("ã‚¨ãƒ³ã‚¿ãƒ¼ã‚­ãƒ¼ã‚’æŠ¼ã—ã¦ãã ã•ã„ çµ‚äº†ã—ã¾ã™") << endl;
 		getchar();
 	}
 
@@ -530,8 +530,8 @@ int main(int, char*, char*)
 
 
 
-// ƒGƒNƒXƒvƒ[ƒ‰‚Æ“¯‚¶
-// ƒtƒHƒ‹ƒ_‚ÉƒtƒHƒ‹ƒ_“à‚Ìƒtƒ@ƒCƒ‹‚ª‘±‚­‚±‚Æ‚ª•ÛØ‚³‚ê‚é
+// ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ã¨åŒã˜
+// ãƒ•ã‚©ãƒ«ãƒ€ã«ãƒ•ã‚©ãƒ«ãƒ€å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒç¶šãã“ã¨ãŒä¿è¨¼ã•ã‚Œã‚‹
 struct IndividualInfoSortCriterion : public binary_function <boost::shared_ptr<IndividualInfo>, boost::shared_ptr<IndividualInfo>, bool> {
 	bool operator()(const boost::shared_ptr<IndividualInfo>& _Left, const boost::shared_ptr<IndividualInfo>& _Right) const
 	{
@@ -541,19 +541,19 @@ struct IndividualInfoSortCriterion : public binary_function <boost::shared_ptr<I
 	}
 };
 
-// ‘ŒÉ“à‚Ìƒtƒ@ƒCƒ‹‚Ìî•ñ‚ğ“¾‚é
-// ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“Ï‚İ‚ÌArchiveDll‚ğ“n‚·
+// æ›¸åº«å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®æƒ…å ±ã‚’å¾—ã‚‹
+// ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³æ¸ˆã¿ã®ArchiveDllã‚’æ¸¡ã™
 bool GetIndividualInfo(ArchiveDll& rArchiveDll) 
 {
 	g_compressFileList.clear();
 
-	// ƒA[ƒJƒCƒu“à‚Ì‘Sƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚ğæ“¾
+	// ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–å†…ã®å…¨ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã‚’å–å¾—
 	INDIVIDUALINFO ii;
 	int ret = rArchiveDll.findFirst(_T("*"), &ii);
 
 	for (;;) {
 		if (ret == 0) {
-			// INDIVIDUALINFO “à‚Ì‘®«‚ÍƒtƒHƒ‹ƒ_‘®«‚ª³Šm‚Å‚È‚©‚Á‚½‚è‚·‚é‚Ì‚Å‚±‚Á‚¿‚Åæ“¾
+			// INDIVIDUALINFO å†…ã®å±æ€§ã¯ãƒ•ã‚©ãƒ«ãƒ€å±æ€§ãŒæ­£ç¢ºã§ãªã‹ã£ãŸã‚Šã™ã‚‹ã®ã§ã“ã£ã¡ã§å–å¾—
 			int attribute = rArchiveDll.getAttribute();
 			DWORD dwAttribute = 0;
 			if ((attribute & FA_RDONLY) != 0) dwAttribute |= FILE_ATTRIBUTE_READONLY;
@@ -562,32 +562,32 @@ bool GetIndividualInfo(ArchiveDll& rArchiveDll)
 			if ((attribute & FA_DIREC) != 0) dwAttribute |= FILE_ATTRIBUTE_DIRECTORY;
 			if ((attribute & FA_ARCH) != 0) dwAttribute |= FILE_ATTRIBUTE_ARCHIVE;
 
-			// ƒpƒXƒ[ƒh‚Â‚«‚©
+			// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã¤ãã‹
 			bool isEncrypted = ((attribute & FA_ENCRYPTED) != 0);
 
-			// ƒ{ƒŠƒ…[ƒ€ƒ‰ƒxƒ‹‚Æ‚Ì‚±‚Æ‚¾‚ª•s–¾
+			// ãƒœãƒªãƒ¥ãƒ¼ãƒ ãƒ©ãƒ™ãƒ«ã¨ã®ã“ã¨ã ãŒä¸æ˜
 			if ((attribute & FA_LABEL) != 0) dwAttribute |= 0;
 
 			if (dwAttribute == 0) FILE_ATTRIBUTE_NORMAL;
 
 			g_compressFileList.push_back(boost::shared_ptr<IndividualInfo>(new IndividualInfo(ii, dwAttribute, isEncrypted)));
 		} else if(ret == -1) {
-			// ŒŸõI—¹
+			// æ¤œç´¢çµ‚äº†
 			break;
 		} else {
-			// ƒGƒ‰[
-			cout << _T("‘ŒÉ“àŒŸõ’†‚ÉƒGƒ‰[‚ª‹N‚«‚Ü‚µ‚½") << endl;
+			// ã‚¨ãƒ©ãƒ¼
+			cout << _T("æ›¸åº«å†…æ¤œç´¢ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒèµ·ãã¾ã—ãŸ") << endl;
 			return false;
 		}
 		ret = rArchiveDll.findNext(&ii);
 	}
 
-	// ƒ\[ƒg
+	// ã‚½ãƒ¼ãƒˆ
 	g_compressFileList.sort(IndividualInfoSortCriterion());
 
 	#ifdef _DEBUG
 	{
-		cout << _T("ƒtƒHƒ‹ƒ_’Ç‰Á‘O") << endl;
+		cout << _T("ãƒ•ã‚©ãƒ«ãƒ€è¿½åŠ å‰") << endl;
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;	
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			cout << (*it)->getFullPath() << endl;
@@ -599,7 +599,7 @@ bool GetIndividualInfo(ArchiveDll& rArchiveDll)
 
 	#ifdef _DEBUG
 	{
-		cout << _T("ƒtƒHƒ‹ƒ_’Ç‰ÁŒã") << endl;
+		cout << _T("ãƒ•ã‚©ãƒ«ãƒ€è¿½åŠ å¾Œ") << endl;
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;	
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			cout << (*it)->getFullPath() << endl;
@@ -611,17 +611,17 @@ bool GetIndividualInfo(ArchiveDll& rArchiveDll)
 }
 
 
-// w’è‚ÌƒtƒHƒ‹ƒ_“à‚Ìƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚Ìî•ñæ“¾
+// æŒ‡å®šã®ãƒ•ã‚©ãƒ«ãƒ€å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã®æƒ…å ±å–å¾—
 bool GetIndividualInfo(LPCTSTR path) 
 {
 	g_compressFileList.clear();
 
 	if (!GetIndividualInfoSub(path, path)) {
-		cout << _T("ƒtƒ@ƒCƒ‹î•ñæ“¾’†‚ÉƒGƒ‰[‚ª‹N‚«‚Ü‚µ‚½") << endl;
+		cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«æƒ…å ±å–å¾—ä¸­ã«ã‚¨ãƒ©ãƒ¼ãŒèµ·ãã¾ã—ãŸ") << endl;
 		return false;
 	}
 
-	// ƒ\[ƒg
+	// ã‚½ãƒ¼ãƒˆ
 	g_compressFileList.sort(IndividualInfoSortCriterion());
 
 	#ifdef _DEBUG
@@ -643,7 +643,7 @@ bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath)
 	String path;
 	HANDLE hSearch;
 
-	// ’TõƒpƒX‚ğì¬
+	// æ¢ç´¢ãƒ‘ã‚¹ã‚’ä½œæˆ
 	path = searchPath;
 	CatPath(path, _T("*.*"));
 
@@ -653,7 +653,7 @@ bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath)
 		return false;
 	}
 
-	// ƒhƒ‰ƒCƒu‚Ì‚İ‚Ìê‡‚Í\‚ÅI‚í‚è‚»‚êˆÈŠO‚Í\‚ÅI‚í‚ç‚È‚¢‚Ì‚Å‚»‚Ì’²®
+	// ãƒ‰ãƒ©ã‚¤ãƒ–ã®ã¿ã®å ´åˆã¯\ã§çµ‚ã‚ã‚Šãã‚Œä»¥å¤–ã¯\ã§çµ‚ã‚ã‚‰ãªã„ã®ã§ãã®èª¿æ•´
 	int basePathLen = lstrlen(basePath);
 	if (basePathLen <= lstrlen(_T("C:\\"))) {
 	} else {
@@ -661,11 +661,11 @@ bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath)
 	}
 
 	do{
-		// ƒfƒBƒŒƒNƒgƒŠ‚©A•’Ê‚Ìƒtƒ@ƒCƒ‹‚©
+		// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‹ã€æ™®é€šã®ãƒ•ã‚¡ã‚¤ãƒ«ã‹
 		if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0){
-			// ƒfƒBƒŒƒNƒgƒŠ‚Å‚ ‚Á‚½
+			// ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã§ã‚ã£ãŸ
 
-			// ƒ‹[ƒg‹y‚ÑƒJƒŒƒ“ƒg‚Å‚È‚¢ƒtƒHƒ‹ƒ_‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+			// ãƒ«ãƒ¼ãƒˆåŠã³ã‚«ãƒ¬ãƒ³ãƒˆã§ãªã„ãƒ•ã‚©ãƒ«ãƒ€ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
 			if (lstrcmp(fd.cFileName,_T(".")) == 0 || lstrcmp(fd.cFileName, _T("..")) == 0) {
 				 continue;
 			}
@@ -683,7 +683,7 @@ bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath)
 				return false;
 			}
 		} else {
-			// •’Ê‚Ìƒtƒ@ƒCƒ‹‚Å‚ ‚Á‚½
+			// æ™®é€šã®ãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã£ãŸ
 			path = searchPath;
 			CatPath(path, fd.cFileName);
 
@@ -702,7 +702,7 @@ bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath)
 
 
 
-// ƒŠƒXƒg‚©‚ç‹óƒtƒHƒ‹ƒ_‚ğæ‚èœ‚­
+// ãƒªã‚¹ãƒˆã‹ã‚‰ç©ºãƒ•ã‚©ãƒ«ãƒ€ã‚’å–ã‚Šé™¤ã
 bool deleteEmptyFolder(LPCTSTR basePath) {
 	if (g_compressFileList.empty()) {
 		return true;
@@ -715,7 +715,7 @@ bool deleteEmptyFolder(LPCTSTR basePath) {
 	cur = next;
 	cur--;
 	for (;;) {
-		// Ÿ‚Ì—v‘f‚ªƒfƒBƒŒƒNƒgƒŠ“à‚Ì‚à‚Ì‚ğ‚³‚µ‚Ä‚¢‚È‚¯‚ê‚Î‹óƒtƒHƒ‹ƒ_
+		// æ¬¡ã®è¦ç´ ãŒãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã®ã‚‚ã®ã‚’ã•ã—ã¦ã„ãªã‘ã‚Œã°ç©ºãƒ•ã‚©ãƒ«ãƒ€
 		if (((*cur)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 			if (next == g_compressFileList.end()
 			 || (_tcsncmp((*cur)->getFullPath(), (*next)->getFullPath(), lstrlen((*cur)->getFullPath())) != 0)
@@ -724,12 +724,12 @@ bool deleteEmptyFolder(LPCTSTR basePath) {
 					String path = basePath;
 					CatPath(path, (*cur)->getFullPath());
 					if(!RemoveDirectory(path.c_str())) {
-						cout << _T("‹óƒtƒHƒ‹ƒ_ ") << (*cur)->getFullPath() << _T(" ‚Ìíœ‚É¸”s") << endl;
+						cout << _T("ç©ºãƒ•ã‚©ãƒ«ãƒ€ ") << (*cur)->getFullPath() << _T(" ã®å‰Šé™¤ã«å¤±æ•—") << endl;
 						return false;
 					}
 				}
 
-				cout << _T("‹óƒtƒHƒ‹ƒ_ ") << (*cur)->getFullPath() << _T(" ‚ğíœ") << endl;
+				cout << _T("ç©ºãƒ•ã‚©ãƒ«ãƒ€ ") << (*cur)->getFullPath() << _T(" ã‚’å‰Šé™¤") << endl;
 				g_compressFileList.erase(cur);
 				if (g_compressFileList.empty()) break;
 				cur = next;
@@ -746,7 +746,7 @@ bool deleteEmptyFolder(LPCTSTR basePath) {
 }
 
 
-// ƒŠƒXƒg‚É‹óƒtƒHƒ‹ƒ_‚ª‚ ‚ê‚Îfalse‚ğ•Ô‚·
+// ãƒªã‚¹ãƒˆã«ç©ºãƒ•ã‚©ãƒ«ãƒ€ãŒã‚ã‚Œã°falseã‚’è¿”ã™
 bool ExistsEmptyFolder() {
 	if (g_compressFileList.empty()) {
 		return false;
@@ -759,7 +759,7 @@ bool ExistsEmptyFolder() {
 	cur = next;
 	cur--;
 	for (;;) {
-		// Ÿ‚Ì—v‘f‚ªƒfƒBƒŒƒNƒgƒŠ“à‚Ì‚à‚Ì‚ğ‚³‚µ‚Ä‚¢‚È‚¯‚ê‚Î‹óƒtƒHƒ‹ƒ_
+		// æ¬¡ã®è¦ç´ ãŒãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªå†…ã®ã‚‚ã®ã‚’ã•ã—ã¦ã„ãªã‘ã‚Œã°ç©ºãƒ•ã‚©ãƒ«ãƒ€
 		if (((*cur)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 			if (next == g_compressFileList.end()) {
 				return true;
@@ -784,7 +784,7 @@ bool ExistsRedundantFolde() {
 	return (path.IsEmpty() == false);
 }
 
-// ç’·ƒtƒHƒ‹ƒ_‚ÌƒpƒX‚ğ“¾‚é
+// å†—é•·ãƒ•ã‚©ãƒ«ãƒ€ã®ãƒ‘ã‚¹ã‚’å¾—ã‚‹
 void GetRedundantPath(String& rRedundantPath) {
 	rRedundantPath.Empty();
 
@@ -792,9 +792,9 @@ void GetRedundantPath(String& rRedundantPath) {
 	list<boost::shared_ptr<IndividualInfo> >::iterator it;
 	for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 		if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) == 0) {
-			// ƒtƒ@ƒCƒ‹
+			// ãƒ•ã‚¡ã‚¤ãƒ«
 
-			// ƒtƒ@ƒCƒ‹‚ğŒ©‚Â‚¯‚½‚ç‚»‚êˆÈã‚Ìç’·ƒpƒX‚ÌL‚Ñ‚Í–³‚¢
+			// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¦‹ã¤ã‘ãŸã‚‰ãã‚Œä»¥ä¸Šã®å†—é•·ãƒ‘ã‚¹ã®ä¼¸ã³ã¯ç„¡ã„
 			TCHAR path[MAX_PATH + 1];
 			PathCommonPrefix((*it)->getFullPath(), rRedundantPath.c_str(), path);
 
@@ -802,11 +802,11 @@ void GetRedundantPath(String& rRedundantPath) {
 				rRedundantPath = path;
 				if (*path == _TCHAR('\0')) break;
 			}
-			// ‚»‚Ì‚Ü‚Ü
+			// ãã®ã¾ã¾
 			isEmpty = false;
 
 		} else {
-			// ƒtƒHƒ‹ƒ_
+			// ãƒ•ã‚©ãƒ«ãƒ€
 			TCHAR path[MAX_PATH + 1];
 			PathCommonPrefix((*it)->getFullPath(), rRedundantPath.c_str(), path);
 
@@ -818,7 +818,7 @@ void GetRedundantPath(String& rRedundantPath) {
 				if (isEmpty) {
 					rRedundantPath = (*it)->getFullPath();
 				} else {
-					// ‚»‚Ì‚Ü‚Ü
+					// ãã®ã¾ã¾
 				}
 			}
 		}
@@ -826,15 +826,15 @@ void GetRedundantPath(String& rRedundantPath) {
 	FixPath(rRedundantPath);
 }
 
-// wstring ‚ÉMBCS•¶š—ñ‚ğUNICODE‚É•ÏŠ·‚µ‚ÄƒZƒbƒg‚·‚é
+// wstring ã«MBCSæ–‡å­—åˆ—ã‚’UNICODEã«å¤‰æ›ã—ã¦ã‚»ãƒƒãƒˆã™ã‚‹
 void setMultiByteString(wstring& rWString, const char* string) {
 	rWString.erase();
 
-	// Unicode‚É•K—v‚È•¶š”‚Ìæ“¾
+	// Unicodeã«å¿…è¦ãªæ–‡å­—æ•°ã®å–å¾—
 	int len = ::MultiByteToWideChar(CP_THREAD_ACP, 0, string, -1, NULL, 0);
 	WCHAR* pUnicode = new WCHAR[len];
 
-	//•ÏŠ·
+	//å¤‰æ›
 	::MultiByteToWideChar(CP_THREAD_ACP, 0, string, (int)strlen(string)+1, pUnicode, len);
 
 	rWString = pUnicode;
@@ -842,9 +842,9 @@ void setMultiByteString(wstring& rWString, const char* string) {
 	delete	pUnicode;
 }
 
-// -1 : ƒGƒ‰[
-//  0 : ‚È‚É‚à‚È‚¢
-//  1 : ’†’f‚·‚×‚«
+// -1 : ã‚¨ãƒ©ãƒ¼
+//  0 : ãªã«ã‚‚ãªã„
+//  1 : ä¸­æ–­ã™ã¹ã
 int CheckRemarkableFile() 
 {
 	int r = CheckRemarkableFileSub();
@@ -854,8 +854,8 @@ int CheckRemarkableFile()
 		switch (g_WarningLevel) {
 		case 1:
 		{
-			// ƒƒbƒZ[ƒW‚Æ\¬o—Í
-			cout << _T("’–Úƒtƒ@ƒCƒ‹‚Ì‚İ‚Å\¬‚³‚ê‚Ä‚¢‚Ü‚·") << endl;
+			// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¨æ§‹æˆå‡ºåŠ›
+			cout << _T("æ³¨ç›®ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿ã§æ§‹æˆã•ã‚Œã¦ã„ã¾ã™") << endl;
 			list<boost::shared_ptr<IndividualInfo> >::iterator it;
 			for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 				cout << (*it)->getFullPath() << endl;
@@ -864,8 +864,8 @@ int CheckRemarkableFile()
 		}
 		case 2:
 		{
-			// ƒƒbƒZ[ƒW‚Æ\¬o—Í
-			cout << _T("’–Úƒtƒ@ƒCƒ‹‚ªŠÜ‚Ü‚ê‚Ä‚¢‚Ü‚·") << endl;
+			// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã¨æ§‹æˆå‡ºåŠ›
+			cout << _T("æ³¨ç›®ãƒ•ã‚¡ã‚¤ãƒ«ãŒå«ã¾ã‚Œã¦ã„ã¾ã™") << endl;
 			list<boost::shared_ptr<IndividualInfo> >::iterator it;
 			for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 				cout << (*it)->getFullPath() << endl;
@@ -881,9 +881,9 @@ int CheckRemarkableFile()
 	}
 }
 
-//  0 : ³íI—¹
-//  1 : ğŒ‚É‚©‚©‚Á‚½
-// -1 : ƒGƒ‰[
+//  0 : æ­£å¸¸çµ‚äº†
+//  1 : æ¡ä»¶ã«ã‹ã‹ã£ãŸ
+// -1 : ã‚¨ãƒ©ãƒ¼
 int CheckRemarkableFileSub() 
 {
 	if (g_WarningLevel == 0) return 0;
@@ -899,10 +899,10 @@ int CheckRemarkableFileSub()
 	try {
 		wregex regex(append, regex_constants::normal | regex_constants::icase);
 
-		// ³‹K•\Œ»‚Æƒtƒ@ƒCƒ‹–¼‚ªƒ}ƒbƒ`‚µ‚È‚©‚Á‚½‚çæ‚èœ‚­
+		// æ­£è¦è¡¨ç¾ã¨ãƒ•ã‚¡ã‚¤ãƒ«åãŒãƒãƒƒãƒã—ãªã‹ã£ãŸã‚‰å–ã‚Šé™¤ã
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it=g_compressFileList.begin(); it!=g_compressFileList.end(); ++it) {
-			// ƒtƒHƒ‹ƒ_‚Í–³‹
+			// ãƒ•ã‚©ãƒ«ãƒ€ã¯ç„¡è¦–
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
 				continue;
 			}
@@ -925,14 +925,14 @@ int CheckRemarkableFileSub()
 	}
 
 	catch (boost::bad_expression) {
-		cout << _T("³‹K•\Œ»‚ÌƒRƒ“ƒpƒCƒ‹‚É¸”s") << endl;
+		cout << _T("æ­£è¦è¡¨ç¾ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã«å¤±æ•—") << endl;
 		return -1;
 	}
 
 	return 0;
 }
 
-// ’Ç‰Áƒtƒ@ƒCƒ‹‚ğƒ`ƒFƒbƒN
+// è¿½åŠ ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒã‚§ãƒƒã‚¯
 bool CheckAppendFile(LPCTSTR basePath) {
 	if (g_AppendFile.IsEmpty()) return true;
 
@@ -946,7 +946,7 @@ bool CheckAppendFile(LPCTSTR basePath) {
 	try {
 		wregex regex(append, regex_constants::normal | regex_constants::icase);
 
-		// ³‹K•\Œ»‚Æƒtƒ@ƒCƒ‹–¼‚ªƒ}ƒbƒ`‚µ‚È‚©‚Á‚½‚çæ‚èœ‚­
+		// æ­£è¦è¡¨ç¾ã¨ãƒ•ã‚¡ã‚¤ãƒ«åãŒãƒãƒƒãƒã—ãªã‹ã£ãŸã‚‰å–ã‚Šé™¤ã
 		list<boost::shared_ptr<IndividualInfo> >::iterator it = g_compressFileList.begin();
 		while (it != g_compressFileList.end()) {
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
@@ -965,34 +965,34 @@ bool CheckAppendFile(LPCTSTR basePath) {
 			if (regex_match(filename, results, regex)) {
 				++it;
 			} else {
-				// ˆêŠ‡‰ğ“€‚Ìê‡‚Í‰ğ“€Ï‚İ‚ÌÀÛ‚Ìƒtƒ@ƒCƒ‹‚àíœ
+				// ä¸€æ‹¬è§£å‡ã®å ´åˆã¯è§£å‡æ¸ˆã¿ã®å®Ÿéš›ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚‚å‰Šé™¤
 				if (g_BatchDecompress) {
 					String path = basePath;
 					CatPath(path, (*it)->getFullPath());
 
-					// “Ç‚İæ‚èê—pƒtƒ@ƒCƒ‹‚àÁ‚¹‚é‚æ‚¤‚É
-					// DeleteFile() ‚Å‚Í‚È‚­ DeleteFileOrFolder() ‚ğg—p
+					// èª­ã¿å–ã‚Šå°‚ç”¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚‚æ¶ˆã›ã‚‹ã‚ˆã†ã«
+					// DeleteFile() ã§ã¯ãªã DeleteFileOrFolder() ã‚’ä½¿ç”¨
 					bool usesRecycleBin = g_RecyclesIndividualFiles;
 					if(!DeleteFileOrFolder(path.c_str(), usesRecycleBin)) {
-						cout << _T("ƒtƒ@ƒCƒ‹ ") << (*it)->getFullPath() << _T(" ‚Ìíœ‚É¸”s") << endl;
+						cout << _T("ãƒ•ã‚¡ã‚¤ãƒ« ") << (*it)->getFullPath() << _T(" ã®å‰Šé™¤ã«å¤±æ•—") << endl;
 						return false;
 					}
 				}
-				cout << _T("ƒtƒ@ƒCƒ‹ ") << (*it)->getFullPath() << _T(" ‚ğíœ") << endl;
+				cout << _T("ãƒ•ã‚¡ã‚¤ãƒ« ") << (*it)->getFullPath() << _T(" ã‚’å‰Šé™¤") << endl;
 				it = g_compressFileList.erase(it);
 			}
 		}
 	}
 
 	catch (boost::bad_expression) {
-		cout << _T("³‹K•\Œ»‚ÌƒRƒ“ƒpƒCƒ‹‚É¸”s") << endl;
+		cout << _T("æ­£è¦è¡¨ç¾ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã«å¤±æ•—") << endl;
 		return false;
 	}
 
 	return true;
 }
 
-// ’Ç‰Áƒtƒ@ƒCƒ‹‚ğƒ`ƒFƒbƒN
+// è¿½åŠ ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒã‚§ãƒƒã‚¯
 bool ExistsNotAppendFile() {
 	#ifdef _UNICODE
 		wstring append(g_AppendFile.c_str());
@@ -1027,8 +1027,8 @@ bool ExistsNotAppendFile() {
 		}
 	}
 
-	// ƒGƒ‰[‚Í‚±‚±‚Å‚Ío‚³‚¸
-	// ƒ`ƒFƒbƒN‚ğ’†’f‚³‚¹‚éŒ`‚Å•Ô‚·
+	// ã‚¨ãƒ©ãƒ¼ã¯ã“ã“ã§ã¯å‡ºã•ãš
+	// ãƒã‚§ãƒƒã‚¯ã‚’ä¸­æ–­ã•ã›ã‚‹å½¢ã§è¿”ã™
 	catch (boost::bad_expression) {
 		return true;
 	}
@@ -1036,7 +1036,7 @@ bool ExistsNotAppendFile() {
 	return false;
 }
 
-// œŠOƒtƒ@ƒCƒ‹‚ğƒ`ƒFƒbƒN
+// é™¤å¤–ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒã‚§ãƒƒã‚¯
 bool CheckExcludeFile(LPCTSTR basePath) {
 	if (g_ExcludeFile.IsEmpty()) return true;
 
@@ -1050,7 +1050,7 @@ bool CheckExcludeFile(LPCTSTR basePath) {
 	try {
 		wregex regex(exclude, regex_constants::normal | regex_constants::icase);
 
-		// ³‹K•\Œ»‚Æƒtƒ@ƒCƒ‹–¼‚ªƒ}ƒbƒ`‚µ‚½‚çæ‚èœ‚­
+		// æ­£è¦è¡¨ç¾ã¨ãƒ•ã‚¡ã‚¤ãƒ«åãŒãƒãƒƒãƒã—ãŸã‚‰å–ã‚Šé™¤ã
 		list<boost::shared_ptr<IndividualInfo> >::iterator it = g_compressFileList.begin();
 		while (it != g_compressFileList.end()) {
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
@@ -1067,20 +1067,20 @@ bool CheckExcludeFile(LPCTSTR basePath) {
 
 			wsmatch results;
 			if ( regex_match(filename, results, regex) ) {
-				// ˆêŠ‡‰ğ“€‚Ìê‡‚Í‰ğ“€Ï‚İ‚ÌÀÛ‚Ìƒtƒ@ƒCƒ‹‚àíœ
+				// ä¸€æ‹¬è§£å‡ã®å ´åˆã¯è§£å‡æ¸ˆã¿ã®å®Ÿéš›ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚‚å‰Šé™¤
 				if (g_BatchDecompress) {
 					String path = basePath;
 					CatPath(path, (*it)->getFullPath());
 
-					// “Ç‚İæ‚èê—pƒtƒ@ƒCƒ‹‚àÁ‚¹‚é‚æ‚¤‚É
-					// DeleteFile() ‚Å‚Í‚È‚­ DeleteFileOrFolder() ‚ğg—p
+					// èª­ã¿å–ã‚Šå°‚ç”¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚‚æ¶ˆã›ã‚‹ã‚ˆã†ã«
+					// DeleteFile() ã§ã¯ãªã DeleteFileOrFolder() ã‚’ä½¿ç”¨
 					bool usesRecycleBin = g_RecyclesIndividualFiles;
 					if(!DeleteFileOrFolder(path.c_str(), usesRecycleBin)) {
-						cout << _T("ƒtƒ@ƒCƒ‹ ") << (*it)->getFullPath() << _T(" ‚Ìíœ‚É¸”s") << endl;
+						cout << _T("ãƒ•ã‚¡ã‚¤ãƒ« ") << (*it)->getFullPath() << _T(" ã®å‰Šé™¤ã«å¤±æ•—") << endl;
 						return false;
 					}
 				}
-				cout << _T("ƒtƒ@ƒCƒ‹ ") << (*it)->getFullPath() << _T(" ‚ğíœ") << endl;
+				cout << _T("ãƒ•ã‚¡ã‚¤ãƒ« ") << (*it)->getFullPath() << _T(" ã‚’å‰Šé™¤") << endl;
 				it = g_compressFileList.erase(it);
 			} else {
 				++it;
@@ -1089,7 +1089,7 @@ bool CheckExcludeFile(LPCTSTR basePath) {
 	}
 
 	catch (boost::bad_expression) {
-		cout << _T("³‹K•\Œ»‚ÌƒRƒ“ƒpƒCƒ‹‚É¸”s") << endl;
+		cout << _T("æ­£è¦è¡¨ç¾ã®ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã«å¤±æ•—") << endl;
 		return false;
 	}
 
@@ -1097,7 +1097,7 @@ bool CheckExcludeFile(LPCTSTR basePath) {
 }
 
 
-// œŠOƒtƒ@ƒCƒ‹‚ğƒ`ƒFƒbƒN
+// é™¤å¤–ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒã‚§ãƒƒã‚¯
 bool ExistsExcludeFile() {
 	#ifdef _UNICODE
 		wstring exclude(g_ExcludeFile.c_str());
@@ -1109,7 +1109,7 @@ bool ExistsExcludeFile() {
 	try {
 		wregex regex(exclude, regex_constants::normal | regex_constants::icase);
 
-		// ³‹K•\Œ»‚Æƒtƒ@ƒCƒ‹–¼‚ªƒ}ƒbƒ`‚µ‚½‚çæ‚èœ‚­
+		// æ­£è¦è¡¨ç¾ã¨ãƒ•ã‚¡ã‚¤ãƒ«åãŒãƒãƒƒãƒã—ãŸã‚‰å–ã‚Šé™¤ã
 		list<boost::shared_ptr<IndividualInfo> >::iterator it = g_compressFileList.begin();
 		while (it != g_compressFileList.end()) {
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
@@ -1133,8 +1133,8 @@ bool ExistsExcludeFile() {
 		}
 	}
 
-	// ƒGƒ‰[‚Í‚±‚±‚Å‚Ío‚³‚¸
-	// ƒ`ƒFƒbƒN‚ğ’†’f‚³‚¹‚éŒ`‚Å•Ô‚·
+	// ã‚¨ãƒ©ãƒ¼ã¯ã“ã“ã§ã¯å‡ºã•ãš
+	// ãƒã‚§ãƒƒã‚¯ã‚’ä¸­æ–­ã•ã›ã‚‹å½¢ã§è¿”ã™
 	catch (boost::bad_expression) {
 		return true;
 	}
@@ -1174,10 +1174,10 @@ void StringToFileTime(LPCTSTR fileTime, FILETIME& rFileTime) {
 	FILETIME ft;
 	SystemTimeToFileTime(&st, &ft);
 
-	LocalFileTimeToFileTime(&ft, &rFileTime); //•ÏŠ·
+	LocalFileTimeToFileTime(&ft, &rFileTime); //å¤‰æ›
 }
 
-// •¶š—ñ‚Åƒtƒ@ƒCƒ‹‚ÌXV“ú‚ğİ’è‚·‚é
+// æ–‡å­—åˆ—ã§ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ—¥æ™‚ã‚’è¨­å®šã™ã‚‹
 bool SetFileLastWriteTime(LPCTSTR filename, LPCTSTR lastWriteTime) {
 	FILETIME ft;
 
@@ -1185,14 +1185,14 @@ bool SetFileLastWriteTime(LPCTSTR filename, LPCTSTR lastWriteTime) {
 
 	HANDLE hFile = CreateFile(filename, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
-		cout << _T("ƒtƒ@ƒCƒ‹‚ÌXV“ú•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+		cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 		return false;
 	}
 
 	bool b = (SetFileTime(hFile, NULL, NULL, &ft) != 0);
 
 	if (b == false) {
-		cout << _T("ƒtƒ@ƒCƒ‹‚ÌXV“ú•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+		cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 	}
 
 	CloseHandle(hFile);
@@ -1221,9 +1221,9 @@ bool AddLackFolder() {
 	list<boost::shared_ptr<IndividualInfo> >::iterator it;
 	for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 		if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-			// ƒtƒHƒ‹ƒ_‚ğŒ©‚Â‚¯‚½‚çƒpƒX‚ğ‹L‰¯
-			// ‚½‚¾‚µA‚QŠK‘wˆê‹C‚É’Ç‰Á‚³‚ê‚é‰Â”\«‚à‚ ‚é‚Ì‚Å
-			// ‚PŠK‘w‚¸‚Âƒ`ƒFƒbƒN
+			// ãƒ•ã‚©ãƒ«ãƒ€ã‚’è¦‹ã¤ã‘ãŸã‚‰ãƒ‘ã‚¹ã‚’è¨˜æ†¶
+			// ãŸã ã—ã€ï¼’éšå±¤ä¸€æ°—ã«è¿½åŠ ã•ã‚Œã‚‹å¯èƒ½æ€§ã‚‚ã‚ã‚‹ã®ã§
+			// ï¼‘éšå±¤ãšã¤ãƒã‚§ãƒƒã‚¯
 
 			TCHAR common[MAX_PATH + 1];
 			PathCommonPrefix((*it)->getFullPath(), path.c_str(), common);
@@ -1234,11 +1234,11 @@ bool AddLackFolder() {
 				p = (*it)->getFullPath() + lstrlen(common) + 1;
 			}
 			if (strchrex(p, _TCHAR('\\')) == NULL) {
-				// ‚PŠK‘w‚µ‚©•Ï‰»‚µ‚Ä‚¢‚È‚¯‚ê‚Î
-				// ‚±‚Ì‘O‚ÉƒtƒHƒ‹ƒ_‚ğ‘}“ü‚·‚é•K—v‚Í‚È‚¢
+				// ï¼‘éšå±¤ã—ã‹å¤‰åŒ–ã—ã¦ã„ãªã‘ã‚Œã°
+				// ã“ã®å‰ã«ãƒ•ã‚©ãƒ«ãƒ€ã‚’æŒ¿å…¥ã™ã‚‹å¿…è¦ã¯ãªã„
 				path = (*it)->getFullPath();
 			} else {
-				// ƒtƒHƒ‹ƒ_‚ª“o˜^‚³‚ê‚Ä‚¢‚È‚¢
+				// ãƒ•ã‚©ãƒ«ãƒ€ãŒç™»éŒ²ã•ã‚Œã¦ã„ãªã„
 				String filePath = (*it)->getFullPath();
 				RemoveFileName(filePath);
 
@@ -1260,18 +1260,18 @@ bool AddLackFolder() {
 			}
 
 		} else {
-			// ƒtƒ@ƒCƒ‹‚ğŒ©‚Â‚¯‚½‚ç
-			// ‚»‚Ìƒtƒ@ƒCƒ‹‚ğ‚ÂƒfƒBƒŒƒNƒgƒŠ‚ª‚ ‚é‚©ƒ`ƒFƒbƒN‚·‚é
+			// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¦‹ã¤ã‘ãŸã‚‰
+			// ãã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒã¤ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 			String filePath = (*it)->getFullPath();
 			RemoveFileName(filePath);
 			int r = lstrcmpi(filePath.c_str(), path.c_str());
 			if (r == 0) {
-				// ƒtƒHƒ‹ƒ_‚Í“o˜^Ï‚İ
+				// ãƒ•ã‚©ãƒ«ãƒ€ã¯ç™»éŒ²æ¸ˆã¿
 			} else if (r < 0) {
-				// ã‚ÌŠK‘w‚ÌƒtƒHƒ‹ƒ_‚É‚ ‚Á‚½
+				// ä¸Šã®éšå±¤ã®ãƒ•ã‚©ãƒ«ãƒ€ã«ã‚ã£ãŸ
 				path = filePath;
 			} else {
-				// ƒtƒHƒ‹ƒ_‚ª“o˜^‚³‚ê‚Ä‚¢‚È‚¢
+				// ãƒ•ã‚©ãƒ«ãƒ€ãŒç™»éŒ²ã•ã‚Œã¦ã„ãªã„
 				adds = true;
 
 				TCHAR common[MAX_PATH + 1];
@@ -1300,9 +1300,9 @@ bool AddLackFolder() {
 
 
 
-//  0:	‘ŒÉ‚Ìî•ñ‚ğæ“¾‚µ ˆ—Ï‚İ
-//  1:	‘ŒÉ‚Ìî•ñ‚ğæ“¾‚µ –¢ˆ—
-// -1:	‘ŒÉ‚Ìî•ñæ“¾‚Å‚«‚¸
+//  0:	æ›¸åº«ã®æƒ…å ±ã‚’å–å¾—ã— å‡¦ç†æ¸ˆã¿
+//  1:	æ›¸åº«ã®æƒ…å ±ã‚’å–å¾—ã— æœªå‡¦ç†
+// -1:	æ›¸åº«ã®æƒ…å ±å–å¾—ã§ããš
 int isProcessedArchive(LPCTSTR filename) 
 {
 	g_compressFileList.clear();
@@ -1343,7 +1343,7 @@ int isProcessedArchive(LPCTSTR filename)
 	 		isProcessed = false;
 		}
 
-		// internal file attributes ‚Í–³ˆ³k‚Å‚È‚¢ê‡ŒŸØ‚Å‚«‚È‚¢
+		// internal file attributes ã¯ç„¡åœ§ç¸®ã§ãªã„å ´åˆæ¤œè¨¼ã§ããªã„
 		if ((p->getExternalFileAttributes() & FILE_ATTRIBUTE_DIRECTORY) == 0) {
 			if (p->getVersionNeededToExtract() != 0x000a) {
 				isProcessed = false;
@@ -1356,7 +1356,7 @@ int isProcessedArchive(LPCTSTR filename)
 			if (p->getInternalFileAttributes() != 0) isProcessed = false;
 		}
 
-		// ƒ\[ƒg‚ª•s—v‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+		// ã‚½ãƒ¼ãƒˆãŒä¸è¦ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
 		if (pLastIndividualInfo && 
 			IndividualInfoSortCriterion()(pIndividualInfo, pLastIndividualInfo)) 
 		{
@@ -1372,14 +1372,14 @@ int isProcessedArchive(LPCTSTR filename)
 		pLastIndividualInfo = pIndividualInfo;
 	}
 
-	// ‘ŒÉ‚Ìî•ñ‚ğæ“¾‚µI‚í‚Á‚½‚Ì‚Å
-	// ‚±‚±‚Ü‚Å‚Åˆ—Ï‚İ‚Å‚È‚¢‚Æ”»’f‚³‚ê‚½ê‡”²‚¯‚é
+	// æ›¸åº«ã®æƒ…å ±ã‚’å–å¾—ã—çµ‚ã‚ã£ãŸã®ã§
+	// ã“ã“ã¾ã§ã§å‡¦ç†æ¸ˆã¿ã§ãªã„ã¨åˆ¤æ–­ã•ã‚ŒãŸå ´åˆæŠœã‘ã‚‹
 	if (isProcessed == false) {
 		return 1;
 	}
 
-	// ƒ\[ƒg
-	// Zip‚Æ‚µ‚Ä³‚µ‚­ƒ\[ƒg‚³‚ê‚Ä‚¢‚Ä‚àˆ——p‚Æ‚µ‚Ä³‚µ‚­‚È‚¢‚©‚à‚µ‚ê‚È‚¢‚Ì‚ÅÄƒ\[ƒg
+	// ã‚½ãƒ¼ãƒˆ
+	// Zipã¨ã—ã¦æ­£ã—ãã‚½ãƒ¼ãƒˆã•ã‚Œã¦ã„ã¦ã‚‚å‡¦ç†ç”¨ã¨ã—ã¦æ­£ã—ããªã„ã‹ã‚‚ã—ã‚Œãªã„ã®ã§å†ã‚½ãƒ¼ãƒˆ
 	//g_compressFileList.sort(IndividualInfoSortCriterion());
 
 	#ifdef _DEBUG
@@ -1391,34 +1391,34 @@ int isProcessedArchive(LPCTSTR filename)
 	}
 	#endif
 
-	// Œ‡‚¯‚Ä‚¢‚éƒtƒHƒ‹ƒ_‚Ìƒ`ƒFƒbƒN
-	// ƒtƒHƒ‹ƒ_‚ªŒ‡‚¯‚Ä‚¢‚éê‡‚Í’Ç‰Á‚Æ“¯‚Éˆ—Ï‚İ‚Å‚Í‚È‚¢‚Æ”»’f‚³‚ê‚é
+	// æ¬ ã‘ã¦ã„ã‚‹ãƒ•ã‚©ãƒ«ãƒ€ã®ãƒã‚§ãƒƒã‚¯
+	// ãƒ•ã‚©ãƒ«ãƒ€ãŒæ¬ ã‘ã¦ã„ã‚‹å ´åˆã¯è¿½åŠ ã¨åŒæ™‚ã«å‡¦ç†æ¸ˆã¿ã§ã¯ãªã„ã¨åˆ¤æ–­ã•ã‚Œã‚‹
 	if (AddLackFolder()) {
 		return 1;
 	}
 
-	// ’Ç‰Áƒtƒ@ƒCƒ‹‚Ìƒ`ƒFƒbƒN
+	// è¿½åŠ ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚§ãƒƒã‚¯
 	if (g_AppendFile.IsEmpty() == false) {
 		if (ExistsNotAppendFile()) return 1;
 	}
 
-	// œŠOƒtƒ@ƒCƒ‹‚Ìƒ`ƒFƒbƒN
+	// é™¤å¤–ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚§ãƒƒã‚¯
 	if (g_ExcludeFile.IsEmpty() == false) {
 		if (ExistsExcludeFile()) return 1;
 	}
 
-	// ‹óƒtƒHƒ‹ƒ_‚Ìƒ`ƒFƒbƒN
+	// ç©ºãƒ•ã‚©ãƒ«ãƒ€ã®ãƒã‚§ãƒƒã‚¯
 	if (g_DeletesEmptyFolder) {
 		if (ExistsEmptyFolder()) return 1;
 	}
 
-	// ç’·ƒtƒHƒ‹ƒ_‚Ìƒ`ƒFƒbƒN
+	// å†—é•·ãƒ•ã‚©ãƒ«ãƒ€ã®ãƒã‚§ãƒƒã‚¯
 	if (g_RemovesRedundantFolder != 0) {
 		if (ExistsRedundantFolde()) return 1;
 	}
 
 	{
-		// ‘®«‚Ìƒ`ƒFƒbƒN
+		// å±æ€§ã®ãƒã‚§ãƒƒã‚¯
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
@@ -1434,7 +1434,7 @@ int isProcessedArchive(LPCTSTR filename)
 	}
 
 	{
-		// XV“ú‚Ìƒ`ƒFƒbƒN
+		// æ›´æ–°æ—¥æ™‚ã®ãƒã‚§ãƒƒã‚¯
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
@@ -1447,10 +1447,10 @@ int isProcessedArchive(LPCTSTR filename)
 						return 1;
 					}					
 				} else if (g_FolderTimeMode == 2) {
-					// ƒtƒHƒ‹ƒ_‚ÌXV“ú‚æ‚è‚àV‚µ‚¢ƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚ª
-					// ƒtƒHƒ‹ƒ_ˆÈ‰º‚É‚ ‚Á‚½‚ç’†~
-					// ƒtƒHƒ‹ƒ_ˆÈ‰º‚ÌÅV‚Ìƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚ÆƒtƒHƒ‹ƒ_‚ÌXV“ú‚ª
-					// ˆê’v‚µ‚È‚¢ê‡‚à’†~
+					// ãƒ•ã‚©ãƒ«ãƒ€ã®æ›´æ–°æ—¥æ™‚ã‚ˆã‚Šã‚‚æ–°ã—ã„ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ãŒ
+					// ãƒ•ã‚©ãƒ«ãƒ€ä»¥ä¸‹ã«ã‚ã£ãŸã‚‰ä¸­æ­¢
+					// ãƒ•ã‚©ãƒ«ãƒ€ä»¥ä¸‹ã®æœ€æ–°ã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã¨ãƒ•ã‚©ãƒ«ãƒ€ã®æ›´æ–°æ—¥æ™‚ãŒ
+					// ä¸€è‡´ã—ãªã„å ´åˆã‚‚ä¸­æ­¢
 					FILETIME ft;
 					ft.dwHighDateTime = 0;
 					ft.dwLowDateTime = 0;
@@ -1490,13 +1490,13 @@ int isProcessedArchive(LPCTSTR filename)
 
 
 
-// ƒpƒXƒ[ƒhƒ_ƒCƒAƒƒO
+// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ€ã‚¤ã‚¢ãƒ­ã‚°
 String g_password;
 String g_archive;
 String g_file;
 bool g_masksPassword = false;
 
-// ƒTƒCƒY§ŒÀ‚È‚µ‚ÅŒ‹‰Ê‚ğ String ‚É•Ô‚· GetWindowText()
+// ã‚µã‚¤ã‚ºåˆ¶é™ãªã—ã§çµæœã‚’ String ã«è¿”ã™ GetWindowText()
 void GetWindowText(HWND hWnd, String& String)
 {
 	DWORD dwSize;
@@ -1506,20 +1506,20 @@ void GetWindowText(HWND hWnd, String& String)
 	for(;;){
 		pszString = new TCHAR [dwSize];
 
-		// ŠÖ”‚ª¬Œ÷‚·‚é‚ÆƒRƒs[‚³‚ê‚½•¶š—ñ‚Ì•¶š”‚ª•Ô‚é(I’[‚Ì NULL •¶š‚ÍŠÜ‚Ü‚È‚¢)
+		// é–¢æ•°ãŒæˆåŠŸã™ã‚‹ã¨ã‚³ãƒ”ãƒ¼ã•ã‚ŒãŸæ–‡å­—åˆ—ã®æ–‡å­—æ•°ãŒè¿”ã‚‹(çµ‚ç«¯ã® NULL æ–‡å­—ã¯å«ã¾ãªã„)
 		dwRet = GetWindowText(hWnd, pszString, dwSize);
 
 		if(dwRet == 0){
-			// ƒGƒ‰[‚â‹ó‚Ì•¶š—ñ
+			// ã‚¨ãƒ©ãƒ¼ã‚„ç©ºã®æ–‡å­—åˆ—
 			delete [] pszString;
 			String.Empty();
 			return;
 		}else if(dwRet == dwSize - 1){
-			// ƒoƒbƒtƒ@‚ª¬‚³‚©‚Á‚½
+			// ãƒãƒƒãƒ•ã‚¡ãŒå°ã•ã‹ã£ãŸ
 			delete [] pszString;
 			dwSize*=2;
 		}else{
-			// ¬Œ÷
+			// æˆåŠŸ
 			break;
 		}
 	}
@@ -1569,8 +1569,8 @@ INT_PTR CALLBACK PasswordDialogProc(HWND hwndDlg,
     }
 }
 
-// IDOK : “ü—Í‚³‚ê‚½
-// IDCANCEL : ƒLƒƒƒ“ƒZƒ‹‚³‚ê‚½
+// IDOK : å…¥åŠ›ã•ã‚ŒãŸ
+// IDCANCEL : ã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚ŒãŸ
 int getPassword(LPCTSTR archive, LPCTSTR file, String& password) {
 	g_archive = archive;
 	g_file = file;
@@ -1579,51 +1579,51 @@ int getPassword(LPCTSTR archive, LPCTSTR file, String& password) {
 	return (int)r;
 }
 
-// ‘ŒÉ‚ğˆ—‚·‚é
+// æ›¸åº«ã‚’å‡¦ç†ã™ã‚‹
 bool process(LPCTSTR filename) 
 {
 	if (!FileExists(filename)) {
-		cout << _T("‘ŒÉ‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ") << endl;
+		cout << _T("æ›¸åº«ãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“") << endl;
 		return false;
 	}
 
-	// ‘ŒÉ‚©‚ç\¬ƒtƒ@ƒCƒ‹‚ÌƒŠƒXƒg‚ğ“¾‚Ä
-	// ‚»‚ÌƒŠƒXƒg‚ğQÆA‘€ì‚µA•K—v‚È‚à‚Ì‚Ì‚İ‰ğ“€
-	// i‰ğ“€‚ÌÛAç’·ƒtƒHƒ‹ƒ_‚àl—¶‚µ‚Ä“WŠJ‚·‚éj
-	// ‰ğ“€‚³‚ê‚½‚à‚Ì‚ğw’è‚Ìˆ³k—¦‚Åˆ³k‚·‚é
+	// æ›¸åº«ã‹ã‚‰æ§‹æˆãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒªã‚¹ãƒˆã‚’å¾—ã¦
+	// ãã®ãƒªã‚¹ãƒˆã‚’å‚ç…§ã€æ“ä½œã—ã€å¿…è¦ãªã‚‚ã®ã®ã¿è§£å‡
+	// ï¼ˆè§£å‡ã®éš›ã€å†—é•·ãƒ•ã‚©ãƒ«ãƒ€ã‚‚è€ƒæ…®ã—ã¦å±•é–‹ã™ã‚‹ï¼‰
+	// è§£å‡ã•ã‚ŒãŸã‚‚ã®ã‚’æŒ‡å®šã®åœ§ç¸®ç‡ã§åœ§ç¸®ã™ã‚‹
 
-	// ‘Š‘ÎƒpƒX‚Å‚Ìw’è‚à‚ ‚è“¾‚é‚Ì‚Å
-	// ƒA[ƒJƒCƒuƒtƒ@ƒCƒ‹–¼‚ğƒtƒ‹ƒpƒX‚É‚·‚é
+	// ç›¸å¯¾ãƒ‘ã‚¹ã§ã®æŒ‡å®šã‚‚ã‚ã‚Šå¾—ã‚‹ã®ã§
+	// ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãƒ•ãƒ«ãƒ‘ã‚¹ã«ã™ã‚‹
 	String srcFilename(filename);
 	GetFullPath(srcFilename);
 
 	if (srcFilename.GetLength() > MAX_PATH) {
-		cout << _T("‘ŒÉ‚ÌƒpƒX‚ª’·‚·‚¬‚Ü‚·") << endl;
+		cout << _T("æ›¸åº«ã®ãƒ‘ã‚¹ãŒé•·ã™ãã¾ã™") << endl;
 		return false;
 	}
 
-	// ˆ—Ï‚İ‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+	// å‡¦ç†æ¸ˆã¿ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
 	int result = isProcessedArchive(srcFilename.c_str());
 	if (g_PreCheck && result == 0) {
-		cout << _T("ˆ—‚Í•s—v‚Å‚·") << endl;
+		cout << _T("å‡¦ç†ã¯ä¸è¦ã§ã™") << endl;
 
-		// ’–Úƒtƒ@ƒCƒ‹‚Ìƒ`ƒFƒbƒN
+		// æ³¨ç›®ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚§ãƒƒã‚¯
 		CheckRemarkableFile();
 
-		// ƒtƒ@ƒCƒ‹–¼‚ğƒ`ƒFƒbƒN
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãƒã‚§ãƒƒã‚¯
 		String ext;
 		GetExtention(srcFilename.c_str(), ext);
 		if (lstrcmpi(ext.c_str(), _T(".zip")) == 0) {
 			return true;
 		}
 
-		// Œ³‚Ì‘ŒÉíœŒã–Ú•W‚Ì–¼‘O‚É•Ï‚¦‚é
+		// å…ƒã®æ›¸åº«å‰Šé™¤å¾Œç›®æ¨™ã®åå‰ã«å¤‰ãˆã‚‹
 		String destFilename(srcFilename);
 		RemoveExtension(destFilename);
 		destFilename.Cat(_T(".zip"));
 		EvacuateFileName(destFilename);
 		if (MoveFile(srcFilename.c_str(), destFilename.c_str()) == 0) {
-			cout << _T("‘ŒÉ‚ÌƒŠƒl[ƒ€‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+			cout << _T("æ›¸åº«ã®ãƒªãƒãƒ¼ãƒ ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 			cout << destFilename.c_str() << endl;
 		}
 		return true;
@@ -1632,7 +1632,7 @@ bool process(LPCTSTR filename)
 	ArchiveDll* pArchiveDll;
 	pArchiveDll = g_ArchiveDllManager.getSuitableArchiveDll(srcFilename.c_str());
 	if (pArchiveDll == NULL) {
-		cout << _T("‘ŒÉ‚ğˆµ‚¤‚Ì‚É“K“–‚ÈDLL‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ") << endl;
+		cout << _T("æ›¸åº«ã‚’æ‰±ã†ã®ã«é©å½“ãªDLLãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“") << endl;
 		return false;
 	}
 
@@ -1643,29 +1643,29 @@ bool process(LPCTSTR filename)
 
 
 
-	// ‰ğ“€æ‚Ég‚¤ƒeƒ“ƒ|ƒ‰ƒŠƒtƒHƒ‹ƒ_‚ğ“¾‚é
+	// è§£å‡å…ˆã«ä½¿ã†ãƒ†ãƒ³ãƒãƒ©ãƒªãƒ•ã‚©ãƒ«ãƒ€ã‚’å¾—ã‚‹
 	String destPath;
 	getTemporaryPath(destPath);
 
-	// ˆêˆÓ‚È–¼‘O‚ÌƒtƒHƒ‹ƒ_‚ğì‚é
+	// ä¸€æ„ãªåå‰ã®ãƒ•ã‚©ãƒ«ãƒ€ã‚’ä½œã‚‹
 	CatPath(destPath, _T("uz"));
 	EvacuateFolderName(destPath);
 
-	// ƒtƒ@ƒCƒ‹–¼‚ğŒ³‚ÉƒtƒHƒ‹ƒ_–¼‚ğì¬‚·‚éê‡
+	// ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å…ƒã«ãƒ•ã‚©ãƒ«ãƒ€åã‚’ä½œæˆã™ã‚‹å ´åˆ
 	//CatPath(destPath, srcFilename.c_str());
 	//RemoveExtension(destPath);
 	//evacuateFolderName(destPath);
 
-	// destPath ‚ÉˆêˆÓ‚ÈƒtƒHƒ‹ƒ_–¼‚ª“ü‚Á‚½‚Ì‚Å‚»‚ÌƒtƒHƒ‹ƒ_‚ğì¬
+	// destPath ã«ä¸€æ„ãªãƒ•ã‚©ãƒ«ãƒ€åãŒå…¥ã£ãŸã®ã§ãã®ãƒ•ã‚©ãƒ«ãƒ€ã‚’ä½œæˆ
 	TemporaryFolder temp_folder;
 	if (!temp_folder.create(destPath.c_str())) {
-		cout << _T("ƒeƒ“ƒ|ƒ‰ƒŠƒtƒHƒ‹ƒ_ì¬‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+		cout << _T("ãƒ†ãƒ³ãƒãƒ©ãƒªãƒ•ã‚©ãƒ«ãƒ€ä½œæˆã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 		return false;
 	}
 
 	if (g_BatchDecompress) {
-		// ‘ŒÉ“à‚Ìƒtƒ@ƒCƒ‹–¼‚É‚æ‚Á‚Ä‚Í UNZIP32.DLL ‚Å‰ğ“€‚ğ‚İ‚é‚ÆˆÙíI—¹‚·‚é‚Ì‚Å
-		// ‘ŒÉ“à‚Ìƒtƒ@ƒCƒ‹–¼‚ğæ“¾‚Å‚«‚Ä‚¢‚éê‡‚»‚Ìƒtƒ@ƒCƒ‹–¼‚ğƒ`ƒFƒbƒN
+		// æ›¸åº«å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«åã«ã‚ˆã£ã¦ã¯ UNZIP32.DLL ã§è§£å‡ã‚’è©¦ã¿ã‚‹ã¨ç•°å¸¸çµ‚äº†ã™ã‚‹ã®ã§
+		// æ›¸åº«å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–å¾—ã§ãã¦ã„ã‚‹å ´åˆãã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’ãƒã‚§ãƒƒã‚¯
 		if (result >= 0) {
 			list<boost::shared_ptr<IndividualInfo> >::iterator it;
 			for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
@@ -1674,13 +1674,13 @@ bool process(LPCTSTR filename)
 				String path = destPath;
 				CatPath(path, filename.c_str());
 
-				// ‘ŒÉ“à‚Ìƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ª’·‚·‚¬‚È‚¢‚©
+				// æ›¸åº«å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ãŒé•·ã™ããªã„ã‹
 				if (path.GetLength() > 255) {
 					error = true;
 				}
 
-				// NTFS‚Ìƒtƒ@ƒCƒ‹–¼‚Ég‚¦‚È‚¢•¶š‚Íu?  "  /  \  <  >  *  |  :v
-				// ƒpƒX‚Ì‹æØ‚è‚Ég‚í‚ê‚Ä‚¢‚é '/' ‚Æ '\\' ‚Ìƒ`ƒFƒbƒN‚ÍÈ—ª
+				// NTFSã®ãƒ•ã‚¡ã‚¤ãƒ«åã«ä½¿ãˆãªã„æ–‡å­—ã¯ã€Œ?  "  /  \  <  >  *  |  :ã€
+				// ãƒ‘ã‚¹ã®åŒºåˆ‡ã‚Šã«ä½¿ã‚ã‚Œã¦ã„ã‚‹ '/' ã¨ '\\' ã®ãƒã‚§ãƒƒã‚¯ã¯çœç•¥
 				if (filename.FindOneOf(_T(":")) != -1) {
 					error = true;
 				}
@@ -1689,39 +1689,39 @@ bool process(LPCTSTR filename)
 				}
 
 				if (error) {
-					cout << _T("‰ğ“€‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½") << endl;
+					cout << _T("è§£å‡æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ") << endl;
 					return false;
 				}
 			}
 		} else {
-			// g_compressFileList ‚ªæ“¾‚Å‚«‚Ä‚¢‚È‚¢‚Æ‚«‚Íƒ`ƒFƒbƒN‚Í‚ ‚«‚ç‚ß‚é
-			// ¸”s‚·‚é‚Ì‚Í UNZIP32.DLL ‚Å‚Ì‚Å‚ ‚é‚ª
-			// Šî–{“I‚ÉZIPƒtƒ@ƒCƒ‹‚Å‚ ‚é‚È‚ç‚Îæ“¾o—ˆ‚Ä‚¢‚é‚Í‚¸
-			// ƒRƒXƒg‚ğ‚©‚¯‚Ä‚Ü‚Åƒ`ƒFƒbƒN‚µ‚È‚¢
+			// g_compressFileList ãŒå–å¾—ã§ãã¦ã„ãªã„ã¨ãã¯ãƒã‚§ãƒƒã‚¯ã¯ã‚ãã‚‰ã‚ã‚‹
+			// å¤±æ•—ã™ã‚‹ã®ã¯ UNZIP32.DLL ã§ã®æ™‚ã§ã‚ã‚‹ãŒ
+			// åŸºæœ¬çš„ã«ZIPãƒ•ã‚¡ã‚¤ãƒ«ã§ã‚ã‚‹ãªã‚‰ã°å–å¾—å‡ºæ¥ã¦ã„ã‚‹ã¯ãš
+			// ã‚³ã‚¹ãƒˆã‚’ã‹ã‘ã¦ã¾ã§ãƒã‚§ãƒƒã‚¯ã—ãªã„
 		}
 
-		// ˆêŠ‡‰ğ“€
+		// ä¸€æ‹¬è§£å‡
 		int r = pArchiveDll->extract(temp_folder.getPath(), g_ShowsProgress, true);
 
 		if (r != 0) {
-			cout << _T("‰ğ“€‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½") << endl;
+			cout << _T("è§£å‡æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ") << endl;
 			return false;
 		}
 
-		// ƒtƒ@ƒCƒ‹î•ñæ“¾
+		// ãƒ•ã‚¡ã‚¤ãƒ«æƒ…å ±å–å¾—
 		if (!GetIndividualInfo(temp_folder.getPath())) {
 			return false;
 		}
 	} else {
-		// ‰ğ“€‚·‚éƒtƒ@ƒCƒ‹‚Ìî•ñ‚ğ–¢æ“¾‚È‚ç‚Îæ“¾
+		// è§£å‡ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®æƒ…å ±ã‚’æœªå–å¾—ãªã‚‰ã°å–å¾—
 		if (result == 1) {
-			// “¾‚½î•ñ‚Í•sŠ®‘S‚Å‚ ‚é‰Â”\«‚ª‚ ‚é‚Ì‚Å
-			// ƒ\[ƒg‚µ‚ÄŒ‡‚¯‚Ä‚¢‚éƒtƒHƒ‹ƒ_‚ğ•â‚¤
+			// å¾—ãŸæƒ…å ±ã¯ä¸å®Œå…¨ã§ã‚ã‚‹å¯èƒ½æ€§ãŒã‚ã‚‹ã®ã§
+			// ã‚½ãƒ¼ãƒˆã—ã¦æ¬ ã‘ã¦ã„ã‚‹ãƒ•ã‚©ãƒ«ãƒ€ã‚’è£œã†
 			g_compressFileList.sort(IndividualInfoSortCriterion());
 			AddLackFolder();
 		} else if (result == -1) {
 			if (!pArchiveDll->openArchive(NULL, 0)) {
-				cout << _T("‘ŒÉ‚ªŠJ‚¯‚Ü‚¹‚ñ") << endl;
+				cout << _T("æ›¸åº«ãŒé–‹ã‘ã¾ã›ã‚“") << endl;
 				return false;
 			}
 			if (!GetIndividualInfo(*pArchiveDll)) {
@@ -1731,14 +1731,14 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	// ‚±‚Ì“_‚Å‘ŒÉ“à‚Éƒtƒ@ƒCƒ‹‚ªŒ©‚Â‚©‚ç‚È‚©‚Á‚½ê‡
-	// ‹ó‚Ì‘ŒÉA‚à‚µ‚­‚ÍA‰ó‚ê‚Ä‹ó‚ÉŒ©‚¦‚é‘ŒÉ‚Æ‚¢‚¤–‚É‚È‚é
+	// ã“ã®æ™‚ç‚¹ã§æ›¸åº«å†…ã«ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã¤ã‹ã‚‰ãªã‹ã£ãŸå ´åˆ
+	// ç©ºã®æ›¸åº«ã€ã‚‚ã—ãã¯ã€å£Šã‚Œã¦ç©ºã«è¦‹ãˆã‚‹æ›¸åº«ã¨ã„ã†äº‹ã«ãªã‚‹
 	if (g_compressFileList.empty()) {
-		cout << _T("‘ŒÉ“à‚Éƒtƒ@ƒCƒ‹‚ªŒ©‚ ‚½‚è‚Ü‚¹‚ñ") << endl;
+		cout << _T("æ›¸åº«å†…ã«ãƒ•ã‚¡ã‚¤ãƒ«ãŒè¦‹ã‚ãŸã‚Šã¾ã›ã‚“") << endl;
 		return false;
 	}
 
-	// ’–Úƒtƒ@ƒCƒ‹‚Ìƒ`ƒFƒbƒN
+	// æ³¨ç›®ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚§ãƒƒã‚¯
 	int r = CheckRemarkableFile();
 	if (r == 0) {
 	} else if (r == 1) {
@@ -1747,29 +1747,29 @@ bool process(LPCTSTR filename)
 		return false;
 	}
 
-	// ’Ç‰Áƒtƒ@ƒCƒ‹‚Ìƒ`ƒFƒbƒN
+	// è¿½åŠ ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚§ãƒƒã‚¯
 	if (CheckAppendFile(temp_folder.getPath()) == false) {
 		return false;
 	}
 
-	// œŠOƒtƒ@ƒCƒ‹‚Ìƒ`ƒFƒbƒN
+	// é™¤å¤–ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚§ãƒƒã‚¯
 	if (CheckExcludeFile(temp_folder.getPath()) == false) {
 		return false;
 	}
 
-	// ‹óƒtƒHƒ‹ƒ_‚ÌœŠO
+	// ç©ºãƒ•ã‚©ãƒ«ãƒ€ã®é™¤å¤–
 	if (g_DeletesEmptyFolder) {
 		if (deleteEmptyFolder(temp_folder.getPath()) == false) {
 			return false;
 		}
 	}
 
-	// ƒpƒXƒ[ƒh•t‚«ƒtƒ@ƒCƒ‹‚Ìƒ`ƒFƒbƒN
+	// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ä»˜ããƒ•ã‚¡ã‚¤ãƒ«ã®ãƒã‚§ãƒƒã‚¯
 	if (g_IgnoresEncryptedFiles && g_BatchDecompress == false) {
 		list<boost::shared_ptr<IndividualInfo> >::iterator it = g_compressFileList.begin();
 		while (it != g_compressFileList.end()) {
 			if ((*it)->isEncrypted()) {
-				cout << _T("ˆÃ†‰»‚³‚ê‚½ƒtƒ@ƒCƒ‹ ") << (*it)->getFullPath() << _T(" ‚ğíœ") << endl;
+				cout << _T("æš—å·åŒ–ã•ã‚ŒãŸãƒ•ã‚¡ã‚¤ãƒ« ") << (*it)->getFullPath() << _T(" ã‚’å‰Šé™¤") << endl;
 				it = g_compressFileList.erase(it);
 			} else {
 				++it;
@@ -1780,7 +1780,7 @@ bool process(LPCTSTR filename)
 
 	#ifdef _DEBUG
 	{
-		cout << _T("ç’·ƒtƒHƒ‹ƒ_ŒŸo‘O") << endl;
+		cout << _T("å†—é•·ãƒ•ã‚©ãƒ«ãƒ€æ¤œå‡ºå‰") << endl;
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;	
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			cout << (*it)->getFullPath() << endl;
@@ -1788,25 +1788,25 @@ bool process(LPCTSTR filename)
 	}
 	#endif
 
-	// ç’·ƒtƒHƒ‹ƒ_‚ÌŒŸo
+	// å†—é•·ãƒ•ã‚©ãƒ«ãƒ€ã®æ¤œå‡º
 	String redundantPath;
 	int redundantPathLen;
 	if (g_RemovesRedundantFolder != 0) {
 		GetRedundantPath(redundantPath);
 		if (redundantPath.IsEmpty() == false) {
-			cout << _T("ç’·ƒtƒHƒ‹ƒ_ ") << redundantPath.c_str() << _T(" ‚ğ’Zk") << endl;
+			cout << _T("å†—é•·ãƒ•ã‚©ãƒ«ãƒ€ ") << redundantPath.c_str() << _T(" ã‚’çŸ­ç¸®") << endl;
 		}
 	}
-	// ç’·ƒpƒX‚Ì’·‚³‚ğ“¾‚é
-	// ‚½‚¾‚µç’·ƒpƒX•ªƒpƒX‚ğí‚é‚Ì‚Ég‚¤‚Ì‚ÅƒpƒX‚ğ‚Â‚È‚®'\\'‚Ì•ª‚¾‚¯ƒCƒ“ƒNƒŠƒƒ“ƒg
+	// å†—é•·ãƒ‘ã‚¹ã®é•·ã•ã‚’å¾—ã‚‹
+	// ãŸã ã—å†—é•·ãƒ‘ã‚¹åˆ†ãƒ‘ã‚¹ã‚’å‰Šã‚‹ã®ã«ä½¿ã†ã®ã§ãƒ‘ã‚¹ã‚’ã¤ãªã'\\'ã®åˆ†ã ã‘ã‚¤ãƒ³ã‚¯ãƒªãƒ¡ãƒ³ãƒˆ
 	redundantPathLen = redundantPath.GetLength();
 	if (redundantPathLen != 0 && redundantPath.ReverseFind(TCHAR('\\')) != redundantPathLen - 1) {
 		redundantPathLen += 1;
 	}
 
-	// ‰ğ“€
+	// è§£å‡
 
-	// w’è‚Ìƒtƒ@ƒCƒ‹‚ğw’è‚ÌêŠ‚É‰ğ“€
+	// æŒ‡å®šã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã®å ´æ‰€ã«è§£å‡
 	if (g_BatchDecompress == false) {
 		bool hasValidPassword = false;
 		String password;
@@ -1819,28 +1819,28 @@ bool process(LPCTSTR filename)
 			String destPath(temp_folder.getPath());
 			CatPath(destPath, extractFilename.c_str() + redundantPathLen);
 
-			// TODO ƒtƒ@ƒCƒ‹–¼‚ª•s³‚È•¶š‚ªg‚í‚ê‚Ä‚¢‚È‚¢‚©ƒ`ƒFƒbƒN‚·‚×‚«‚©
+			// TODO ãƒ•ã‚¡ã‚¤ãƒ«åãŒä¸æ­£ãªæ–‡å­—ãŒä½¿ã‚ã‚Œã¦ã„ãªã„ã‹ãƒã‚§ãƒƒã‚¯ã™ã¹ãã‹
 
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-				// ƒtƒHƒ‹ƒ_‚ÍƒpƒX‚ª‚©‚©‚Á‚Ä‚¢‚Ä‚àŠÖŒW‚È‚¢
-				// UNLHA32.dll ‚ÍƒtƒHƒ‹ƒ_‚ğ‰ğ“€‚Å‚«‚È‚¢‚æ‚¤‚È‚Ì‚Å©‘O‚Åì¬
+				// ãƒ•ã‚©ãƒ«ãƒ€ã¯ãƒ‘ã‚¹ãŒã‹ã‹ã£ã¦ã„ã¦ã‚‚é–¢ä¿‚ãªã„
+				// UNLHA32.dll ã¯ãƒ•ã‚©ãƒ«ãƒ€ã‚’è§£å‡ã§ããªã„ã‚ˆã†ãªã®ã§è‡ªå‰ã§ä½œæˆ
 				if (CreateDirectory(destPath.c_str(), NULL) == 0) {
-					cout << _T("‰ğ“€‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½") << endl;
+					cout << _T("è§£å‡æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ") << endl;
 					return false;
 				}
 			} else {
-				// ‰ğ“€æ‚Íƒtƒ@ƒCƒ‹–¼‚ğæ‚èœ‚¢‚½êŠ‚É‚È‚é
+				// è§£å‡å…ˆã¯ãƒ•ã‚¡ã‚¤ãƒ«åã‚’å–ã‚Šé™¤ã„ãŸå ´æ‰€ã«ãªã‚‹
 				RemoveFileName(destPath);
 
 				bool isEncrypted = (*it)->isEncrypted();
 
 				RETRY:
 
-				// ƒpƒXƒ[ƒhˆ—
+				// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰å‡¦ç†
 				if (isEncrypted) {
 					if (hasValidPassword == false) {
 						if (getPassword(pArchiveDll->getArchiveFilename(), (*it)->getFullPath(), password) == IDCANCEL) {
-							cout << _T("ƒpƒXƒ[ƒh‚Ì“ü—Í‚ªƒLƒƒƒ“ƒZƒ‹‚³‚ê‚Ü‚µ‚½") << endl;
+							cout << _T("ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã®å…¥åŠ›ãŒã‚­ãƒ£ãƒ³ã‚»ãƒ«ã•ã‚Œã¾ã—ãŸ") << endl;
 							return false;
 						}
 					}
@@ -1850,27 +1850,27 @@ bool process(LPCTSTR filename)
 						hasValidPassword = true;
 						continue;
 					} else if (r == -1) {
-						// ƒpƒXƒ[ƒh‚ªˆá‚¤
+						// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒé•ã†
 						if (hasValidPassword) {
 							hasValidPassword = false;
 						} else {
-							cout << _T("ƒpƒXƒ[ƒh‚ªˆá‚¢‚Ü‚·") << endl;
+							cout << _T("ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒé•ã„ã¾ã™") << endl;
 						}
 						goto RETRY;
 					} else {
-						cout << _T("‰ğ“€‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("è§£å‡æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ") << endl;
 						return false;
 					}
 				} else {
 					int r = pArchiveDll->extract(extractFilename.c_str(), destPath.c_str(), g_ShowsProgress);
 					if (r==0) {
-						// ¬Œ÷
+						// æˆåŠŸ
 						continue;
 					} else if (r == -1) {
 						isEncrypted = true;
 						goto RETRY;
 					} else {
-						cout << _T("‰ğ“€‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("è§£å‡æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ") << endl;
 						return false;
 					}
 				}
@@ -1878,19 +1878,19 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	// ‚æ‚­•ª‚©‚ç‚È‚¢‚ªˆê‰‘O‚ÌDLL‚Ìˆ—‚ªI‚í‚é‚æ‚¤‚É‚µ‚Ä‚İ‚é
+	// ã‚ˆãåˆ†ã‹ã‚‰ãªã„ãŒä¸€å¿œå‰ã®DLLã®å‡¦ç†ãŒçµ‚ã‚ã‚‹ã‚ˆã†ã«ã—ã¦ã¿ã‚‹
 	{
 		DWORD startTime = timeGetTime();
 		while (pArchiveDll->getRunning()) {
 			Sleep(10);
 			if (timeGetTime() - startTime > 3000) {
-				cout << _T("‰ğ“€‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½") << endl;
+				cout << _T("è§£å‡æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ") << endl;
 				return false;
 			}
 		}
 	}
 
-	// ƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚Ì“úİ’è
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã®æ—¥æ™‚è¨­å®š
 	if (g_FolderTimeMode != 2 || g_FileTimeMode != 0) {
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
@@ -1905,46 +1905,46 @@ bool process(LPCTSTR filename)
 			}
 
 			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-				// ƒtƒHƒ‹ƒ_‚Ìê‡
+				// ãƒ•ã‚©ãƒ«ãƒ€ã®å ´åˆ
 				if (g_FolderTimeMode != 0 && g_FolderTimeMode != 1)
 					continue;
 
 				DWORD attribute = (*it)->getAttribute();
 
-				// ƒtƒHƒ‹ƒ_‚Í©‘O‚Åì¬‚³‚ê‚½‚à‚Ì‚È‚Ì‚Å
-				// “Ç‚İ‚İê—p‘®«‚Í‚Â‚¢‚Ä‚¢‚È‚¢
-				// ‚½‚¾‚µˆêŠ‡‰ğ“€‚Ìê‡‚Í‚»‚ÌŒÀ‚è‚Å‚Í‚È‚¢
-				// ‘®«‚ª“Ç‚İ‚İê—p‚¾‚ÆXV“ú•ÏX‚É¸”s‚·‚é‚Ì‚Åˆê“I‚É•ÏX‚·‚é
+				// ãƒ•ã‚©ãƒ«ãƒ€ã¯è‡ªå‰ã§ä½œæˆã•ã‚ŒãŸã‚‚ã®ãªã®ã§
+				// èª­ã¿è¾¼ã¿å°‚ç”¨å±æ€§ã¯ã¤ã„ã¦ã„ãªã„
+				// ãŸã ã—ä¸€æ‹¬è§£å‡ã®å ´åˆã¯ãã®é™ã‚Šã§ã¯ãªã„
+				// å±æ€§ãŒèª­ã¿è¾¼ã¿å°‚ç”¨ã ã¨æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã™ã‚‹ã®ã§ä¸€æ™‚çš„ã«å¤‰æ›´ã™ã‚‹
 				bool isReadOnly = false;
 				if (g_BatchDecompress && (attribute & FILE_ATTRIBUTE_READONLY) != 0) {
 					if (SetFileAttributes(path.c_str(), (attribute & (~FILE_ATTRIBUTE_READONLY)))) {
 						isReadOnly = true;
 					} else {
-						cout << _T("ƒtƒHƒ‹ƒ_‚Ì‘®«ˆê•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("ãƒ•ã‚©ãƒ«ãƒ€ã®å±æ€§ä¸€æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 					}
 				}
 
 				HANDLE hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
 				if (hFile == INVALID_HANDLE_VALUE) {
-					cout << _T("ƒtƒHƒ‹ƒ_‚ÌXV“ú•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+					cout << _T("ãƒ•ã‚©ãƒ«ãƒ€ã®æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 				} else {
 					FILETIME ft;
 					if (g_FolderTimeMode == 0) {
-						// ƒtƒHƒ‹ƒ_‚Í‰ğ“€‚Ì“ú•t‚É‚È‚Á‚Ä‚µ‚Ü‚¤‚Ì‚Å’¼‚·				
+						// ãƒ•ã‚©ãƒ«ãƒ€ã¯è§£å‡æ™‚ã®æ—¥ä»˜ã«ãªã£ã¦ã—ã¾ã†ã®ã§ç›´ã™				
 						ft = *((*it)->getLastWriteTime());
 					} else if (g_FolderTimeMode == 1) {
 						StringToFileTime(g_FolderTime.c_str(), ft);
 					}
 					if (SetFileTime(hFile, NULL, NULL, &ft) == 0) {
-						cout << _T("ƒtƒHƒ‹ƒ_‚ÌXV“ú•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("ãƒ•ã‚©ãƒ«ãƒ€ã®æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 					}
 					CloseHandle(hFile);
 				}
 
-				// ‘®«‚ğŒ³‚É–ß‚·
+				// å±æ€§ã‚’å…ƒã«æˆ»ã™
 				if (isReadOnly && g_FolderAttribute == -1) {
 					if (!SetFileAttributes(path.c_str(), attribute)) {
-						cout << _T("ƒtƒHƒ‹ƒ_‚Ì‘®«•œ‹A‚É¸”s‚µ‚Ü‚µ‚½") << endl;					
+						cout << _T("ãƒ•ã‚©ãƒ«ãƒ€ã®å±æ€§å¾©å¸°ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;					
 					}
 				}
 			} else {
@@ -1952,24 +1952,24 @@ bool process(LPCTSTR filename)
 
 				DWORD attribute = (*it)->getAttribute();
 
-				// ‘®«‚ª“Ç‚İ‚İê—p‚¾‚ÆXV“ú•ÏX‚É¸”s‚·‚é‚Ì‚Åˆê“I‚É•ÏX‚·‚é
+				// å±æ€§ãŒèª­ã¿è¾¼ã¿å°‚ç”¨ã ã¨æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã™ã‚‹ã®ã§ä¸€æ™‚çš„ã«å¤‰æ›´ã™ã‚‹
 				bool isReadOnly = false;
 				if ((attribute & FILE_ATTRIBUTE_READONLY) != 0) {
 					if (SetFileAttributes(path.c_str(), (attribute & (~FILE_ATTRIBUTE_READONLY)))) {
 						isReadOnly = true;
 					} else {
-						cout << _T("ƒtƒ@ƒCƒ‹‚Ì‘®«ˆê•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«ã®å±æ€§ä¸€æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 					}
 				}
 
 				if (SetFileLastWriteTime(path.c_str(), g_FileTime.c_str()) == false) {
-					cout << _T("ƒtƒ@ƒCƒ‹‚ÌXV“ú•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+					cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 				}
 
-				// ‘®«‚ğŒ³‚É–ß‚·
+				// å±æ€§ã‚’å…ƒã«æˆ»ã™
 				if (isReadOnly && g_FileAttribute == -1) {
 					if (!SetFileAttributes(path.c_str(), attribute)) {
-						cout << _T("ƒtƒ@ƒCƒ‹‚Ì‘®«•œ‹A‚É¸”s‚µ‚Ü‚µ‚½") << endl;					
+						cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«ã®å±æ€§å¾©å¸°ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;					
 					}
 				}
 			}
@@ -1980,7 +1980,7 @@ bool process(LPCTSTR filename)
 		setFolderTime(temp_folder.getPath());
 	}
 
-	// ƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚Ì‘®«İ’è
+	// ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã®å±æ€§è¨­å®š
 	if (g_FolderAttribute != -1 || g_FileAttribute != -1) {
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
@@ -1997,7 +1997,7 @@ bool process(LPCTSTR filename)
 			DWORD attribute = (*it)->getAttribute();
 
 			if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-				// ƒtƒHƒ‹ƒ_‚Ìê‡
+				// ãƒ•ã‚©ãƒ«ãƒ€ã®å ´åˆ
 				DWORD newAttribute;
 				if (g_FolderAttribute == -1) {
 					newAttribute = attribute;
@@ -2009,7 +2009,7 @@ bool process(LPCTSTR filename)
 					if ((g_FolderAttribute & FileAttribute::ARCHIVE) != 0)		newAttribute |= FILE_ATTRIBUTE_ARCHIVE;
 				}
 				if (SetFileAttributes(path.c_str(), newAttribute) == 0) {
-					cout << _T("ƒtƒHƒ‹ƒ_‚Ì‘®«•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+					cout << _T("ãƒ•ã‚©ãƒ«ãƒ€ã®å±æ€§å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 					continue;
 				}
 			} else {
@@ -2022,7 +2022,7 @@ bool process(LPCTSTR filename)
 					if (newAttribute == 0) newAttribute = FILE_ATTRIBUTE_NORMAL;
 					if (newAttribute == attribute) continue;
 					if (SetFileAttributes(path.c_str(), newAttribute) == 0) {
-						cout << _T("ƒtƒ@ƒCƒ‹‚Ì‘®«•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«ã®å±æ€§å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 						continue;
 					}
 				}
@@ -2031,7 +2031,7 @@ bool process(LPCTSTR filename)
 	}
 
 	if (g_ConvertFileName) {
-		// ƒtƒ@ƒCƒ‹–¼‚Ì•¶š•ÏŠ·
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã®æ–‡å­—å¤‰æ›
 		list<boost::shared_ptr<IndividualInfo> >::iterator it;
 		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
 			String path(temp_folder.getPath());
@@ -2056,8 +2056,8 @@ bool process(LPCTSTR filename)
 					continue;
 				}
 				else {
-					cout << _T("ƒtƒ@ƒCƒ‹–¼ •ÏŠ·‘OF") << orgFilename.c_str() << endl;
-					cout << _T("ƒtƒ@ƒCƒ‹–¼ •ÏŠ·ŒãF") << cnvFilename.c_str() << endl;
+					cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«å å¤‰æ›å‰ï¼š") << orgFilename.c_str() << endl;
+					cout << _T("ãƒ•ã‚¡ã‚¤ãƒ«å å¤‰æ›å¾Œï¼š") << cnvFilename.c_str() << endl;
 				}
 
 				String cnvPath(path);
@@ -2070,13 +2070,13 @@ bool process(LPCTSTR filename)
 					} else if (i < n - 1) {
 						Sleep(3000);
 					} else {
-						cout << _T("ƒŠƒl[ƒ€‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("ãƒªãƒãƒ¼ãƒ ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 					}
 				}
 			}
 		}
 
-		// ƒtƒHƒ‹ƒ_–¼‚Ì•¶š•ÏŠ·
+		// ãƒ•ã‚©ãƒ«ãƒ€åã®æ–‡å­—å¤‰æ›
 		list<boost::shared_ptr<IndividualInfo> >::reverse_iterator ir;
 		for (ir = g_compressFileList.rbegin() ; ir != g_compressFileList.rend() ; ++ir) {
 			String path(temp_folder.getPath());
@@ -2099,8 +2099,8 @@ bool process(LPCTSTR filename)
 
 			if((orgFilename != cnvFilename) || (orgFilename.GetLength() != cnvFilename.GetLength())) {
 				if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-					cout << _T("ƒtƒHƒ‹ƒ_–¼ •ÏŠ·‘OF") << orgFilename.c_str() << endl;
-					cout << _T("ƒtƒHƒ‹ƒ_–¼ •ÏŠ·ŒãF") << cnvFilename.c_str() << endl;
+					cout << _T("ãƒ•ã‚©ãƒ«ãƒ€å å¤‰æ›å‰ï¼š") << orgFilename.c_str() << endl;
+					cout << _T("ãƒ•ã‚©ãƒ«ãƒ€å å¤‰æ›å¾Œï¼š") << cnvFilename.c_str() << endl;
 				}
 				else {
 					continue;
@@ -2116,43 +2116,43 @@ bool process(LPCTSTR filename)
 					} else if (i < n - 1) {
 						Sleep(3000);
 					} else {
-						cout << _T("ƒŠƒl[ƒ€‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("ãƒªãƒãƒ¼ãƒ ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 					}
 				}
 			}
 		}
 	}
 
-	// ˆ³k‚µ‚æ‚¤‚Æ‚·‚éƒtƒHƒ‹ƒ_“à‚ª
-	// w’è‚ÌŠg’£q‚Ìƒtƒ@ƒCƒ‹(—á‚¦‚ÎƒA[ƒJƒCƒu)‚Ì‚İ‚¾‚Á‚½‚ç
-	// Œ³‚ÌƒtƒHƒ‹ƒ_‚É‚»‚Ìƒtƒ@ƒCƒ‹‚ğˆÚ“®‚µ‚ÄI‚í‚è
+	// åœ§ç¸®ã—ã‚ˆã†ã¨ã™ã‚‹ãƒ•ã‚©ãƒ«ãƒ€å†…ãŒ
+	// æŒ‡å®šã®æ‹¡å¼µå­ã®ãƒ•ã‚¡ã‚¤ãƒ«(ä¾‹ãˆã°ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–)ã®ã¿ã ã£ãŸã‚‰
+	// å…ƒã®ãƒ•ã‚©ãƒ«ãƒ€ã«ãã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ç§»å‹•ã—ã¦çµ‚ã‚ã‚Š
 
-	// ˆ³k‚µ‚æ‚¤‚Æ‚·‚éƒtƒHƒ‹ƒ_“à‚ª‹ó‚Å‚ ‚Á‚½‚çI—¹
-	// i‹ó‚ÌƒA[ƒJƒCƒu‚Æ‚È‚é‚±‚Æ‚ğ•\¦j
+	// åœ§ç¸®ã—ã‚ˆã†ã¨ã™ã‚‹ãƒ•ã‚©ãƒ«ãƒ€å†…ãŒç©ºã§ã‚ã£ãŸã‚‰çµ‚äº†
+	// ï¼ˆç©ºã®ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã¨ãªã‚‹ã“ã¨ã‚’è¡¨ç¤ºï¼‰
 	if (IsEmptyFolder(temp_folder.getPath())) {
-		cout << _T("‹ó‚Ì‘ŒÉ‚Æ‚È‚é‚½‚ß‘ŒÉ‚ğì¬‚µ‚Ü‚¹‚ñ") << endl;
+		cout << _T("ç©ºã®æ›¸åº«ã¨ãªã‚‹ãŸã‚æ›¸åº«ã‚’ä½œæˆã—ã¾ã›ã‚“") << endl;
 
-		// ƒeƒ“ƒ|ƒ‰ƒŠƒtƒHƒ‹ƒ_‚Ìíœ(–¾¦“I‚És‚¤)
+		// ãƒ†ãƒ³ãƒãƒ©ãƒªãƒ•ã‚©ãƒ«ãƒ€ã®å‰Šé™¤(æ˜ç¤ºçš„ã«è¡Œã†)
 		if (!temp_folder.destroy()) {
-			// ƒtƒHƒ‹ƒ_íœ¸”s
-			cout << _T("ƒeƒ“ƒ|ƒ‰ƒŠƒtƒHƒ‹ƒ_‚Ìíœ‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+			// ãƒ•ã‚©ãƒ«ãƒ€å‰Šé™¤å¤±æ•—
+			cout << _T("ãƒ†ãƒ³ãƒãƒ©ãƒªãƒ•ã‚©ãƒ«ãƒ€ã®å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 			cout << temp_folder.getPath() << endl;
 		}
 
-		// Œ³‚Ì‘ŒÉ‚ğíœ
+		// å…ƒã®æ›¸åº«ã‚’å‰Šé™¤
 		if (!DeleteFileOrFolder(srcFilename.c_str(), UsesRecycleBin)) {
-			// ƒtƒ@ƒCƒ‹íœ¸”s
-			cout << _T("Œ³‚Ì‘ŒÉ‚Ìíœ‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+			// ãƒ•ã‚¡ã‚¤ãƒ«å‰Šé™¤å¤±æ•—
+			cout << _T("å…ƒã®æ›¸åº«ã®å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 			cout << srcFilename.c_str() << endl;
 		}
 
 		return true;
 	}
 
-	// ì¬‚·‚éƒA[ƒJƒCƒuƒtƒ@ƒCƒ‹–¼‚ğw’è
-	// Šî–{“I‚ÉŒ³‚Æ“¯‚¶ƒtƒ@ƒCƒ‹–¼‚É‚·‚é
-	// ‚½‚¾‚µAŠg’£q‚Í zip
-	// Œ³‚ÆˆÙ‚È‚éê‡‚ÍŠù‚É‘¶İ‚·‚éƒtƒ@ƒCƒ‹–¼‚ğ”ğ‚¯‚é
+	// ä½œæˆã™ã‚‹ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ãƒ•ã‚¡ã‚¤ãƒ«åã‚’æŒ‡å®š
+	// åŸºæœ¬çš„ã«å…ƒã¨åŒã˜ãƒ•ã‚¡ã‚¤ãƒ«åã«ã™ã‚‹
+	// ãŸã ã—ã€æ‹¡å¼µå­ã¯ zip
+	// å…ƒã¨ç•°ãªã‚‹å ´åˆã¯æ—¢ã«å­˜åœ¨ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«åã‚’é¿ã‘ã‚‹
 	String destFilename(srcFilename);
 	String ext;
 	GetExtention(destFilename.c_str(), ext);
@@ -2162,9 +2162,9 @@ bool process(LPCTSTR filename)
 		EvacuateFileName(destFilename);
 	}
 
-	// Œ³‚ÌƒA[ƒJƒCƒu‚Æ“¯‚¶ƒtƒ@ƒCƒ‹–¼‚Ìê‡‚Í
-	// ˆê“I‚É•Ê‚Ìƒtƒ@ƒCƒ‹–¼‚Åì¬‚µ
-	// Œ³‚Ì‘ŒÉíœŒãƒtƒ@ƒCƒ‹–¼‚ğ–ß‚·
+	// å…ƒã®ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã¨åŒã˜ãƒ•ã‚¡ã‚¤ãƒ«åã®å ´åˆã¯
+	// ä¸€æ™‚çš„ã«åˆ¥ã®ãƒ•ã‚¡ã‚¤ãƒ«åã§ä½œæˆã—
+	// å…ƒã®æ›¸åº«å‰Šé™¤å¾Œãƒ•ã‚¡ã‚¤ãƒ«åã‚’æˆ»ã™
 	String finalDestFilename(destFilename);
 	if (redundantPathLen != 0 && g_RemovesRedundantFolder == 2) {
 		StripPath(finalDestFilename);
@@ -2181,14 +2181,14 @@ bool process(LPCTSTR filename)
 		EvacuateFileName(destFilename);
 	}
 
-	// w’è‚Ì–¼‘O‚Å•K—v‚ÈƒtƒHƒ‹ƒ_ˆÈ‰º‚ğˆ³k
+	// æŒ‡å®šã®åå‰ã§å¿…è¦ãªãƒ•ã‚©ãƒ«ãƒ€ä»¥ä¸‹ã‚’åœ§ç¸®
 	{
 		bool b;
 
 		if(!g_Compress7Zip)
 		{
 			if (g_BatchDecompress) {
-				// ˆêŠ‡‰ğ“€‚Ìê‡‚Í‚±‚±‚Åç’·ƒtƒHƒ‹ƒ_‚ğl—¶‚·‚é
+				// ä¸€æ‹¬è§£å‡ã®å ´åˆã¯ã“ã“ã§å†—é•·ãƒ•ã‚©ãƒ«ãƒ€ã‚’è€ƒæ…®ã™ã‚‹
 				String path = temp_folder.getPath();
 				CatPath(path, redundantPath.c_str());
 				b = compress(path.c_str(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
@@ -2204,12 +2204,12 @@ bool process(LPCTSTR filename)
 					pArchiveDll = g_ArchiveDllManager.addArchiveDll(ArchiveDllID::SEVEN_ZIP);
 				}
 				if (pArchiveDll == NULL) {
-					cout << _T("‘ŒÉ‚ğˆ³k‚·‚é‚Ì‚É“K“–‚ÈDLL‚ªŒ©‚Â‚©‚è‚Ü‚¹‚ñ") << endl;
+					cout << _T("æ›¸åº«ã‚’åœ§ç¸®ã™ã‚‹ã®ã«é©å½“ãªDLLãŒè¦‹ã¤ã‹ã‚Šã¾ã›ã‚“") << endl;
 					return false;
 				}
 			}
 			if (g_BatchDecompress) {
-				// ˆêŠ‡‰ğ“€‚Ìê‡‚Í‚±‚±‚Åç’·ƒtƒHƒ‹ƒ_‚ğl—¶‚·‚é
+				// ä¸€æ‹¬è§£å‡ã®å ´åˆã¯ã“ã“ã§å†—é•·ãƒ•ã‚©ãƒ«ãƒ€ã‚’è€ƒæ…®ã™ã‚‹
 				String path = temp_folder.getPath();
 				CatPath(path, redundantPath.c_str());
 				b = pArchiveDll->compress(path.c_str(), destFilename.c_str(), g_CompressLevel, g_ShowsProgress);
@@ -2218,26 +2218,26 @@ bool process(LPCTSTR filename)
 			}
 		}
 		if (b == false) {
-			cout << _T("ˆ³k‚ÉƒGƒ‰[‚ª”­¶‚µ‚Ü‚µ‚½") << endl;
+			cout << _T("åœ§ç¸®æ™‚ã«ã‚¨ãƒ©ãƒ¼ãŒç™ºç”Ÿã—ã¾ã—ãŸ") << endl;
 			return false;
 		}
 	}
 
-	// ƒeƒ“ƒ|ƒ‰ƒŠƒtƒHƒ‹ƒ_‚Ìíœ(–¾¦“I‚És‚¤)
+	// ãƒ†ãƒ³ãƒãƒ©ãƒªãƒ•ã‚©ãƒ«ãƒ€ã®å‰Šé™¤(æ˜ç¤ºçš„ã«è¡Œã†)
 	if (!temp_folder.destroy()) {
-		// ƒtƒHƒ‹ƒ_íœ¸”s
-		cout << _T("ƒeƒ“ƒ|ƒ‰ƒŠƒtƒHƒ‹ƒ_‚Ìíœ‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+		// ãƒ•ã‚©ãƒ«ãƒ€å‰Šé™¤å¤±æ•—
+		cout << _T("ãƒ†ãƒ³ãƒãƒ©ãƒªãƒ•ã‚©ãƒ«ãƒ€ã®å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 		cout << temp_folder.getPath() << endl;
 	}
 
-	// Œ³‚Ì‘ŒÉ‚ğíœ
+	// å…ƒã®æ›¸åº«ã‚’å‰Šé™¤
 	if (!DeleteFileOrFolder(srcFilename.c_str(), UsesRecycleBin)) {
-		// ƒtƒ@ƒCƒ‹íœ¸”s
-		cout << _T("Œ³‚Ì‘ŒÉ‚Ìíœ‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+		// ãƒ•ã‚¡ã‚¤ãƒ«å‰Šé™¤å¤±æ•—
+		cout << _T("å…ƒã®æ›¸åº«ã®å‰Šé™¤ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 		cout << srcFilename.c_str() << endl;
 	}
 	
-	// ‘ŒÉ‚Ìƒtƒ@ƒCƒ‹–¼‚ğnkf‚Å•ÏŠ·
+	// æ›¸åº«ã®ãƒ•ã‚¡ã‚¤ãƒ«åã‚’nkfã§å¤‰æ›
 	if (g_ConvertFileName) {
 		String orgFilename;
 		GetFileName(finalDestFilename.c_str(), orgFilename);
@@ -2246,15 +2246,15 @@ bool process(LPCTSTR filename)
 		RemoveFileName(finalDestFilename);
 		CatPath(finalDestFilename, cnvFilename.c_str());
 		if(orgFilename != cnvFilename) {
-			cout << _T("‘ŒÉ–¼ •ÏŠ·‘OF") << orgFilename.c_str() << endl;
-			cout << _T("‘ŒÉ–¼ •ÏŠ·ŒãF") << cnvFilename.c_str() << endl;
+			cout << _T("æ›¸åº«å å¤‰æ›å‰ï¼š") << orgFilename.c_str() << endl;
+			cout << _T("æ›¸åº«å å¤‰æ›å¾Œï¼š") << cnvFilename.c_str() << endl;
 		}
 	}
 	
-	// Œ³‚Ì‘ŒÉíœŒã–Ú•W‚Ì–¼‘O‚É•Ï‚¦‚é
+	// å…ƒã®æ›¸åº«å‰Šé™¤å¾Œç›®æ¨™ã®åå‰ã«å¤‰ãˆã‚‹
 	if (finalDestFilename != destFilename) {
-		// ”O‚Ì‚½‚ßƒtƒ@ƒCƒ‹‚ªƒfƒBƒXƒNã‚ÅÀÛ‚ÉˆÚ“®‚·‚é‚Ü‚Å‘Ò‚Â
-		// MoveFileEx() ‚Í Windows 2000 ˆÈ~‚Å‚µ‚©g‚¦‚È‚¢
+		// å¿µã®ãŸã‚ãƒ•ã‚¡ã‚¤ãƒ«ãŒãƒ‡ã‚£ã‚¹ã‚¯ä¸Šã§å®Ÿéš›ã«ç§»å‹•ã™ã‚‹ã¾ã§å¾…ã¤
+		// MoveFileEx() ã¯ Windows 2000 ä»¥é™ã§ã—ã‹ä½¿ãˆãªã„
 		int n = 2;
 		for (int i = 0; i < n; ++i) {
 			if (MoveFileEx(destFilename.c_str(), finalDestFilename.c_str(), MOVEFILE_WRITE_THROUGH) != 0) {
@@ -2262,14 +2262,14 @@ bool process(LPCTSTR filename)
 			} else if (i < n - 1) {
 				Sleep(3000);
 			} else {
-				cout << _T("ì¬‚µ‚½‘ŒÉ‚ÌƒŠƒl[ƒ€‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+				cout << _T("ä½œæˆã—ãŸæ›¸åº«ã®ãƒªãƒãƒ¼ãƒ ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 				cout << destFilename.c_str() << endl;
 			}
 		}
 	}
 
-	// ˆ—‚µ‚½Œ‹‰Ê’–Úƒtƒ@ƒCƒ‹‚Ì‚İ‚Å\¬‚³‚ê‚éê‡
-	// ‚»‚Ì|‚ğ•\¦‚·‚é
+	// å‡¦ç†ã—ãŸçµæœæ³¨ç›®ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿ã§æ§‹æˆã•ã‚Œã‚‹å ´åˆ
+	// ãã®æ—¨ã‚’è¡¨ç¤ºã™ã‚‹
 	CheckRemarkableFile();
 
 	return true;
@@ -2280,8 +2280,8 @@ bool process(LPCTSTR filename)
 
 
 
-// w’è‚ÌƒtƒHƒ‹ƒ_“àiƒTƒuƒtƒHƒ‹ƒ_ŠÜ‚Şj‚ÌƒtƒHƒ‹ƒ_‚ÌXV“ú‚ğ
-// ƒtƒHƒ‹ƒ_“à‚ÌÅV‚ÌXV“ú‚ğ‚Âƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚Æˆê’v‚³‚¹‚é
+// æŒ‡å®šã®ãƒ•ã‚©ãƒ«ãƒ€å†…ï¼ˆã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€å«ã‚€ï¼‰ã®ãƒ•ã‚©ãƒ«ãƒ€ã®æ›´æ–°æ—¥æ™‚ã‚’
+// ãƒ•ã‚©ãƒ«ãƒ€å†…ã®æœ€æ–°ã®æ›´æ–°æ—¥æ™‚ã‚’æŒã¤ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã¨ä¸€è‡´ã•ã›ã‚‹
 void setFolderTime(LPCTSTR path) {
 	FILETIME ft;
 	setFolderTimeSub(path, ft);
@@ -2296,7 +2296,7 @@ bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime) {
 	WIN32_FIND_DATA fd;
 	HANDLE hSearch;
 
-	// ’TõƒpƒX‚ğì¬
+	// æ¢ç´¢ãƒ‘ã‚¹ã‚’ä½œæˆ
 	String searchPath(path);
 	FormatTooLongPath(searchPath);
 	CatPath(searchPath, _T("*.*"));
@@ -2308,7 +2308,7 @@ bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime) {
 
 	do {
 		if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0){
-			// ƒ‹[ƒg‹y‚ÑƒJƒŒƒ“ƒg‚Å‚È‚¢ƒtƒHƒ‹ƒ_‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+			// ãƒ«ãƒ¼ãƒˆåŠã³ã‚«ãƒ¬ãƒ³ãƒˆã§ãªã„ãƒ•ã‚©ãƒ«ãƒ€ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
 			if (lstrcmp(fd.cFileName,_T("."))!=0 && lstrcmp(fd.cFileName,_T("..")) != 0) {
 				isEmptyFolder = false;
 
@@ -2318,7 +2318,7 @@ bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime) {
 
 				if (setFolderTimeSub(searchPath.c_str(), ft) == false) continue;
 
-				// ‘®«‚ª“Ç‚İ‚İê—p‚¾‚ÆXV“ú•ÏX‚É¸”s‚·‚é‚Ì‚Åˆê“I‚É•ÏX‚·‚é
+				// å±æ€§ãŒèª­ã¿è¾¼ã¿å°‚ç”¨ã ã¨æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã™ã‚‹ã®ã§ä¸€æ™‚çš„ã«å¤‰æ›´ã™ã‚‹
 				bool isReadOnly = false;
 				if ((fd.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0) {
 					isReadOnly = true;
@@ -2326,15 +2326,15 @@ bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime) {
 				}
 				HANDLE hFile = CreateFile(searchPath.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
 				if (hFile == INVALID_HANDLE_VALUE) {
-					cout << _T("ƒtƒHƒ‹ƒ_‚ÌXV“ú•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+					cout << _T("ãƒ•ã‚©ãƒ«ãƒ€ã®æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 				} else {
 					if (SetFileTime(hFile, NULL, NULL, &ft) == 0) {
-						cout << _T("ƒtƒHƒ‹ƒ_‚ÌXV“ú•ÏX‚É¸”s‚µ‚Ü‚µ‚½") << endl;
+						cout << _T("ãƒ•ã‚©ãƒ«ãƒ€ã®æ›´æ–°æ—¥æ™‚å¤‰æ›´ã«å¤±æ•—ã—ã¾ã—ãŸ") << endl;
 						GetLastErrorMssage();
 					}
 					CloseHandle(hFile);
 				}
-				// ‘®«‚ğŒ³‚É–ß‚·
+				// å±æ€§ã‚’å…ƒã«æˆ»ã™
 				if (isReadOnly && g_FolderAttribute == -1) {
 					SetFileAttributes(searchPath.c_str(), fd.dwFileAttributes);
 				}
@@ -2361,13 +2361,13 @@ bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime) {
 
 bool compress(LPCTSTR srcPath, LPCTSTR dstPath, int compressLevel, bool /* showsProgress */)
 {
-	// ƒtƒHƒ‹ƒ_ˆÈ‰º‚ğˆ³k
+	// ãƒ•ã‚©ãƒ«ãƒ€ä»¥ä¸‹ã‚’åœ§ç¸®
 	bool b;
 	ZipWriter zw;
 	b = zw.open(dstPath);
 	if (!b) return false;
 
-	// basePathLength ‚Í ––”ö‚É '\\' ‚ª‚Â‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Å•Ï‚í‚é
+	// basePathLength ã¯ æœ«å°¾ã« '\\' ãŒã¤ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹ã§å¤‰ã‚ã‚‹
 	int basePathLength = lstrlen(srcPath);
 	if (strrchrex(srcPath, '\\') != srcPath+(basePathLength-1)) {
 		basePathLength++;
@@ -2381,9 +2381,9 @@ bool compress(LPCTSTR srcPath, LPCTSTR dstPath, int compressLevel, bool /* shows
 	return true;
 }
 
-// w’èƒtƒHƒ‹ƒ_“à‚ğŒŸõ‚µ‚Äƒtƒ@ƒCƒ‹‚ğ’Ç‰Á
-// basePathLength ‚Í ZipWriter ‚É’Ç‰Á‚·‚éƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX‚©‚ç‰½•¶š
-// í‚Á‚½‚ç Zip “à‚Å‚Ì‚»‚Ìƒtƒ@ƒCƒ‹‚ÌƒpƒX‚É‚È‚é‚©i'\\' ‚ª––”ö‚É‚Â‚¢‚Ä‚éƒpƒX‚È‚Ì‚©‚ğ’ˆÓj
+// æŒ‡å®šãƒ•ã‚©ãƒ«ãƒ€å†…ã‚’æ¤œç´¢ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ 
+// basePathLength ã¯ ZipWriter ã«è¿½åŠ ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ãƒ«ãƒ‘ã‚¹ã‹ã‚‰ä½•æ–‡å­—
+// å‰Šã£ãŸã‚‰ Zip å†…ã§ã®ãã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã«ãªã‚‹ã‹ï¼ˆ'\\' ãŒæœ«å°¾ã«ã¤ã„ã¦ã‚‹ãƒ‘ã‚¹ãªã®ã‹ã‚’æ³¨æ„ï¼‰
 bool compressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength)
 {
 	WIN32_FIND_DATA fd;
@@ -2391,7 +2391,7 @@ bool compressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength)
 	String searchPath;
 	HANDLE hSearch;
 
-	// ’TõƒpƒX‚ğì¬
+	// æ¢ç´¢ãƒ‘ã‚¹ã‚’ä½œæˆ
 	searchPath += pszDir;
 	FormatTooLongPath(searchPath);
 	CatPath(searchPath, _T("*.*"));
@@ -2403,15 +2403,15 @@ bool compressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength)
 
 	do {
 		if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0) {
-			// ƒ‹[ƒg‹y‚ÑƒJƒŒƒ“ƒg‚Å‚È‚¢ƒtƒHƒ‹ƒ_‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+			// ãƒ«ãƒ¼ãƒˆåŠã³ã‚«ãƒ¬ãƒ³ãƒˆã§ãªã„ãƒ•ã‚©ãƒ«ãƒ€ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
 			if (lstrcmp(fd.cFileName,_T("."))!=0 && lstrcmp(fd.cFileName,_T(".."))!=0) {
 				String path = pszDir;
 				CatPath(path, fd.cFileName);
 
-				// ƒtƒHƒ‹ƒ_‚ÌƒpƒX‚ğ’Ç‰Á
+				// ãƒ•ã‚©ãƒ«ãƒ€ã®ãƒ‘ã‚¹ã‚’è¿½åŠ 
 				zw.add(path.c_str()+basePathLength, path.c_str());
 
-				// ƒTƒuƒtƒHƒ‹ƒ_‚ÌŒŸõ
+				// ã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€ã®æ¤œç´¢
 				if(!compressSub(path.c_str(), zw, basePathLength)) {
 					return false;
 				}
@@ -2420,10 +2420,10 @@ bool compressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength)
 			String path = pszDir;
 			CatPath(path, fd.cFileName);
 
-			// ƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğvector‚É’Ç‰Á
+			// ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’vectorã«è¿½åŠ 
 			zw.add(path.c_str()+basePathLength, path.c_str());
 		}
-		// ƒƒbƒZ[ƒWˆ—
+		// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
 		//DoEvents();
 	} while (FindNextFile(hSearch, &fd)!=0);
 

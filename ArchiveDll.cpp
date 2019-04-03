@@ -12,10 +12,10 @@ using namespace std;
 
 namespace {
 
-// •¶š—ñ‚ÉƒXƒy[ƒX‚ªŠÜ‚Ü‚ê‚éê‡
-// •¶š—ñ‚ğƒ_ƒuƒ‹ƒNƒH[ƒg‚ÅˆÍ‚Ş
+// æ–‡å­—åˆ—ã«ã‚¹ãƒšãƒ¼ã‚¹ãŒå«ã¾ã‚Œã‚‹å ´åˆ
+// æ–‡å­—åˆ—ã‚’ãƒ€ãƒ–ãƒ«ã‚¯ã‚©ãƒ¼ãƒˆã§å›²ã‚€
 void DoubleQuoteString(String& str) {
-	// ƒXƒy[ƒX‚ğŠÜ‚Ş‚©
+	// ã‚¹ãƒšãƒ¼ã‚¹ã‚’å«ã‚€ã‹
 	if(str.Find(_TCHAR(' ')) == -1) return;
 
 	str.Insert(0, _TCHAR('\"'));
@@ -42,7 +42,7 @@ ArchiveDll::~ArchiveDll() {
 	}
 }
 
-// w’è‚ÌDLL‚Å‰Šú‰»
+// æŒ‡å®šã®DLLã§åˆæœŸåŒ–
 bool ArchiveDll::init(ArchiveDllID::ArchiveDllID archiveDllID) {
 	archiveDllID_ = archiveDllID;
 
@@ -87,7 +87,7 @@ bool ArchiveDll::init(ArchiveDllID::ArchiveDllID archiveDllID) {
 }
 
 /*
-// DLL‚Ìƒtƒ@ƒCƒ‹–¼‚ÆƒvƒŒƒtƒBƒbƒNƒX‚ğƒZƒbƒg
+// DLLã®ãƒ•ã‚¡ã‚¤ãƒ«åã¨ãƒ—ãƒ¬ãƒ•ã‚£ãƒƒã‚¯ã‚¹ã‚’ã‚»ãƒƒãƒˆ
 bool ArchiveDll::setDllFilename(LPCTSTR filename, LPCTSTR prefix) {
 	mDllFilename = filename;
 	mPrefix = prefix;
@@ -110,7 +110,7 @@ FARPROC ArchiveDll::getFuncAddress(LPCTSTR funcName) {
 #endif
 }
 
-// ‡˜”  1
+// é †åºæ•°  1
 int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 	rOutput.Empty();
 
@@ -119,7 +119,7 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 #else
 	FARPROC f = ::GetProcAddress(mDllHandle, mPrefix.c_str());
 #endif	
-	// ŠÖ”‚ªƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚é‚©
+	// é–¢æ•°ãŒã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹ã‹
 	if (f == NULL) { return 1; }
 
 #ifdef _UNICODE
@@ -142,14 +142,14 @@ int ArchiveDll::command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput) {
 	if (r < 0x8000) {
 		return r;
 	} else {
-		// ‰½‚ç‚©‚Ì’è‹`‚³‚ê‚½ƒGƒ‰[
+		// ä½•ã‚‰ã‹ã®å®šç¾©ã•ã‚ŒãŸã‚¨ãƒ©ãƒ¼
 		return r;
 	}
 }
 
 WORD ArchiveDll::getVersion() {
 	FARPROC f = getFuncAddress(_T("GetVersion"));
-	// ŠÖ”‚ªƒTƒ|[ƒg‚³‚ê‚Ä‚¢‚é‚©
+	// é–¢æ•°ãŒã‚µãƒãƒ¼ãƒˆã•ã‚Œã¦ã„ã‚‹ã‹
 	if (f == NULL) { return 0; }
 	typedef WORD (WINAPI * GET_VERSION)();
 	return ((GET_VERSION)f)();
@@ -194,17 +194,17 @@ LPCTSTR ArchiveDll::getArchiveFilename() {
 
 
 
-// ˆêŠ‡‰ğ“€
-// overwritesFile : “¯–¼‚Ìƒtƒ@ƒCƒ‹‚ğã‘‚«‚·‚é‚©”Û‚©
-//  0 : ³íI—¹
-// -1 : ‘Î‰‚µ‚È‚¢Œ`®
-// -2 : ƒpƒXƒ[ƒh•t‚«‚¾‚Á‚½
-// -3 : ƒ†[ƒU[ƒLƒƒƒ“ƒZƒ‹
-// -4 : ‚»‚Ì‘¼‚ÌƒGƒ‰[
+// ä¸€æ‹¬è§£å‡
+// overwritesFile : åŒåã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ä¸Šæ›¸ãã™ã‚‹ã‹å¦ã‹
+//  0 : æ­£å¸¸çµ‚äº†
+// -1 : å¯¾å¿œã—ãªã„å½¢å¼
+// -2 : ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ä»˜ãã ã£ãŸ
+// -3 : ãƒ¦ãƒ¼ã‚¶ãƒ¼ã‚­ãƒ£ãƒ³ã‚»ãƒ«
+// -4 : ãã®ä»–ã®ã‚¨ãƒ©ãƒ¼
 int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFile) {
 	String commandLine;
 
-	// ƒXƒy[ƒX‚ğŠÜ‚Şê‡ƒ_ƒuƒ‹ƒNƒH[ƒg‚ÅˆÍ‚Ş
+	// ã‚¹ãƒšãƒ¼ã‚¹ã‚’å«ã‚€å ´åˆãƒ€ãƒ–ãƒ«ã‚¯ã‚©ãƒ¼ãƒˆã§å›²ã‚€
 	String archive = archiveFilename_;
 	DoubleQuoteString(archive);
 
@@ -219,14 +219,14 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 		if (overwritesFile) {
 			commandLine.Cat(_T("-aoa "));
 		} else {
-			// •Ê–¼‚Å‰ğ“€iƒtƒ@ƒCƒ‹–¼‚É _1 “™‚ğ‚Â‚¯‚éj
+			// åˆ¥åã§è§£å‡ï¼ˆãƒ•ã‚¡ã‚¤ãƒ«åã« _1 ç­‰ã‚’ã¤ã‘ã‚‹ï¼‰
 			commandLine.Cat(_T("-aou "));
 		}
 
 		if (!dest.IsEmpty()) {
 			String dir;
 			dir.Format(_T("-o%s"), dest.c_str());
-			DoubleQuoteString(dir);	// ƒXƒCƒbƒ`‚²‚Æƒ_ƒuƒ‹ƒNƒH[ƒg‚ÅˆÍ‚Ş
+			DoubleQuoteString(dir);	// ã‚¹ã‚¤ãƒƒãƒã”ã¨ãƒ€ãƒ–ãƒ«ã‚¯ã‚©ãƒ¼ãƒˆã§å›²ã‚€
 			dir.Cat(_T(" "));
 			commandLine.Cat(dir.c_str());
 		}
@@ -238,7 +238,7 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 	} else if (archiveDllID_  == ArchiveDllID::UNLHA) {
 		commandLine.Cat(_T("e -x1"));
 
-		// ‘®«‚ğ‚»‚Ì‚Ü‚Ü‚É‰B‚µ‘®«EƒVƒXƒeƒ€‘®«“™‘S‚Ä‚Ìƒtƒ@ƒCƒ‹‚ğ‰ğ“€
+		// å±æ€§ã‚’ãã®ã¾ã¾ã«éš ã—å±æ€§ãƒ»ã‚·ã‚¹ãƒ†ãƒ å±æ€§ç­‰å…¨ã¦ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è§£å‡
 		commandLine.Cat(_T("-a1 "));
 
 		if (showsProgress == false) {
@@ -246,17 +246,17 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 		}
 
 		if (overwritesFile) {
-			// í‚Éã‘‚«“WŠJ
+			// å¸¸ã«ä¸Šæ›¸ãå±•é–‹
 			commandLine.Cat(_T("-m1 -c1 "));
 		} else {
-			// “¯–¼‚Ìƒtƒ@ƒCƒ‹‚ª‚ ‚éê‡Šg’£q‚ğ 000 ` 999 ‚É•Ï‚¦‚Ä“WŠJ
+			// åŒåã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚ã‚‹å ´åˆæ‹¡å¼µå­ã‚’ 000 ï½ 999 ã«å¤‰ãˆã¦å±•é–‹
 			commandLine.Cat(_T("-m2 "));
 		}
 
 		commandLine.Cat(archive.c_str());
 		commandLine.Cat(_T(" "));
 
-		// “WŠJæ‚Ìw’è‚Ìê‡ƒtƒHƒ‹ƒ_‚Í'\\'‚ÅI‚í‚ç‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
+		// å±•é–‹å…ˆã®æŒ‡å®šã®å ´åˆãƒ•ã‚©ãƒ«ãƒ€ã¯'\\'ã§çµ‚ã‚ã‚‰ãªã‘ã‚Œã°ãªã‚‰ãªã„
 		if (!dest.IsEmpty()) {
 			String dir = dest;
 			if (dir.GetAt(dir.GetLength() - 1) != _TCHAR('\\')) {
@@ -276,16 +276,16 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 		}
 
 		if (overwritesFile) {
-			// í‚Éã‘‚«“WŠJ
+			// å¸¸ã«ä¸Šæ›¸ãå±•é–‹
 			commandLine.Cat(_T("-o "));
 		} else {
-			// ã‘‚«‚·‚é‚©”Û‚©‚ğ‘I‚Ôƒ_ƒCƒAƒƒO‚ªo‚é
+			// ä¸Šæ›¸ãã™ã‚‹ã‹å¦ã‹ã‚’é¸ã¶ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ãŒå‡ºã‚‹
 		}
 
 		commandLine.Cat(archive.c_str());
 		commandLine.Cat(_T(" "));
 
-		// “WŠJæ‚Ìw’è‚Ìê‡ƒtƒHƒ‹ƒ_‚Í'\\'‚ÅI‚í‚ç‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
+		// å±•é–‹å…ˆã®æŒ‡å®šã®å ´åˆãƒ•ã‚©ãƒ«ãƒ€ã¯'\\'ã§çµ‚ã‚ã‚‰ãªã‘ã‚Œã°ãªã‚‰ãªã„
 		if (!dest.IsEmpty()) {
 			String dir = dest;
 			if (dir.GetAt(dir.GetLength() - 1) != _TCHAR('\\')) {
@@ -302,16 +302,16 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 		}
 
 		if (overwritesFile) {
-			// í‚Éã‘‚«“WŠJ
+			// å¸¸ã«ä¸Šæ›¸ãå±•é–‹
 			commandLine.Cat(_T("-o "));
 		} else {
-			// ã‘‚«‚·‚é‚©”Û‚©‚ğ‘I‚Ôƒ_ƒCƒAƒƒO‚ªo‚éiƒŠƒl[ƒ€‚à‰Â”\j
+			// ä¸Šæ›¸ãã™ã‚‹ã‹å¦ã‹ã‚’é¸ã¶ãƒ€ã‚¤ã‚¢ãƒ­ã‚°ãŒå‡ºã‚‹ï¼ˆãƒªãƒãƒ¼ãƒ ã‚‚å¯èƒ½ï¼‰
 		}
 
 		commandLine.Cat(archive.c_str());
 		commandLine.Cat(_T(" "));
 
-		// “WŠJæ‚Ìw’è‚Ìê‡ƒtƒHƒ‹ƒ_‚Í'\\'‚ÅI‚í‚ç‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
+		// å±•é–‹å…ˆã®æŒ‡å®šã®å ´åˆãƒ•ã‚©ãƒ«ãƒ€ã¯'\\'ã§çµ‚ã‚ã‚‰ãªã‘ã‚Œã°ãªã‚‰ãªã„
 		String dir;
 		if (!dest.IsEmpty()) {
 			dir = dest;
@@ -341,11 +341,11 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 		return -3;
 	} else {
 		if (archiveDllID_ == ArchiveDllID::UNRAR && ret < 0x8000) {
-			// unrar32.dll(‚¨‚»‚ç‚­0.13ˆÈ~)‚Å -x ƒIƒvƒVƒ‡ƒ“‚Å
-			// ƒtƒHƒ‹ƒ_‚ğŠÜ‚Ş‘ŒÉ‚ğ‰ğ“€‚·‚é‚ÆƒtƒHƒ‹ƒ_‚É‚Â‚¢‚Äã‘‚«‚ª–â‚í‚ê
-			// ã‘‚«‚·‚é‚Æ‚µ‚Ä‚à(‚ ‚é‚¢‚Í -o ƒIƒvƒVƒ‡ƒ“‚ğ‚Â‚¯‚Ä‚à)
-			// 1‚ª•Ô‚é(‚¨‚»‚ç‚­‚»‚ÌƒtƒHƒ‹ƒ_‚ğƒXƒLƒbƒv‚µ‚½ˆµ‚¢)
-			// ‚Ì‚Å0x8000–¢–‚Í¬Œ÷‚Æ‚µ‚Äˆµ‚¤
+			// unrar32.dll(ãŠãã‚‰ã0.13ä»¥é™)ã§ -x ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§
+			// ãƒ•ã‚©ãƒ«ãƒ€ã‚’å«ã‚€æ›¸åº«ã‚’è§£å‡ã™ã‚‹ã¨ãƒ•ã‚©ãƒ«ãƒ€ã«ã¤ã„ã¦ä¸Šæ›¸ããŒå•ã‚ã‚Œ
+			// ä¸Šæ›¸ãã™ã‚‹ã¨ã—ã¦ã‚‚(ã‚ã‚‹ã„ã¯ -o ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’ã¤ã‘ã¦ã‚‚)
+			// 1ãŒè¿”ã‚‹(ãŠãã‚‰ããã®ãƒ•ã‚©ãƒ«ãƒ€ã‚’ã‚¹ã‚­ãƒƒãƒ—ã—ãŸæ‰±ã„)
+			// ã®ã§0x8000æœªæº€ã¯æˆåŠŸã¨ã—ã¦æ‰±ã†
 			return 0;
 		} else {
 			return -4;
@@ -358,14 +358,14 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 
 
 
-// w’è‚Ìƒtƒ@ƒCƒ‹‚ğw’è‚ÌƒpƒX‚É‰ğ“€‚·‚é
-// password ‚ª NULL ‚È‚ç‚ÎƒpƒXƒ[ƒh‚ğg—p‚µ‚È‚¢
-// –ß‚è’l
-//  0 : ¬Œ÷
-// -1 : ƒpƒXƒ[ƒh‚ªŠÔˆá‚Á‚Ä‚¢‚é
-// -2 : ‚»‚Ì‘¼‚ÌƒGƒ‰[
+// æŒ‡å®šã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã®ãƒ‘ã‚¹ã«è§£å‡ã™ã‚‹
+// password ãŒ NULL ãªã‚‰ã°ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ã‚’ä½¿ç”¨ã—ãªã„
+// æˆ»ã‚Šå€¤
+//  0 : æˆåŠŸ
+// -1 : ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒé–“é•ã£ã¦ã„ã‚‹
+// -2 : ãã®ä»–ã®ã‚¨ãƒ©ãƒ¼
 int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, LPCTSTR password) {
-	// ƒXƒy[ƒX‚ğŠÜ‚Şê‡ƒ_ƒuƒ‹ƒNƒH[ƒg‚ÅˆÍ‚Ş
+	// ã‚¹ãƒšãƒ¼ã‚¹ã‚’å«ã‚€å ´åˆãƒ€ãƒ–ãƒ«ã‚¯ã‚©ãƒ¼ãƒˆã§å›²ã‚€
 	String archiveFilename(archiveFilename_);
 	DoubleQuoteString(archiveFilename);
 
@@ -382,8 +382,8 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 	String commandLine;
 	String switchString;
 	if (archiveDllID_ == ArchiveDllID::SEVEN_ZIP) {
-		// -aos ƒIƒvƒVƒ‡ƒ“‚Í“¯–¼‚Ìƒtƒ@ƒCƒ‹‚ªƒTƒuƒtƒHƒ‹ƒ_ˆÈ‰º‚É‚ ‚Á‚½ê‡
-		// ‚»‚ê‚à‰ğ“€‚³‚ê‚Ä‚µ‚Ü‚¤‚Ì‚ÅA‚»‚ê‚Åã‘‚«‚µ‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ß
+		// -aos ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã¯åŒåã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€ä»¥ä¸‹ã«ã‚ã£ãŸå ´åˆ
+		// ãã‚Œã‚‚è§£å‡ã•ã‚Œã¦ã—ã¾ã†ã®ã§ã€ãã‚Œã§ä¸Šæ›¸ãã—ãªã„ã‚ˆã†ã«ã™ã‚‹ãŸã‚
 
 		WORD version = getVersion();
 
@@ -393,7 +393,7 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 			switchString.Cat(_T("-hide "));
 		}
 
-		// ƒpƒXƒ[ƒh
+		// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 		if (password != NULL) {
 			String p;
 			p.Format(_T("-p%s"), password);
@@ -408,7 +408,7 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 			commandLine.Format(_T("e %s %s -o%s %s"), switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 		}
 	} else if (archiveDllID_ == ArchiveDllID::UNLHA) {
-		// ‘ÎÛƒfƒBƒŒƒNƒgƒŠ‚É‘¶İ‚µ‚È‚¢ƒtƒ@ƒCƒ‹‚Ì‚İ ‘®«‚ğ—LŒø‚É‚µ‚Ä “WŠJ
+		// å¯¾è±¡ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã«å­˜åœ¨ã—ãªã„ãƒ•ã‚¡ã‚¤ãƒ«ã®ã¿ å±æ€§ã‚’æœ‰åŠ¹ã«ã—ã¦ å±•é–‹
 		if (showsProgress) {
 			commandLine.Format(_T("e -jn -a1 %s %s %s"), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 		} else {
@@ -421,7 +421,7 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 			switchString.Cat(_T("-q "));
 		}
 
-		// ƒpƒXƒ[ƒh
+		// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 		if (password != NULL) {
 			String p;
 			p.Format(_T("-p%s"), password);			
@@ -437,7 +437,7 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 			switchString.Cat(_T("--i "));
 		}
 
-		// ƒpƒXƒ[ƒh
+		// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰
 		if (password != NULL) {
 			String p;
 			p.Format(_T("-P%s"), password);			
@@ -446,15 +446,15 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 			switchString.Cat(p.c_str());
 		}
 
-		// ƒtƒ@ƒCƒ‹–¼‚Í³‹K•\Œ»‚Åw’è‚·‚éˆ×
-		// u\v‚ğu\\v‚Æ‚µ‚È‚¯‚ê‚Î‚È‚ç‚È‚¢
-		// –Ê“|‚È‚Ì‚Åu/v‚É’uŠ·‚·‚é
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã¯æ­£è¦è¡¨ç¾ã§æŒ‡å®šã™ã‚‹ç‚º
+		// ã€Œ\ã€ã‚’ã€Œ\\ã€ã¨ã—ãªã‘ã‚Œã°ãªã‚‰ãªã„
+		// é¢å€’ãªã®ã§ã€Œ/ã€ã«ç½®æ›ã™ã‚‹
 		extractFilename.Replace(_TCHAR('\\'), _TCHAR('/'));
 
 		commandLine.Format(_T("-j -n %s %s %s %s"), switchString.c_str(), archiveFilename.c_str(), dest.c_str(), extractFilename.c_str());
 
 	} else {
-		// ‚»‚Ì‘¼‚ÌŒ`®
+		// ãã®ä»–ã®å½¢å¼
 		return -2;
 	}
 
@@ -484,8 +484,8 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 		} else if (ret == ERROR_PASSWORD_FILE) {
 			return -1;
 		} else {
-			// ƒpƒXƒ[ƒh‚ª‹ó•¶š—ñ‚Å‰ğ“€‚ğ‚İ‚½ê‡‚Í
-			// ‚±‚±‚É—ˆ‚é‚æ‚¤‚¾
+			// ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãŒç©ºæ–‡å­—åˆ—ã§è§£å‡ã‚’è©¦ã¿ãŸå ´åˆã¯
+			// ã“ã“ã«æ¥ã‚‹ã‚ˆã†ã 
 			return -2;
 		}
 	} else {
@@ -493,14 +493,14 @@ int ArchiveDll::extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, L
 	}
 }
 
-// w’èƒtƒHƒ‹ƒ_“à‚ğw’èƒtƒ@ƒCƒ‹–¼‚Åˆ³k
-// Œ»İ 7-zip32.dll ‚É‚Ì‚İ‘Î‰
+// æŒ‡å®šãƒ•ã‚©ãƒ«ãƒ€å†…ã‚’æŒ‡å®šãƒ•ã‚¡ã‚¤ãƒ«åã§åœ§ç¸®
+// ç¾åœ¨ 7-zip32.dll ã«ã®ã¿å¯¾å¿œ
 bool ArchiveDll::compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, bool showsProgress) {
 		String filename(destPath);
 		DoubleQuoteString(filename);
 
-		// ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Å‚Íˆ³kæ‚Éâ‘ÎƒpƒX‚Íw’è‚Å‚«‚È‚¢‚Ì‚Å
-		// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ•ÏX‚µ‚Äw’è
+		// ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã§ã¯åœ§ç¸®å…ˆã«çµ¶å¯¾ãƒ‘ã‚¹ã¯æŒ‡å®šã§ããªã„ã®ã§
+		// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’å¤‰æ›´ã—ã¦æŒ‡å®š
 		String oldCurrentDirectory;
 		GetCurrentDirectory(oldCurrentDirectory);
 		SetCurrentDirectoryEx(srcPath);
@@ -527,17 +527,17 @@ bool ArchiveDll::compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, 
 		int ret = command(NULL, commandLine.c_str(), output);
 #endif
 
-		// ƒJƒŒƒ“ƒgƒfƒBƒŒƒNƒgƒŠ‚ğ–ß‚·
+		// ã‚«ãƒ¬ãƒ³ãƒˆãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã‚’æˆ»ã™
 		SetCurrentDirectoryEx(oldCurrentDirectory.c_str());
 
 		return (ret == 0);
 }
 
 
-// –ß‚è’l
-// 0			: ³íI—¹
-// |1			: ŒŸõI—¹
-// 0, |1 ˆÈŠO	: ˆÙíI—¹
+// æˆ»ã‚Šå€¤
+// 0			: æ­£å¸¸çµ‚äº†
+// ï¼1			: æ¤œç´¢çµ‚äº†
+// 0, ï¼1 ä»¥å¤–	: ç•°å¸¸çµ‚äº†
 int ArchiveDll::findFirst(LPCTSTR wildName, INDIVIDUALINFO* p) {
 	FARPROC f = getFuncAddress(_T("FindFirst"));
 	if (f == NULL) { return 1; }
@@ -550,10 +550,10 @@ int ArchiveDll::findFirst(LPCTSTR wildName, INDIVIDUALINFO* p) {
 #endif
 }
 
-// –ß‚è’l 
-// 0			: ³íI—¹
-// |1			: ŒŸõI—¹
-// 0, |1 ˆÈŠO	: ˆÙíI—¹
+// æˆ»ã‚Šå€¤ 
+// 0			: æ­£å¸¸çµ‚äº†
+// ï¼1			: æ¤œç´¢çµ‚äº†
+// 0, ï¼1 ä»¥å¤–	: ç•°å¸¸çµ‚äº†
 int ArchiveDll::findNext(INDIVIDUALINFO* p) {
 	FARPROC f = getFuncAddress(_T("FindNext"));
 	if (f == NULL) { return 1; }
@@ -561,7 +561,7 @@ int ArchiveDll::findNext(INDIVIDUALINFO* p) {
 	return ((FIND_NEXT)f)(mArchiveHandle, p);
 }
 
-// ‡˜”  10
+// é †åºæ•°  10
 bool ArchiveDll::getRunning() {
 	FARPROC f = getFuncAddress(_T("GetRunning"));
 	if (f == NULL) { return false; }
@@ -570,7 +570,7 @@ bool ArchiveDll::getRunning() {
 	return (b == TRUE);
 }
 
-// ‡˜”  12
+// é †åºæ•°  12
 bool ArchiveDll::checkArchive() {
 	FARPROC f = getFuncAddress(_T("CheckArchive"));
 	if (f == NULL) { return false; }
@@ -582,13 +582,13 @@ bool ArchiveDll::checkArchive() {
 	BOOL b = ((CHECK_ARCHIVE)f)(archiveFilename_.c_str(), 0);
 #endif
 
-	// UNZIP32.DLL ‚ÍƒA[ƒJƒCƒu‚Å‚È‚¢ƒtƒ@ƒCƒ‹‚É‘Î‚µ‚Ä
-	// checkArchive() ‚ª’Ê‚Á‚Ä‚µ‚Ü‚¤–‚ª‚ ‚é‚Ì‚Å
-	// ©‘O‚ÅƒVƒOƒlƒ`ƒƒƒ`ƒFƒbƒN
+	// UNZIP32.DLL ã¯ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã§ãªã„ãƒ•ã‚¡ã‚¤ãƒ«ã«å¯¾ã—ã¦
+	// checkArchive() ãŒé€šã£ã¦ã—ã¾ã†äº‹ãŒã‚ã‚‹ã®ã§
+	// è‡ªå‰ã§ã‚·ã‚°ãƒãƒãƒ£ãƒã‚§ãƒƒã‚¯
 	if (archiveDllID_ == ArchiveDllID::UNZIP) {
 		ReadOnlyMemoryMappedFileEx mmf;
 		if (!mmf.open(archiveFilename_.c_str())) return false;
-		// ƒVƒOƒlƒ`ƒƒƒ`ƒFƒbƒN
+		// ã‚·ã‚°ãƒãƒãƒ£ãƒã‚§ãƒƒã‚¯
 		boost::shared_ptr<ViewOfFile> pView = mmf.map(0, sizeof(UINT32));
 		if (!pView) return false;
 		if ( *((UINT32*)pView->getPointer()) != 0x04034b50) return false;
@@ -672,7 +672,7 @@ void ArchiveDllManager::releaseArchiveDll(ArchiveDllID::ArchiveDllID archiveDllI
 ArchiveDll* ArchiveDllManager::getSuitableArchiveDll(LPCTSTR filename) {
 	int id = -1;
 
-	// Šg’£q‚©‚ç“K“–‚ÈDLL‚ğ’T‚·
+	// æ‹¡å¼µå­ã‹ã‚‰é©å½“ãªDLLã‚’æ¢ã™
 	String ext;
 	GetExtention(filename, ext);
 	ArchiveDll* p = NULL;
@@ -695,9 +695,9 @@ ArchiveDll* ArchiveDllManager::getSuitableArchiveDll(LPCTSTR filename) {
 			p = addArchiveDll((ArchiveDllID::ArchiveDllID)id);
 		}
 		if (p != NULL) {
-			// DLL‚ªg—p’†‚Å‚È‚¢‚©ƒ`ƒFƒbƒN‚·‚é
+			// DLLãŒä½¿ç”¨ä¸­ã§ãªã„ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 			if (p->getRunning()) {
-				// DLLg—p’†
+				// DLLä½¿ç”¨ä¸­
 			} else {
 				p->setArchiveFilename(filename);
 				if (p->checkArchive()) {
@@ -707,16 +707,16 @@ ArchiveDll* ArchiveDllManager::getSuitableArchiveDll(LPCTSTR filename) {
 		}
 	}
 
-	// ‘S‚Ä‚ÌƒA[ƒJƒCƒu‚ğ‚·
+	// å…¨ã¦ã®ã‚¢ãƒ¼ã‚«ã‚¤ãƒ–ã‚’è©¦ã™
 	for (int i=0; i<ArchiveDllID::MAX_ARCHIVE_DLL; ++i) {
 		p = getArchiveDll((ArchiveDllID::ArchiveDllID)i);
 		if (p == NULL) {
 			p = addArchiveDll((ArchiveDllID::ArchiveDllID)i);
 		}
 		if (p != NULL) {
-			// DLL‚ªg—p’†‚Å‚È‚¢‚©ƒ`ƒFƒbƒN‚·‚é
+			// DLLãŒä½¿ç”¨ä¸­ã§ãªã„ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 			if (p->getRunning()) {
-				// DLLg—p’†
+				// DLLä½¿ç”¨ä¸­
 			} else {
 				p->setArchiveFilename(filename);
 				if (p->checkArchive()) {

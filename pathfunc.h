@@ -3,23 +3,23 @@
 												2003.06.11 (c)YOSHIDA Kurima
 ===============================================================================
  Content:
-	�p�X������Ɋւ���֐��Q
+	パス文字列に関する関数群
 
  Notes:
-	���Q�o�C�g�����̃A���t�@�x�b�g�̑啶���E�������̈Ⴂ�������Ă�
-	�����p�X�Ƃ��Ĉ�����悤�i�e�X�g���Ċm�F����K�v����j�Ȃ̂�
-	����ɑΉ����Ȃ���΂Ȃ�Ȃ�
+	※２バイト文字のアルファベットの大文字・小文字の違いがあっても
+	同じパスとして扱われるよう（テストして確認する必要あり）なので
+	それに対応しなければならない
 
-	���l�b�g���[�N�p�X�ɑΉ�����K�v������
+	※ネットワークパスに対応する必要がある
 
-	�����̃t�@�C���̊֐��Q�̓p�X�̋�؂蕶�����u\�v�݂̂Ɖ��肵�đg��ł���
+	※このファイルの関数群はパスの区切り文字を「\」のみと仮定して組んである
 
-	����{���j�Ƃ��ē��ɒf���Ă��Ȃ�����
-	�����Ƃ��Đ������`���̃p�X���n�����Ɖ��肵��O�����͍s���Ă��Ȃ�
-	�󕶎���͐������p�X�̂ЂƂƂ���
+	※基本方針として特に断っていない限り
+	引数として正しい形式のパスが渡されると仮定し例外処理は行っていない
+	空文字列は正しいパスのひとつとする
 
-	�t���p�X�̕\����
-	�����[�g�h���C�u�̂Ƃ��̂ݖ�����\����
+	フルパスの表し方
+	※ルートドライブのときのみ末尾に\がつく
 
 	c:\
 	c:\data
@@ -28,18 +28,18 @@
 	c:\a.txt
 
 
-	���΃p�X�̕\����
-	���擪��\�͂��Ȃ�
+	相対パスの表し方
+	※先頭に\はつけない
 
 	data
 	data\a.txt
 	data\sub\a.txt
 
 
-	�l�b�g���[�N�t�H���_
-	\\Prius\�V�����t�H��
+	ネットワークフォルダ
+	\\Prius\新しいフォル
 
-	���Ƃ��AC�h���C�u�����L���Ă��ȉ��̂悤�ɂȂ�
+	たとえ、Cドライブを共有しても以下のようになる
 	\\Prius\c
 
  Sample:
@@ -56,133 +56,133 @@ namespace KSDK {
 
 class String;
 
-// �p�X�̎��
+// パスの種類
 enum PathAttribute {
-	PATH_INVALID,	// ���݂��Ȃ��p�X
-	PATH_FILE,		// �t�@�C���̃p�X
-	PATH_FOLDER,	// �t�H���_�̃p�X
+	PATH_INVALID,	// 存在しないパス
+	PATH_FILE,		// ファイルのパス
+	PATH_FOLDER,	// フォルダのパス
 };
 
-// �w��̃t�@�C�������t���p�X�ɂ��ĕԂ�
-// �t�@�C���̎w��͑��΃p�X�A�t���p�X�A�g���q����A�g���q�����̂��������
-// pszDefPath�͋�̕������NULL�w��������pszFile�݂̂Ŏw�肷�邱�ƂɂȂ�
+// 指定のファイル名をフルパスにして返す
+// ファイルの指定は相対パス、フルパス、拡張子あり、拡張子無しのいずれも可
+// pszDefPathは空の文字列やNULL指定をするとpszFileのみで指定することになる
 //char* GetFullPath(const char* pszFile, const char* pszDefPath, const char* pszDefExt, char* pszPath);
 
-// ���΃p�X�ɃJ�����g�f�B���N�g�������ăt���p�X�ɂ���
+// 相対パスにカレントディレクトリをつけてフルパスにする
 bool GetFullPath(String& Path);
 
-// UNC (Universal Naming Convention) �p�X ��
-// �u\\�v�Ŏn�܂��Ă��邩
+// UNC (Universal Naming Convention) パス か
+// 「\\」で始まっているか
 bool IsUNCPath(LPCTSTR pszPath);
 
-// �w��̃p�X���t���p�X���ǂ���
-// �u:�v��2�����ڂɂ��邩
+// 指定のパスがフルパスかどうか
+// 「:」が2文字目にあるか
 bool IsFullPath(LPCTSTR pszPath);
 
-// �w��̃p�X���t���p�X���ǂ����iUNC���t���p�X�ƈ����j
+// 指定のパスがフルパスかどうか（UNCもフルパスと扱う）
 bool IsFullPathEx(LPCTSTR pszPath);
 
-// �w��̃p�X���t�@�C���̃p�X���i�g���q�����邩�j
+// 指定のパスがファイルのパスか（拡張子があるか）
 //bool IsFilePath(LPCTSTR pszPath);
 
-// �w��̃t�@�C�������݂��邩
+// 指定のファイルが存在するか
 bool FileExists(LPCTSTR pszPath);
 
-// �擪�̃X�y�[�X �����̃X�y�[�X�ƃs���I�h ���폜
+// 先頭のスペース 末尾のスペースとピリオド を削除
 void FixFileName(String& FileName);
 
-// �������`���ɂ���
-// �i�ŏ��Ɂu\�v�����������菜���j
-// �i������2�ȏ�u\�v�������ꍇ�̓l�b�g���[�N�p�X�ƍl��2�c���j
-// �i�Ō�Ɂu\�v�����������菜�� ������ �uc:\�v�̗l�Ƀ��[�g�̏ꍇ�͂����Ȃ�Ȃ��j
+// 正しい形式にする
+// （最初に「\」があったら取り除く）
+// （ただし2つ以上「\」が続く場合はネットワークパスと考え2つ残す）
+// （最後に「\」があったら取り除く ただし 「c:\」の様にルートの場合はそうならない）
 void FixPath(String& Path);
 
-// �T�C�Y�����Ȃ��Ō��ʂ� String �ɕԂ� GetCurrentDirectory()
+// サイズ制限なしで結果を String に返す GetCurrentDirectory()
 void GetCurrentDirectory(String& string);
 
-// MAX_PATH�𒴂��钷���̃p�X��
-// ���C�h���� (W) �o�[�W������ API �֐��ɓn���Ƃ���
-// �t�H�[�}�b�g�ɕϊ�����
+// MAX_PATHを超える長さのパスを
+// ワイド文字 (W) バージョンの API 関数に渡すときの
+// フォーマットに変換する
 void FormatTooLongPath(String& String);
 
-// �w��̃p�X���t�H���_���t�@�C������Ԃ�
+// 指定のパスがフォルダかファイルかを返す
 PathAttribute GetPathAttribute(LPCTSTR pszPath);
 
-// �f�B���N�g���̍쐬�i�����K�w�̃f�B���N�g�����쐬�\�j
-// �t���p�X�̂ݑΉ�
-// MakeSureDirectoryPathExists() ���g���΂������ۂ��H
+// ディレクトリの作成（複数階層のディレクトリも作成可能）
+// フルパスのみ対応
+// MakeSureDirectoryPathExists() を使えばいいっぽい？
 bool CreateDirectoryEx(LPCTSTR path);
 
-// �p�X����t�@�C��������菜��
-// �L���ȃp�X�ł��邩�͊m���߂Ȃ�
+// パスからファイル名を取り除く
+// 有効なパスであるかは確かめない
 bool RemoveFileName(String& path);
 
-// �p�X����t�@�C��������菜��
-// �L���ȁi���݂���j�p�X�ɂ��Ă̂ݗL��
+// パスからファイル名を取り除く
+// 有効な（存在する）パスについてのみ有効
 bool RemoveFileNameEx(String& path);
 
-// �p�X����g���q����菜��
-// �L���ȃp�X�ł��邩�͊m���߂Ȃ�
+// パスから拡張子を取り除く
+// 有効なパスであるかは確かめない
 bool RemoveExtension(String& path);
 
-// �t�@�C��������g���q�𓾂�
+// ファイル名から拡張子を得る
 void GetExtention(LPCTSTR filename, String& ext);
 
-// �J�����g�f�B���N�g���ݒ�
-// ��΃p�X�ł��A���΃p�X�i�󕶎���ł��j�ł��w��\
-// "\\data" �Ƃ� "C:\\data" �Ƃ������悤�Ɏw�肷��
-// ��΃p�X�łȂ��ꍇexe�t�@�C�����܂ރt�H���_����̑��΃p�X�Ƃ݂Ȃ�
+// カレントディレクトリ設定
+// 絶対パスでも、相対パス（空文字列でも可）でも指定可能
+// "\\data" とか "C:\\data" といったように指定する
+// 絶対パスでない場合exeファイルを含むフォルダからの相対パスとみなす
 bool SetCurrentDirectoryEx(LPCTSTR pszDir);
 
-// �p�X�̒ǉ�
+// パスの追加
 //void CatPath(char* pszPath1, const char* pszPath2);
 void CatPath(String& String, LPCTSTR pszPath);
 
-// �t�H���_���󂩂ǂ������ׂ�
+// フォルダが空かどうか調べる
 bool IsEmptyFolder(LPCTSTR pszPath);
 
-// 2�̃p�X�̐擪���狤�ʂ���p�X�̒�����Ԃ�
+// 2つのパスの先頭から共通するパスの長さを返す
 int PathCommonPrefixLen(const char* psz1, const char* psz2);
 
-// �w�肵���p�X�𒷂��p�X�ɕϊ�����
+// 指定したパスを長いパスに変換する
 //bool GetLongPathName(char* pszPath);
 
-// �w�肳�ꂽ�����񂪃t�@�C�����Ƃ��Đ�������
-// �i�t�@�C�����Ɏg���Ȃ��������g���Ă��Ȃ����j�`�F�b�N
-// �t�@�C���Ɏg���Ȃ�������
-// WinXP���ƁuTAB�v�u\�v�u/�v�u:�v�u*�v�u?�v�u"�v�u<�v�u>�v�u|�v
-// Win98SE���Ƃ���Ɂu,�v�u;�v�������
-// �i�ǂ���烍���O�t�@�C���l�[���ɂ����Ắu,�v���u;�v���g����͗l�j
-// ��̕������擪�Ƀs���I�h������ꍇ�s���Ƃ���
+// 指定された文字列がファイル名として正しいか
+// （ファイル名に使えない文字が使われていないか）チェック
+// ファイルに使えない文字は
+// WinXPだと「TAB」「\」「/」「:」「*」「?」「"」「<」「>」「|」
+// Win98SEだとさらに「,」「;」が加わる
+// （どうやらロングファイルネームにおいては「,」も「;」も使える模様）
+// 空の文字列や先頭にピリオドがある場合不正とする
 bool IsFileName(LPCTSTR pszFileName);
 
-// �p�X��\�������񂩂�X�y�[�X��������
-// �X�y�[�X���������������ꍇ
-// ������S�̂��_�u���N�H�[�e�[�V�����}�[�N�ň͂�
+// パスを表す文字列からスペースを検索し
+// スペース文字が見つかった場合
+// 文字列全体をダブルクォーテーションマークで囲む
 void QuotePath(String& Path);
 
-// �T�C�Y�����Ȃ��Ō��ʂ� String �ɕԂ� GetModuleFileName()
+// サイズ制限なしで結果を String に返す GetModuleFileName()
 void GetModuleFileName(HMODULE hModule, String& filename);
 
-// �t���p�X����t�@�C�����𓾂�
+// フルパスからファイル名を得る
 void GetFileName(LPCTSTR path, String& filename);
 
 LPCTSTR GetFileName(LPCTSTR Path);
 
-// �t�@�C����t�H���_�̍폜
-// ���ݔ��ɑ��邱�Ƃ��ł���
-// �t�H���_�͂��̃t�H���_�Ɋ܂܂��t�@�C�����ƍ폜����
+// ファイルやフォルダの削除
+// ごみ箱に送ることもできる
+// フォルダはそのフォルダに含まれるファイルごと削除する
 bool DeleteFileOrFolder(LPCTSTR filename, bool usesRecycleBin = false);
 
-// �s���S�Ȏ���
-// �ȗ����ꂽ�p�X��삯�オ��p�X�ɂ��Ή�����K�v������
+// 不完全な実装
+// 省略されたパスや駆け上がりパスにも対応する必要がある
 int ComparePath(LPCTSTR path1, LPCTSTR path2);
 
-// �t�@�C�����������łȂ��t�@�C�����ɕς���
-// �g���q��ۂ��ăt�@�C�����̏I���Ɂu(1)�v����t����
+// ファイル名を既存でないファイル名に変える
+// 拡張子を保ってファイル名の終わりに「(1)」等を付ける
 bool EvacuateFileName(String& rFilename);
 
-// �t�H���_���������łȂ��t�H���_���ɕς���
+// フォルダ名を既存でないフォルダ名に変える
 bool EvacuateFolderName(String& folderName);
 
 int PathGetDepth(LPCTSTR path);
@@ -197,12 +197,12 @@ bool expandPath(LPCTSTR srcPath, String& dstPath);
 
 class FileEnumerator {
 public:
-	// path �̓t���p�X�̂ݑΉ�
-	// pattern �� FindFirstFile() �ւ̈������l
-	// �u*�v�܂��́u?�v�̃��C���h�J�[�h�������܂߂邱�Ƃ��ł���
-	// TODO ���[�g�f�B���N�g���̌����ɑΉ����Ă��Ȃ� �ȉ����Q�l�ɂ��邱��
+	// path はフルパスのみ対応
+	// pattern は FindFirstFile() への引数同様
+	// 「*」または「?」のワイルドカード文字を含めることができる
+	// TODO ルートディレクトリの検索に対応していない 以下を参考にすること
 	// http://msdn.microsoft.com/library/ja/default.asp?url=/library/ja/jpfileio/html/_win32_findfirstfile.asp
-	// TODO �u*�v�݂̂łȂ��p�^�[�����w�肵���ꍇ�T�u�t�H���_�ȉ��̌������ł��Ȃ�
+	// TODO 「*」のみでないパターンを指定した場合サブフォルダ以下の検索ができない
 	static bool enumerate(
 		LPCTSTR path, 
 		LPCTSTR pattern, 

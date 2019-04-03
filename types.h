@@ -3,17 +3,17 @@
 
 #include <Windows.h>
 
-typedef	signed		int		INT;	// •„†‚Â‚«®”
-typedef	unsigned	int		UINT;	// •„†‚È‚µ®”
+typedef	signed		int		INT;	// ç¬¦å·ã¤ãæ•´æ•°
+typedef	unsigned	int		UINT;	// ç¬¦å·ãªã—æ•´æ•°
 
-typedef	unsigned	char	UINT8;	// •„†‚È‚µ‚PƒoƒCƒg®”
-typedef	unsigned	short	UINT16;	// •„†‚È‚µ‚QƒoƒCƒg®”
-typedef	unsigned	int		UINT32;	// •„†‚È‚µ‚SƒoƒCƒg®”
+typedef	unsigned	char	UINT8;	// ç¬¦å·ãªã—ï¼‘ãƒã‚¤ãƒˆæ•´æ•°
+typedef	unsigned	short	UINT16;	// ç¬¦å·ãªã—ï¼’ãƒã‚¤ãƒˆæ•´æ•°
+typedef	unsigned	int		UINT32;	// ç¬¦å·ãªã—ï¼”ãƒã‚¤ãƒˆæ•´æ•°
 
-typedef	signed		char	SINT8;	// •„†‚Â‚«‚PƒoƒCƒg®”
-typedef	signed		short	SINT16;	// •„†‚Â‚«‚QƒoƒCƒg®”
-typedef	signed		int		SINT32;	// •„†‚Â‚«‚SƒoƒCƒg®”
+typedef	signed		char	SINT8;	// ç¬¦å·ã¤ãï¼‘ãƒã‚¤ãƒˆæ•´æ•°
+typedef	signed		short	SINT16;	// ç¬¦å·ã¤ãï¼’ãƒã‚¤ãƒˆæ•´æ•°
+typedef	signed		int		SINT32;	// ç¬¦å·ã¤ãï¼”ãƒã‚¤ãƒˆæ•´æ•°
 
-typedef	float		FLOAT32;		// ‚SƒoƒCƒgÀ”
+typedef	float		FLOAT32;		// ï¼”ãƒã‚¤ãƒˆå®Ÿæ•°
 
 #endif //__TYPES_H__

@@ -46,34 +46,34 @@ public:
 		archiveFilename_ = filename;
 	}
 
-	// ˆêŠ‡‰ğ“€
+	// ä¸€æ‹¬è§£å‡
 	int extract(LPCTSTR destPath, bool showsProgress, bool overwritesFile);
 
-	// w’è‚Ìƒtƒ@ƒCƒ‹EƒtƒHƒ‹ƒ_‚ğw’è‚ÌƒtƒHƒ‹ƒ_‚É‰ğ“€
+	// æŒ‡å®šã®ãƒ•ã‚¡ã‚¤ãƒ«ãƒ»ãƒ•ã‚©ãƒ«ãƒ€ã‚’æŒ‡å®šã®ãƒ•ã‚©ãƒ«ãƒ€ã«è§£å‡
 	int extract(LPCTSTR srcPath, LPCTSTR destPath, bool showsProgress, LPCTSTR password = NULL);
 
-	// w’èƒtƒHƒ‹ƒ_ˆÈ‰º‚ğw’èƒtƒ@ƒCƒ‹–¼‚Åˆ³k
+	// æŒ‡å®šãƒ•ã‚©ãƒ«ãƒ€ä»¥ä¸‹ã‚’æŒ‡å®šãƒ•ã‚¡ã‚¤ãƒ«åã§åœ§ç¸®
 	bool compress(LPCTSTR srcPath, LPCTSTR destPath, int compressLevel, bool showsProgress);
 
 	int findFirst(LPCTSTR wildName, INDIVIDUALINFO* p);
 	int findNext(INDIVIDUALINFO* p);
 
-	// ‡˜”  1
+	// é †åºæ•°  1
 	int command(const HWND hwnd, LPCTSTR cmdLine, String& rOutput);
 
-	// ‡˜”  10
+	// é †åºæ•°  10
 	bool getRunning();
 
-	// ‡˜”  12
+	// é †åºæ•°  12
 	bool checkArchive();
 
-	// ‡˜”  47
+	// é †åºæ•°  47
 	int getAttribute();
 
-	// ‡˜”  40
+	// é †åºæ•°  40
 	int getFileName(String& rFilename);
 
-	// ‡˜”  65
+	// é †åºæ•°  65
 	bool getWriteTimeEx(FILETIME& rLastWriteTime);
 
 	int setUnicodeMode();
@@ -103,7 +103,7 @@ public:
 
 	void releaseArchiveDll(ArchiveDllID::ArchiveDllID archiveDllID);
 
-	// w’è‚Ì‘ŒÉ‚ğˆµ‚¤‚Ì‚É“K“–‚ÈƒA[ƒJƒCƒuDLL‚ğ•Ô‚·
+	// æŒ‡å®šã®æ›¸åº«ã‚’æ‰±ã†ã®ã«é©å½“ãªã‚¢ãƒ¼ã‚«ã‚¤ãƒ–DLLã‚’è¿”ã™
 	ArchiveDll* getSuitableArchiveDll(LPCTSTR filename);
 
 private:

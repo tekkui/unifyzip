@@ -6,7 +6,7 @@
 
 namespace KSDK {
 
-// ‚·‚×‚Ä‚Ì—áŠO‚Í‚±‚ê‚©‚ç”h¶‚³‚¹‚é
+// ã™ã¹ã¦ã®ä¾‹å¤–ã¯ã“ã‚Œã‹ã‚‰æ´¾ç”Ÿã•ã›ã‚‹
 class Exception {
 	//Exception() {}
 	virtual String getError() const { return _T(""); };

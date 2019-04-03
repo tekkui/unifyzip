@@ -3,7 +3,7 @@
 												2003.10.19 (c)YOSHIDA Kurima
 ================================================================================
  Content:
-	ProfileƒNƒ‰ƒX
+	Profileã‚¯ãƒ©ã‚¹
 	
  Notes:
 
@@ -22,9 +22,9 @@ namespace KSDK {
 
 class Profile {
 public:
-	Profile();						// ƒfƒtƒHƒ‹ƒgƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	Profile(LPCTSTR pszFilename);	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-	virtual ~Profile();			// ƒfƒXƒgƒ‰ƒNƒ^
+	Profile();						// ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	Profile(LPCTSTR pszFilename);	// ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
+	virtual ~Profile();			// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 
 	void Open(LPCTSTR pszFilename);
 	void Close();
@@ -36,8 +36,8 @@ public:
 	void GetString(LPCTSTR pszAppName, LPCTSTR pszKeyName, LPCTSTR pszDefault, String& returnedString);
 
 private:
-	Profile(const Profile &Profile);					// ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚ğŒÄ‚×‚È‚¢‚æ‚¤‚É private éŒ¾
-	const Profile& operator=(const Profile& Profile);	// ‘ã“ü‰‰Z‚ğŒÄ‚×‚È‚¢‚æ‚¤‚É private éŒ¾
+	Profile(const Profile &Profile);					// ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã‚’å‘¼ã¹ãªã„ã‚ˆã†ã« private å®£è¨€
+	const Profile& operator=(const Profile& Profile);	// ä»£å…¥æ¼”ç®—ã‚’å‘¼ã¹ãªã„ã‚ˆã†ã« private å®£è¨€
 
 	String m_Filename;
 };

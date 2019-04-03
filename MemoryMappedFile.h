@@ -13,7 +13,7 @@ public:
 	bool open(LPCTSTR filename) {
 		close();
 
-		// ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
 		fh_ = CreateFile(filename, GENERIC_READ|GENERIC_WRITE, 0, NULL,OPEN_EXISTING,
 			FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -23,12 +23,12 @@ public:
 
 		if (fileSize_ == -1) return false;
 
-		// ƒtƒ@ƒCƒ‹ƒ}ƒbƒsƒ“ƒOƒIƒuƒWƒFƒNƒgì¬
+		// ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ”ãƒ³ã‚°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½œæˆ
 		hMap_ = CreateFileMapping(fh_, NULL, PAGE_READWRITE, 0, 0, NULL);
 
 		if (hMap_ == NULL) return false;
 
-		// ƒtƒ@ƒCƒ‹‚ğƒ}ƒbƒv‚µAæ“ªƒAƒhƒŒƒX‚ğlpBuf‚Éæ“¾
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒãƒƒãƒ—ã—ã€å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’lpBufã«å–å¾—
 		p_ = (LPBYTE)MapViewOfFile(hMap_, FILE_MAP_WRITE, 0, 0, 0);
 
 		if (p_ == NULL) return false;
@@ -77,7 +77,7 @@ private:
 };
 
 
-// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚Ì‘å‚«‚Èƒtƒ@ƒCƒ‹i1GB‚ğ’´‚¦‚éƒtƒ@ƒCƒ‹‚È‚Çj‚Ìê‡ƒ}ƒbƒsƒ“ƒO‚É¸”s‚·‚é
+// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã®å¤§ããªãƒ•ã‚¡ã‚¤ãƒ«ï¼ˆ1GBã‚’è¶…ãˆã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ãªã©ï¼‰ã®å ´åˆãƒãƒƒãƒ”ãƒ³ã‚°ã«å¤±æ•—ã™ã‚‹
 class ReadOnlyMemoryMappedFile {
 public:
 	ReadOnlyMemoryMappedFile() : fh_(NULL), hMap_(NULL), p_(NULL), fileSize_(0) {}
@@ -85,7 +85,7 @@ public:
 	bool open(LPCTSTR filename) {
 		close();
 
-		// ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
 		fh_ = CreateFile(filename, GENERIC_READ, 0, NULL,OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 
 		if (fh_ == NULL) return false;
@@ -94,20 +94,20 @@ public:
 
 		if (fileSize_ == -1) return false;
 
-		// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ª0‚Ì‚Í open() ‚Í¬Œ÷‚·‚é‚ª
-		// “Ç‚Ş‚à‚Ì‚Í–³‚¢
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºãŒ0ã®æ™‚ã¯ open() ã¯æˆåŠŸã™ã‚‹ãŒ
+		// èª­ã‚€ã‚‚ã®ã¯ç„¡ã„
 		if (fileSize_ == 0) {
 			p_ = NULL;
 			hMap_ = NULL;
 			return true;
 		}
 
-		// ƒtƒ@ƒCƒ‹ƒ}ƒbƒsƒ“ƒOƒIƒuƒWƒFƒNƒgì¬
+		// ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ”ãƒ³ã‚°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½œæˆ
 		hMap_ = CreateFileMapping(fh_, NULL, PAGE_READONLY, 0, 0, NULL);
 
 		if (hMap_ == NULL) return false;
 
-		// ƒtƒ@ƒCƒ‹‚ğƒ}ƒbƒv‚µAæ“ªƒAƒhƒŒƒX‚ğlpBuf‚Éæ“¾
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’ãƒãƒƒãƒ—ã—ã€å…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’lpBufã«å–å¾—
 		p_ = (LPBYTE)MapViewOfFile(hMap_, FILE_MAP_READ, 0, 0, 0);
 
 		if (p_ == NULL) return false;
@@ -149,9 +149,9 @@ private:
 };
 
 
-// View ‚ğ•ÊƒNƒ‰ƒX‚Æ‚µ‚Ä•¡”‚ÌView‚É‘Î‰‚µ‹‘å‚Èƒtƒ@ƒCƒ‹‚É‘Î‰‚µ‚½ƒo[ƒWƒ‡ƒ“
-// ViewOfFile ‚Ìì¬‚É‚ ‚½‚Á‚Ä‚Í dwAllocationGranularity ‚ğ‹C‚É‚µ‚È‚¢‚Å‚¢‚¢‚æ‚¤‚É‚È‚Á‚Ä‚¢‚é
-// ViewOfFile ‚ğì¬‚µ‚½ ReadOnlyMemoryMappedFileEx ‚Í ViewOfFile ‚æ‚èŒã‚Éíœ‚·‚é‚±‚Æ
+// View ã‚’åˆ¥ã‚¯ãƒ©ã‚¹ã¨ã—ã¦è¤‡æ•°ã®Viewã«å¯¾å¿œã—å·¨å¤§ãªãƒ•ã‚¡ã‚¤ãƒ«ã«å¯¾å¿œã—ãŸãƒãƒ¼ã‚¸ãƒ§ãƒ³
+// ViewOfFile ã®ä½œæˆã«ã‚ãŸã£ã¦ã¯ dwAllocationGranularity ã‚’æ°—ã«ã—ãªã„ã§ã„ã„ã‚ˆã†ã«ãªã£ã¦ã„ã‚‹
+// ViewOfFile ã‚’ä½œæˆã—ãŸ ReadOnlyMemoryMappedFileEx ã¯ ViewOfFile ã‚ˆã‚Šå¾Œã«å‰Šé™¤ã™ã‚‹ã“ã¨
 class ViewOfFile {
 public:
 	ViewOfFile(HANDLE hFileMappingObject, UINT32 fileOffset, UINT32 numberOfBytesToMap) {
@@ -211,21 +211,21 @@ public:
 	bool open(LPCTSTR filename) {
 		close();
 
-		// ƒtƒ@ƒCƒ‹ƒI[ƒvƒ“
+		// ãƒ•ã‚¡ã‚¤ãƒ«ã‚ªãƒ¼ãƒ—ãƒ³
 		fh_ = CreateFile(filename, GENERIC_READ, 0, NULL,OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if (fh_ == INVALID_HANDLE_VALUE) return false;
 
 		fileSize_ = GetFileSize(fh_, NULL);
 		if (fileSize_ == -1) return false;
 
-		// ƒtƒ@ƒCƒ‹ƒ}ƒbƒsƒ“ƒOƒIƒuƒWƒFƒNƒgì¬
+		// ãƒ•ã‚¡ã‚¤ãƒ«ãƒãƒƒãƒ”ãƒ³ã‚°ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆä½œæˆ
 		hMap_ = CreateFileMapping(fh_, NULL, PAGE_READONLY, 0, 0, NULL);
 		if (hMap_ == NULL) return false;
 
 		return true;
 	}
 
-	// fileOffset ‚Æ numberOfBytesToMap ‚ğ 0 ‚Æw’è‚·‚é‚Æƒtƒ@ƒCƒ‹ƒTƒCƒY‚Åƒ}ƒbƒv‚³‚ê‚é
+	// fileOffset ã¨ numberOfBytesToMap ã‚’ 0 ã¨æŒ‡å®šã™ã‚‹ã¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã§ãƒãƒƒãƒ—ã•ã‚Œã‚‹
 	boost::shared_ptr<ViewOfFile> map(UINT32 fileOffset, UINT32 numberOfBytesToMap) {
 		boost::shared_ptr<ViewOfFile> p;
 		if (hMap_ == NULL) return p;

@@ -12,43 +12,43 @@
 
 namespace KSDK {
 
-const int MIN_BUF_LEN = 16;	// Å’áƒƒ‚ƒŠŠm•Û—Êi•¶š”’PˆÊj
-const int MAX_INT_LEN = 10;	// int(32bit)‚ğ•¶š—ñ‚É’¼‚µ‚½‚Æ‚«‚É•K—v‚Èƒƒ‚ƒŠ—Êi•¶š”’PˆÊj
+const int MIN_BUF_LEN = 16;	// æœ€ä½ãƒ¡ãƒ¢ãƒªç¢ºä¿é‡ï¼ˆæ–‡å­—æ•°å˜ä½ï¼‰
+const int MAX_INT_LEN = 10;	// int(32bit)ã‚’æ–‡å­—åˆ—ã«ç›´ã—ãŸã¨ãã«å¿…è¦ãªãƒ¡ãƒ¢ãƒªé‡ï¼ˆæ–‡å­—æ•°å˜ä½ï¼‰
 
-//ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+//ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 String::String() :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL), m_ansiStr(NULL),
 						m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Reserve(MIN_BUF_LEN);
 }
 
-// •¶š—ñ‚Å‰Šú‰»
+// æ–‡å­—åˆ—ã§åˆæœŸåŒ–
 String::String(LPCTSTR pszString) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL), m_ansiStr(NULL),
 										m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Copy(pszString);
 }
 
-// ƒRƒs[ƒRƒ“ƒXƒgƒ‰ƒNƒ^
+// ã‚³ãƒ”ãƒ¼ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 String::String(const String& another) :	m_pszBuf(NULL), m_pszStr(NULL), m_utf8Str(NULL), m_ansiStr(NULL),
 											m_nMaxBufLen(0), m_nBufLen(0), m_nStrLen(0)
 {
 	Copy(another.c_str());
 }
 
-// ƒfƒXƒgƒ‰ƒNƒ^
+// ãƒ‡ã‚¹ãƒˆãƒ©ã‚¯ã‚¿
 String::~String(){
 	if(m_pszBuf != NULL) free(m_pszBuf);
 	if(m_utf8Str != NULL) delete[] m_utf8Str;
 	if(m_ansiStr != NULL) delete[] m_ansiStr;
 }
 
-// •¶š—ñ‚ğ‘ã“ü
+// æ–‡å­—åˆ—ã‚’ä»£å…¥
 String& String::Copy(LPCTSTR pszString)
 {
 	int nLen;
 
-	// ©•ª©g‚Ö‚Ì‘ã“ü‚Í‚µ‚È‚¢
+	// è‡ªåˆ†è‡ªèº«ã¸ã®ä»£å…¥ã¯ã—ãªã„
 	if(m_pszStr == pszString) return *this;
 	
 	nLen = lstrlen(pszString);
@@ -65,7 +65,7 @@ String& String::Copy(LPCTSTR pszString)
 }
 
 
-// ”’l‚ğ•¶š—ñ‚É•ÏŠ·‚µ‚Ä‘ã“ü
+// æ•°å€¤ã‚’æ–‡å­—åˆ—ã«å¤‰æ›ã—ã¦ä»£å…¥
 String& String::Copy(int n)
 {
 	Empty();
@@ -79,7 +79,7 @@ String& String::Copy(int n)
 	return *this;
 }
 
-// ˆê•¶š‘ã“ü
+// ä¸€æ–‡å­—ä»£å…¥
 String& String::Copy(TCHAR c)
 {
 	Empty();
@@ -94,18 +94,18 @@ String& String::Copy(TCHAR c)
 	return *this;
 }
 
-// ’·‚³‚ğw’è‚µ‚Ä•¶š—ñ‚ğ‘ã“üiI’[‚É '\0' ‚ª•t‚­j
+// é•·ã•ã‚’æŒ‡å®šã—ã¦æ–‡å­—åˆ—ã‚’ä»£å…¥ï¼ˆçµ‚ç«¯ã« '\0' ãŒä»˜ãï¼‰
 String& String::NCopy(LPCTSTR pszString, int n)
 {
-	// ©•ª©g‚Ö‚Ì‘ã“ü‚Í‚µ‚È‚¢
+	// è‡ªåˆ†è‡ªèº«ã¸ã®ä»£å…¥ã¯ã—ãªã„
 	if(m_pszStr == pszString) return *this;
 
 	Empty();
 
-	// ƒRƒs[‚·‚é•¶š”
+	// ã‚³ãƒ”ãƒ¼ã™ã‚‹æ–‡å­—æ•°
 	int nLen = n;
 
-	// ‘ã“ü‚µ‚½‚¢•¶š—ñ‚Ì’·‚³‚ªw’è’·‚³‚æ‚è’Z‚¯‚ê‚Î‚»‚±‚Ü‚Å‚ğ‘ã“ü
+	// ä»£å…¥ã—ãŸã„æ–‡å­—åˆ—ã®é•·ã•ãŒæŒ‡å®šé•·ã•ã‚ˆã‚ŠçŸ­ã‘ã‚Œã°ãã“ã¾ã§ã‚’ä»£å…¥
 	LPCTSTR p = pszString;
 	for (int i=0; i<n; ++i) {
 		if (*p == _TCHAR('\0')) {
@@ -113,9 +113,9 @@ String& String::NCopy(LPCTSTR pszString, int n)
 			break;
 		}
 
-		// Ÿ‚Ì•¶š‚Ö
-		// 2ƒoƒCƒg•¶š‚É‚Í '\0' ‚ÍŠÜ‚Ü‚ê‚È‚¢‚Å‚ ‚ë‚¤‚©‚ç
-		// “Á•Êˆµ‚¢‚µ‚È‚¢
+		// æ¬¡ã®æ–‡å­—ã¸
+		// 2ãƒã‚¤ãƒˆæ–‡å­—ã«ã¯ '\0' ã¯å«ã¾ã‚Œãªã„ã§ã‚ã‚ã†ã‹ã‚‰
+		// ç‰¹åˆ¥æ‰±ã„ã—ãªã„
 		p++;
 	}
 
@@ -131,7 +131,7 @@ String& String::NCopy(LPCTSTR pszString, int n)
 	return *this;
 }
 
-// •¶š—ñ‚ğ’Ç‰Á
+// æ–‡å­—åˆ—ã‚’è¿½åŠ 
 String& String::Cat(LPCTSTR pszString)
 {
 	int nLen;
@@ -146,7 +146,7 @@ String& String::Cat(LPCTSTR pszString)
 	return *this;
 }
 
-// ”’l‚ğ•¶š—ñ‚É•ÏŠ·‚µ‚Ä’Ç‰Á
+// æ•°å€¤ã‚’æ–‡å­—åˆ—ã«å¤‰æ›ã—ã¦è¿½åŠ 
 String& String::Cat(int n)
 {
 	LPTSTR psz;
@@ -161,7 +161,7 @@ String& String::Cat(int n)
 	return *this;
 }
 
-// ˆê•¶š’Ç‰Á
+// ä¸€æ–‡å­—è¿½åŠ 
 String& String::Cat(TCHAR c)
 {
 	LPTSTR psz;
@@ -177,22 +177,22 @@ String& String::Cat(TCHAR c)
 	return *this;
 }
 
-// ’·‚³‚ğw’è‚µ‚Ä•¶š—ñ‚ğ’Ç‰Á
+// é•·ã•ã‚’æŒ‡å®šã—ã¦æ–‡å­—åˆ—ã‚’è¿½åŠ 
 String& String::NCat(LPCTSTR pszString, int n)
 {
-	// ƒRƒs[‚·‚é•¶š”
+	// ã‚³ãƒ”ãƒ¼ã™ã‚‹æ–‡å­—æ•°
 	int nLen = n;
 
-	// ’Ç‰Á‚µ‚½‚¢•¶š—ñ‚Ì’·‚³‚ªw’è’·‚³‚æ‚è’Z‚¯‚ê‚Î‚»‚±‚Ü‚Å‚ğ’Ç‰Á
+	// è¿½åŠ ã—ãŸã„æ–‡å­—åˆ—ã®é•·ã•ãŒæŒ‡å®šé•·ã•ã‚ˆã‚ŠçŸ­ã‘ã‚Œã°ãã“ã¾ã§ã‚’è¿½åŠ 
 	LPCTSTR p = pszString;
 	for (int i=0; i<n; ++i) {
 		if (*p == _TCHAR('\0')) {
 			nLen = i;
 			break;
 		}
-		// Ÿ‚Ì•¶š‚Ö
-		// 2ƒoƒCƒg•¶š‚É‚Í '\0' ‚ÍŠÜ‚Ü‚ê‚È‚¢‚Å‚ ‚ë‚¤‚©‚ç
-		// “Á•Êˆµ‚¢‚µ‚È‚¢
+		// æ¬¡ã®æ–‡å­—ã¸
+		// 2ãƒã‚¤ãƒˆæ–‡å­—ã«ã¯ '\0' ã¯å«ã¾ã‚Œãªã„ã§ã‚ã‚ã†ã‹ã‚‰
+		// ç‰¹åˆ¥æ‰±ã„ã—ãªã„
 		p++;
 	}
 
@@ -208,8 +208,8 @@ String& String::NCat(LPCTSTR pszString, int n)
 	return *this;
 }
 
-// ƒƒ‚ƒŠ—Ìˆæim_nBufLenj‚ğw’èƒTƒCƒYˆÈã‚ÉŠg‘å
-// •¶š—ñ‚ÌˆÚ“®‚Ís‚í‚È‚¢
+// ãƒ¡ãƒ¢ãƒªé ˜åŸŸï¼ˆm_nBufLenï¼‰ã‚’æŒ‡å®šã‚µã‚¤ã‚ºä»¥ä¸Šã«æ‹¡å¤§
+// æ–‡å­—åˆ—ã®ç§»å‹•ã¯è¡Œã‚ãªã„
 bool String::Reserve(int nSize)
 {
 	if(m_nBufLen >= nSize) return true;
@@ -218,9 +218,9 @@ bool String::Reserve(int nSize)
 	int nOffset;
 
 	if(m_pszBuf != NULL){
-		// ‚·‚Å‚Éƒƒ‚ƒŠ‚ğŠm•Û‚µ‚Ä‚¢‚éê‡
+		// ã™ã§ã«ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã—ã¦ã„ã‚‹å ´åˆ
 
-		// ƒƒ‚ƒŠ‚ÌŠm•Û—Ê‚ğŒˆ‚ß‚é
+		// ãƒ¡ãƒ¢ãƒªã®ç¢ºä¿é‡ã‚’æ±ºã‚ã‚‹
 		nOffset = (int)(m_pszStr - m_pszBuf);
 		nSize += nOffset;
 		n = m_nMaxBufLen;
@@ -232,15 +232,15 @@ bool String::Reserve(int nSize)
 		m_nMaxBufLen = n;
 		m_nBufLen = n - nOffset;
 	}else{
-		// ƒƒ‚ƒŠ–¢Šm•Û‚Ìê‡
+		// ãƒ¡ãƒ¢ãƒªæœªç¢ºä¿ã®å ´åˆ
 
-		// ƒƒ‚ƒŠ‚ÌŠm•Û—Ê‚ğŒˆ‚ß‚é
+		// ãƒ¡ãƒ¢ãƒªã®ç¢ºä¿é‡ã‚’æ±ºã‚ã‚‹
 		n = MIN_BUF_LEN;
 		while(n < nSize) n*=2;
 
 		if((m_pszBuf = (LPTSTR)malloc(sizeof(TCHAR) * n)) == NULL) return false;
 
-		// ‹ó‚Ì•¶š—ñ‚ğİ’è
+		// ç©ºã®æ–‡å­—åˆ—ã‚’è¨­å®š
 		m_pszStr = m_pszBuf;
 		*m_pszStr = _TCHAR('\0');
 
@@ -261,7 +261,7 @@ void String::Empty(void)
 	}
 }
 
-// I’[•¶š‚ğ‘Å‚Á‚Ä•¶š‚Ì’·‚³‚ğw’è‚Ì’·‚³ˆÈ‰º‚É‚·‚é
+// çµ‚ç«¯æ–‡å­—ã‚’æ‰“ã£ã¦æ–‡å­—ã®é•·ã•ã‚’æŒ‡å®šã®é•·ã•ä»¥ä¸‹ã«ã™ã‚‹
 int String::MakeLeft(int nCount)
 {
 	if(m_nStrLen <= nCount) return m_nStrLen;
@@ -270,9 +270,9 @@ int String::MakeLeft(int nCount)
 	return m_nStrLen;
 }
 
-// •¶š—ñ‚Ìw’è‚ÌˆÊ’u‚ğæ‚èo‚·
-// nStart = 0 ‚¾‚Æ•¶š‚ÌÅ‰‚©‚çæ‚èo‚·
-// c‚Á‚½•¶š—ñ‚Ì•¶š”‚ğ•Ô‚·
+// æ–‡å­—åˆ—ã®æŒ‡å®šã®ä½ç½®ã‚’å–ã‚Šå‡ºã™
+// nStart = 0 ã ã¨æ–‡å­—ã®æœ€åˆã‹ã‚‰å–ã‚Šå‡ºã™
+// æ®‹ã£ãŸæ–‡å­—åˆ—ã®æ–‡å­—æ•°ã‚’è¿”ã™
 int String::MakeMid(int nFirst)
 {
 	if(nFirst <= 0){
@@ -287,8 +287,8 @@ int String::MakeMid(int nFirst)
 	return m_nStrLen;
 }
 
-// •¶š—ñ‚Ìw’è‚ÌˆÊ’u‚ğæ‚èo‚·
-// nStart = 0 ‚¾‚Æ•¶š‚ÌÅ‰‚©‚çæ‚èo‚·
+// æ–‡å­—åˆ—ã®æŒ‡å®šã®ä½ç½®ã‚’å–ã‚Šå‡ºã™
+// nStart = 0 ã ã¨æ–‡å­—ã®æœ€åˆã‹ã‚‰å–ã‚Šå‡ºã™
 int String::MakeMid(int nFirst, int nCount)
 {
 	if (nCount < 0) nCount = 0;
@@ -312,13 +312,13 @@ int String::MakeMid(int nFirst, int nCount)
 	return m_nStrLen;
 }
 
-// ‘å•¶š‰»
+// å¤§æ–‡å­—åŒ–
 void String::MakeUpper()
 {
 	KSDK::MakeUpper(m_pszStr);
 }
 
-// •¶š—ñ‚Ì‘å•¶š”¼ŠpƒAƒ‹ƒtƒ@ƒxƒbƒg‚ğ¬•¶š‚É‚·‚é
+// æ–‡å­—åˆ—ã®å¤§æ–‡å­—åŠè§’ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆã‚’å°æ–‡å­—ã«ã™ã‚‹
 void String::MakeLower()
 {
 	LPTSTR psz;
@@ -342,7 +342,7 @@ void String::MakeLower()
 	}
 }
 
-// ’uŠ·
+// ç½®æ›
 int String::Replace( TCHAR chOld, TCHAR chNew ) {
 	LPCTSTR psz;
 	int n = 0;
@@ -355,7 +355,7 @@ int String::Replace( TCHAR chOld, TCHAR chNew ) {
 	return n;
 }
 
-// ’uŠ·
+// ç½®æ›
 int String::Replace(LPCTSTR pszOld, LPCTSTR pszNew) {
 	int oldLen = lstrlen(pszOld);
 	int newLen = lstrlen(pszNew);
@@ -394,10 +394,10 @@ int String::Replace(LPCTSTR pszOld, LPCTSTR pszNew) {
 }
 
 
-// ‘}“ü
+// æŒ¿å…¥
 int String::Insert( int nIndex, TCHAR ch )
 {
-	// nIndex‚ª‘å‚«‚¢ê‡‚ÍCat()
+	// nIndexãŒå¤§ãã„å ´åˆã¯Cat()
 	if(nIndex >= m_nStrLen){
 		Cat(ch);
 		return m_nStrLen;
@@ -419,7 +419,7 @@ int String::Insert( int nIndex, TCHAR ch )
 
 int String::Insert( int nIndex, LPCTSTR pstr )
 {
-	// nIndex‚ª‘å‚«‚¢ê‡‚ÍCat()
+	// nIndexãŒå¤§ãã„å ´åˆã¯Cat()
 	if(nIndex >= m_nStrLen){
 		Cat(pstr);
 		return m_nStrLen;
@@ -430,12 +430,12 @@ int String::Insert( int nIndex, LPCTSTR pstr )
 	int d = r - n;
 
 	if(d>0){
-		// •¶š—ñ‚Ì‘O‚É‚ ‚éƒƒ‚ƒŠ‚ÅŠÔ‚É‡‚¤
+		// æ–‡å­—åˆ—ã®å‰ã«ã‚ã‚‹ãƒ¡ãƒ¢ãƒªã§é–“ã«åˆã†
 		memmove(m_pszStr-n, m_pszStr, sizeof(TCHAR) * nIndex);
 		m_pszStr-=n;
 		m_nBufLen+=n;
 	}else{
-		// •¶š—ñ‚Ì‘O‚É‚ ‚éƒƒ‚ƒŠ‚Íg‚í‚È‚¢
+		// æ–‡å­—åˆ—ã®å‰ã«ã‚ã‚‹ãƒ¡ãƒ¢ãƒªã¯ä½¿ã‚ãªã„
 		Reserve(m_nStrLen + n + 1);
 		memmove(m_pszStr + nIndex + n, m_pszStr + nIndex, sizeof(TCHAR) * (m_nStrLen - nIndex + 1));
 	}
@@ -445,10 +445,10 @@ int String::Insert( int nIndex, LPCTSTR pstr )
 	return m_nStrLen;
 }
 
-// íœ
+// å‰Šé™¤
 int String::Delete( int nIndex, int nCount )
 {
-	// ‰½‚àíœ‚µ‚È‚¢
+	// ä½•ã‚‚å‰Šé™¤ã—ãªã„
 	if(nCount <= 0) return m_nStrLen;
 
 	if(nIndex < 0){
@@ -750,11 +750,11 @@ void String::FormatV(LPCTSTR lpszFormat, va_list argList)
 	//VERIFY(_vstprintf(m_pchData, lpszFormat, argListSave) <= GetAllocLength());
 	//ReleaseBuffer();
 
-// «‰Á‚¦‚Ü‚µ‚½
+// â†“åŠ ãˆã¾ã—ãŸ
 	Reserve(nMaxLen + 1);
 	_vstprintf(m_pszStr, lpszFormat, argListSave);
 	m_nStrLen = lstrlen(m_pszStr);
-// ª‚±‚±‚Ü‚Å
+// â†‘ã“ã“ã¾ã§
 
 	va_end(argListSave);
 }
@@ -828,7 +828,7 @@ void AFX_CDECL String::FormatMessage(UINT nFormatID, ...)
 
 
 
-// ¶‚Éw’è‚Ì•¶š‚ª‘±‚­ŒÀ‚èíœ
+// å·¦ã«æŒ‡å®šã®æ–‡å­—ãŒç¶šãé™ã‚Šå‰Šé™¤
 void String::TrimLeft( TCHAR chTarget )
 {
 	LPCTSTR psz;
@@ -836,7 +836,7 @@ void String::TrimLeft( TCHAR chTarget )
 	Delete(0, (int)(psz-m_pszStr));
 }
 
-// ¶‚Éw’è‚Ì•¶š‚ª‘±‚­ŒÀ‚èíœ
+// å·¦ã«æŒ‡å®šã®æ–‡å­—ãŒç¶šãé™ã‚Šå‰Šé™¤
 void String::TrimLeft( LPCTSTR lpszTargets )
 {
 	LPCTSTR psz, pszt;
@@ -913,7 +913,7 @@ void String::TrimRight( LPCTSTR lpszTargets )
 	}
 }
 
-// ŒŸõ
+// æ¤œç´¢
 int String::Find( TCHAR ch, int nStart) const
 {
 	LPCTSTR psz;
@@ -931,7 +931,7 @@ int String::Find( LPCTSTR lpszSub, int nStart ) const {
 	return (int)(psz - m_pszStr);
 }
 
-// ŒŸõ
+// æ¤œç´¢
 int String::ReverseFind( TCHAR ch) const
 {
 	LPCTSTR psz;
@@ -996,7 +996,7 @@ void String::ReleaseBuffer(int nNewLength) {
 }
 
 #if defined(_UNICODE)
-// •¶š—ñ‚ğ‘ã“ü
+// æ–‡å­—åˆ—ã‚’ä»£å…¥
 String& String::Utf8Copy(const char *utf8str)
 {
 	size_t utf8Size = 0;

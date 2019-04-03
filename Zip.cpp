@@ -26,7 +26,7 @@ const uLong LANGUAGE_ENCODING_FLAG = 0x1 << 11;
 
 namespace {
 
-// ƒtƒ@ƒCƒ‹‚ÌXV“ú‚ğİ’è‚·‚é
+// ãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ—¥æ™‚ã‚’è¨­å®šã™ã‚‹
 bool SetFileLastWriteTime(LPCTSTR filename, const FILETIME* pLastWriteTime) {
 	HANDLE hFile = CreateFile(filename, GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (hFile == INVALID_HANDLE_VALUE) {
@@ -64,29 +64,29 @@ inline bool isASCII(const void* p, UINT32 length) {
 	return true;
 }
 
-// ‰ğ“€
+// è§£å‡
 int DecompressSub(const void* pInput, UINT32 inputSize, Buffer& outputBuffer, UINT32 uncompressedSize)
 {
 	outputBuffer.clear();
 	outputBuffer.reserve(uncompressedSize);
 
 //	const int OUTBUFSIZ = 0x4000;
-//	const int INBUFSIZ = 16384;         /* “ü—Íƒoƒbƒtƒ@ƒTƒCƒYi”CˆÓj */
+//	const int INBUFSIZ = 16384;         /* å…¥åŠ›ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚ºï¼ˆä»»æ„ï¼‰ */
 
 	const char* pin = (const char*)pInput;
 
-	// o—Íƒoƒbƒtƒ@
+	// å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡
 //	char outbuf[OUTBUFSIZ];
 
 //	int count;
 	int status;
 
-	/* ƒ‰ƒCƒuƒ‰ƒŠ‚Æ‚â‚è‚Æ‚è‚·‚é‚½‚ß‚Ì\‘¢‘Ì */
+	/* ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã¨ã‚„ã‚Šã¨ã‚Šã™ã‚‹ãŸã‚ã®æ§‹é€ ä½“ */
 	z_stream z;					 
 
 
 /*
-	// ‚·‚×‚Ä‚Ìƒƒ‚ƒŠŠÇ—‚ğƒ‰ƒCƒuƒ‰ƒŠ‚É”C‚¹‚é
+	// ã™ã¹ã¦ã®ãƒ¡ãƒ¢ãƒªç®¡ç†ã‚’ãƒ©ã‚¤ãƒ–ãƒ©ãƒªã«ä»»ã›ã‚‹
 	z.zalloc = Z_NULL;
 	z.zfree = Z_NULL;
 	z.opaque = Z_NULL;
@@ -108,7 +108,7 @@ int DecompressSub(const void* pInput, UINT32 inputSize, Buffer& outputBuffer, UI
 
 
 /*
-	// “ü—Íƒ|ƒCƒ“ƒ^‚ğƒZƒbƒg
+	// å…¥åŠ›ãƒã‚¤ãƒ³ã‚¿ã‚’ã‚»ãƒƒãƒˆ
 	z.next_in = (Bytef*)pin;
 	if (inputSize >= INBUFSIZ) {
 		z.avail_in = INBUFSIZ;
@@ -119,7 +119,7 @@ int DecompressSub(const void* pInput, UINT32 inputSize, Buffer& outputBuffer, UI
 	}
 	pin+=z.avail_in;
 
-	// ‰Šú‰»
+	// åˆæœŸåŒ–
 	z.next_in = Z_NULL;
 	z.avail_in = 0;
 */
@@ -129,16 +129,16 @@ int DecompressSub(const void* pInput, UINT32 inputSize, Buffer& outputBuffer, UI
 	}
 
 /*
-	z.next_out = (Bytef*)outbuf;		// o—Íƒ|ƒCƒ“ƒ^
-	z.avail_out = OUTBUFSIZ;	// o—Íƒoƒbƒtƒ@c—Ê
+	z.next_out = (Bytef*)outbuf;		// å‡ºåŠ›ãƒã‚¤ãƒ³ã‚¿
+	z.avail_out = OUTBUFSIZ;	// å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡æ®‹é‡
 */
 
 	status = Z_OK;
 
 	while (status != Z_STREAM_END) {
 /*
-		if (z.avail_in == 0) {  // “ü—Íc—Ê‚ªƒ[ƒ‚É‚È‚ê‚Î
-			// “ü—Íƒ|ƒCƒ“ƒ^‚ğƒZƒbƒg
+		if (z.avail_in == 0) {  // å…¥åŠ›æ®‹é‡ãŒã‚¼ãƒ­ã«ãªã‚Œã°
+			// å…¥åŠ›ãƒã‚¤ãƒ³ã‚¿ã‚’ã‚»ãƒƒãƒˆ
 			z.next_in = (Bytef*)pin;
 			if (inputSize >= INBUFSIZ) {
 				z.avail_in = INBUFSIZ;
@@ -151,40 +151,40 @@ int DecompressSub(const void* pInput, UINT32 inputSize, Buffer& outputBuffer, UI
 		}
 */
 
-		// “ü—Íc—Ê‚ª0‚É‚È‚é–‚Í–³‚¢‚Í‚¸
+		// å…¥åŠ›æ®‹é‡ãŒ0ã«ãªã‚‹äº‹ã¯ç„¡ã„ã¯ãš
 		if (z.avail_in == 0) {
 			return -1;
 		}
 
-		//status = inflate(&z, Z_SYNC_FLUSH); /* “WŠJ */
+		//status = inflate(&z, Z_SYNC_FLUSH); /* å±•é–‹ */
 
-		// ˆê“x‚Å“WŠJ‚·‚éê‡‚Í Z_FINISH
-		status = inflate(&z, Z_FINISH); /* “WŠJ */
+		// ä¸€åº¦ã§å±•é–‹ã™ã‚‹å ´åˆã¯ Z_FINISH
+		status = inflate(&z, Z_FINISH); /* å±•é–‹ */
 		
 
-		if (status == Z_STREAM_END) break; /* Š®—¹ */
-		if (status != Z_OK) {   /* ƒGƒ‰[ */
+		if (status == Z_STREAM_END) break; /* å®Œäº† */
+		if (status != Z_OK) {   /* ã‚¨ãƒ©ãƒ¼ */
 			return -2;
 		}
 
 /*
-		if (z.avail_out == 0) { // o—Íƒoƒbƒtƒ@‚ªs‚«‚ê‚Î
-			// ‚Ü‚Æ‚ß‚Ä‘‚«o‚·
+		if (z.avail_out == 0) { // å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ãŒå°½ãã‚Œã°
+			// ã¾ã¨ã‚ã¦æ›¸ãå‡ºã™
 			if (!outputBuffer.append(outbuf, OUTBUFSIZ)) {
 				return -3;
 			}
-			z.next_out = (Bytef*)outbuf; // o—Íƒ|ƒCƒ“ƒ^‚ğŒ³‚É–ß‚·
-			z.avail_out = OUTBUFSIZ; // o—Íƒoƒbƒtƒ@c—Ê‚ğŒ³‚É–ß‚·
+			z.next_out = (Bytef*)outbuf; // å‡ºåŠ›ãƒã‚¤ãƒ³ã‚¿ã‚’å…ƒã«æˆ»ã™
+			z.avail_out = OUTBUFSIZ; // å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡æ®‹é‡ã‚’å…ƒã«æˆ»ã™
 		}
 */
 
-		// o—Íƒoƒbƒtƒ@‚ªs‚«‚é‚±‚Æ‚à–³‚¢‚Í‚¸
+		// å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ãŒå°½ãã‚‹ã“ã¨ã‚‚ç„¡ã„ã¯ãš
 		if (z.avail_out == 0) {
 			return -1;
 		}
 	}
 
-	// c‚è‚ğ“f‚«o‚·
+	// æ®‹ã‚Šã‚’åãå‡ºã™
 /*
 	if ((count = OUTBUFSIZ - z.avail_out) != 0) {
 		if (!outputBuffer.append(outbuf, count)) {
@@ -195,7 +195,7 @@ int DecompressSub(const void* pInput, UINT32 inputSize, Buffer& outputBuffer, UI
 	outputBuffer.setDataLength(z.total_out);
 
 
-	/* Œãn–– */
+	/* å¾Œå§‹æœ« */
 	if (inflateEnd(&z) != Z_OK) {
 		return -5;
 	}
@@ -203,9 +203,9 @@ int DecompressSub(const void* pInput, UINT32 inputSize, Buffer& outputBuffer, UI
 	return 0;
 }
 
-// ‰ğ“€
-// w’è‚Ì‘ŒÉ“à‚Ì‘Sƒtƒ@ƒCƒ‹‚ğw’è‚Ì‘ŒÉ“à‚ÉƒtƒHƒ‹ƒ_•t‚«‚Å‰ğ“€‚·‚é
-// destPathiƒtƒ‹ƒpƒX‚Ì‚İj
+// è§£å‡
+// æŒ‡å®šã®æ›¸åº«å†…ã®å…¨ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒ‡å®šã®æ›¸åº«å†…ã«ãƒ•ã‚©ãƒ«ãƒ€ä»˜ãã§è§£å‡ã™ã‚‹
+// destPathï¼ˆãƒ•ãƒ«ãƒ‘ã‚¹ã®ã¿ï¼‰
 // zipFileName
 int Decompress(LPCTSTR zipFileName, LPCTSTR destPath) {
 	ZipReader zip;
@@ -248,7 +248,7 @@ int Decompress(LPCTSTR zipFileName, LPCTSTR destPath) {
 					file.write(outputBuffer.getPointer(), outputBuffer.getDataLength());
 				}
 				file.close();
-				// XV“ú‚Ìİ’è
+				// æ›´æ–°æ—¥æ™‚ã®è¨­å®š
 				if (!SetFileLastWriteTime(path.c_str(), &(pLocalFile->getFileTime()))) {
 					return -7;
 				}
@@ -262,16 +262,16 @@ int Decompress(LPCTSTR zipFileName, LPCTSTR destPath) {
 }
 
 
-// w’èƒtƒHƒ‹ƒ_“à‚ğŒŸõ‚µ‚Äƒtƒ@ƒCƒ‹‚ğ’Ç‰Á
-// basePathLength ‚Í ZipWriter ‚É’Ç‰Á‚·‚éƒtƒ@ƒCƒ‹‚Ìƒtƒ‹ƒpƒX‚©‚ç‰½•¶š
-// í‚Á‚½‚ç Zip “à‚Å‚Ì‚»‚Ìƒtƒ@ƒCƒ‹‚ÌƒpƒX‚É‚È‚é‚©i'\\' ‚ª––”ö‚É‚Â‚¢‚Ä‚éƒpƒX‚È‚Ì‚©‚ğ’ˆÓj
+// æŒ‡å®šãƒ•ã‚©ãƒ«ãƒ€å†…ã‚’æ¤œç´¢ã—ã¦ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¿½åŠ 
+// basePathLength ã¯ ZipWriter ã«è¿½åŠ ã™ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ•ãƒ«ãƒ‘ã‚¹ã‹ã‚‰ä½•æ–‡å­—
+// å‰Šã£ãŸã‚‰ Zip å†…ã§ã®ãã®ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã«ãªã‚‹ã‹ï¼ˆ'\\' ãŒæœ«å°¾ã«ã¤ã„ã¦ã‚‹ãƒ‘ã‚¹ãªã®ã‹ã‚’æ³¨æ„ï¼‰
 bool CompressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength) {
 	WIN32_FIND_DATA fd;
 
 	String searchPath;
 	HANDLE hSearch;
 
-	// ’TõƒpƒX‚ğì¬
+	// æ¢ç´¢ãƒ‘ã‚¹ã‚’ä½œæˆ
 	searchPath += pszDir;
 	FormatTooLongPath(searchPath);
 	CatPath(searchPath, _T("*.*"));
@@ -282,15 +282,15 @@ bool CompressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength) {
 
 	do {
 		if ((fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)!=0) {
-			// ƒ‹[ƒg‹y‚ÑƒJƒŒƒ“ƒg‚Å‚È‚¢ƒtƒHƒ‹ƒ_‚©‚Ç‚¤‚©ƒ`ƒFƒbƒN
+			// ãƒ«ãƒ¼ãƒˆåŠã³ã‚«ãƒ¬ãƒ³ãƒˆã§ãªã„ãƒ•ã‚©ãƒ«ãƒ€ã‹ã©ã†ã‹ãƒã‚§ãƒƒã‚¯
 			if (lstrcmp(fd.cFileName,_T("."))!=0 && lstrcmp(fd.cFileName,_T(".."))!=0) {
 				String path = pszDir;
 				CatPath(path, fd.cFileName);
 
-				// ƒtƒHƒ‹ƒ_‚ÌƒpƒX‚ğ’Ç‰Á
+				// ãƒ•ã‚©ãƒ«ãƒ€ã®ãƒ‘ã‚¹ã‚’è¿½åŠ 
 				zw.add(path.c_str()+basePathLength, path.c_str());
 
-				// ƒTƒuƒtƒHƒ‹ƒ_‚ÌŒŸõ
+				// ã‚µãƒ–ãƒ•ã‚©ãƒ«ãƒ€ã®æ¤œç´¢
 				if(!CompressSub(path.c_str(), zw, basePathLength)) {
 					return false;
 				}
@@ -299,10 +299,10 @@ bool CompressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength) {
 			String path = pszDir;
 			CatPath(path, fd.cFileName);
 
-			// ƒtƒ@ƒCƒ‹‚ÌƒpƒX‚ğvector‚É’Ç‰Á
+			// ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ‘ã‚¹ã‚’vectorã«è¿½åŠ 
 			zw.add(path.c_str()+basePathLength, path.c_str());
 		}
-		// ƒƒbƒZ[ƒWˆ—
+		// ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å‡¦ç†
 		//DoEvents();
 	} while (FindNextFile(hSearch, &fd)!=0);
 
@@ -313,13 +313,13 @@ bool CompressSub(LPCTSTR pszDir, ZipWriter& zw, int basePathLength) {
 
 bool Compress(LPCTSTR srcPath, LPCTSTR dstPath, int compressLevel)
 {
-	// ƒtƒHƒ‹ƒ_ˆÈ‰º‚ğˆ³k
+	// ãƒ•ã‚©ãƒ«ãƒ€ä»¥ä¸‹ã‚’åœ§ç¸®
 	bool b;
 	ZipWriter zw;
 	b = zw.open(dstPath);
 	if (!b) return false;
 
-	// basePathLength ‚Í ––”ö‚É '\\' ‚ª‚Â‚¢‚Ä‚¢‚é‚©‚Ç‚¤‚©‚Å•Ï‚í‚é
+	// basePathLength ã¯ æœ«å°¾ã« '\\' ãŒã¤ã„ã¦ã„ã‚‹ã‹ã©ã†ã‹ã§å¤‰ã‚ã‚‹
 	int basePathLength = lstrlen(srcPath);
 	if (strrchrex(srcPath, _TCHAR('\\')) != srcPath+(basePathLength-1)) {
 		basePathLength++;
@@ -372,16 +372,16 @@ bool LocalFile::seek(int offset, int origin) {
 }
 
 //#ifdef USE_ZIP_DETAIL_INFO
-// ‘ŒÉ“à‚Ìƒtƒ@ƒCƒ‹‚ğ‘–¸‚µ‚Ä InternalFileAttributes ‚ğ“¾‚é
+// æ›¸åº«å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’èµ°æŸ»ã—ã¦ InternalFileAttributes ã‚’å¾—ã‚‹
 UINT16 LocalFile::obtainInternalFileAttributes() 
 {
 	UINT32 fileAttributes = getExternalFileAttributes();
 	UINT32 fileSize = getFileSize();
 
-	// ƒtƒHƒ‹ƒ_‚Í 0
+	// ãƒ•ã‚©ãƒ«ãƒ€ã¯ 0
 	if (fileAttributes & FILE_ATTRIBUTE_DIRECTORY) return 0;
 
-	// ‹óƒtƒ@ƒCƒ‹‚Í 1
+	// ç©ºãƒ•ã‚¡ã‚¤ãƒ«ã¯ 1
 	if (fileSize == 0) return 1;
 
 	UINT32 offset = getFileOffset();
@@ -399,10 +399,10 @@ UINT16 LocalFile::obtainInternalFileAttributes()
 	for (;;) {
 		boost::shared_ptr<ViewOfFile> pView(pMemoryMappedFile_->map(offset + checkedSize, mappingSize));
 		if (pView->getPointer() == NULL) {
-			// MIN_MAPPING_SIZE ‚Å
-			// ƒ}ƒbƒsƒ“ƒO‚ª¸”s‚·‚é‚È‚ç‚¨èã‚°
+			// MIN_MAPPING_SIZE ã§
+			// ãƒãƒƒãƒ”ãƒ³ã‚°ãŒå¤±æ•—ã™ã‚‹ãªã‚‰ãŠæ‰‹ä¸Šã’
 			if (mappingSize <= MIN_MAPPING_SIZE) return 0;
-			// ‚±‚êˆÈãƒ}ƒbƒsƒ“ƒOƒTƒCƒY‚ğ‘‚â‚¹‚È‚¢‚Ì‚¾‚ë‚¤
+			// ã“ã‚Œä»¥ä¸Šãƒãƒƒãƒ”ãƒ³ã‚°ã‚µã‚¤ã‚ºã‚’å¢—ã‚„ã›ãªã„ã®ã ã‚ã†
 			maximizes = true;
 			mappingSize = prevMappingSize;
 			pView.reset();
@@ -441,7 +441,7 @@ inline UINT16 GetUINT16(UINT8* p, UINT32 offset) {
 bool ZipReader::open(LPCTSTR fileName) {
 	close();
 
-	// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ªUINT32‚Ì”ÍˆÍ‚ğ’´‚¦‚Ä‚¢‚½‚çƒGƒ‰[‚Æ‚·‚é
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºãŒUINT32ã®ç¯„å›²ã‚’è¶…ãˆã¦ã„ãŸã‚‰ã‚¨ãƒ©ãƒ¼ã¨ã™ã‚‹
 	WIN32_FIND_DATA fd;
 	HANDLE hFindFile = FindFirstFile(fileName, &fd);
 	if (hFindFile != INVALID_HANDLE_VALUE) {
@@ -455,19 +455,19 @@ bool ZipReader::open(LPCTSTR fileName) {
 	if (!mmf_.open(fileName)) return false;
 	
 	{
-		// ƒVƒOƒlƒ`ƒƒƒ`ƒFƒbƒN
+		// ã‚·ã‚°ãƒãƒãƒ£ãƒã‚§ãƒƒã‚¯
 		boost::shared_ptr<ViewOfFile> pView = mmf_.map(0, sizeof(UINT32));
 		if (!pView) return false;
 		if ( *((UINT32*)pView->getPointer()) != 0x04034b50) return false;
 	}
 
-	// zip‚ÉŠi”[‚³‚ê‚Ä‚¢‚éƒtƒ@ƒCƒ‹‚Ì”(•ªŠ„zip‚Í”ñ‘Î‰)
+	// zipã«æ ¼ç´ã•ã‚Œã¦ã„ã‚‹ãƒ•ã‚¡ã‚¤ãƒ«ã®æ•°(åˆ†å‰²zipã¯éå¯¾å¿œ)
 	INT16 filenum;
 
 	boost::shared_ptr<ViewOfFile> pCentralDirView;
 
-	// ƒtƒ@ƒCƒ‹I’[‚©‚ç End of central directory record ‚ÌÅ‘å’·‚Ì”ÍˆÍ‚Å
-	// end of central dir signature ‚ğ’T‚·
+	// ãƒ•ã‚¡ã‚¤ãƒ«çµ‚ç«¯ã‹ã‚‰ End of central directory record ã®æœ€å¤§é•·ã®ç¯„å›²ã§
+	// end of central dir signature ã‚’æ¢ã™
 	{
 		const UINT32 MAX_EOCDR = (0xffff + 22);
 
@@ -493,29 +493,29 @@ bool ZipReader::open(LPCTSTR fileName) {
 				UINT32 centralDirectorySize = GetUINT32(pEOCDR, 12);
 				UINT32 centralDirectoryPos = GetUINT32(pEOCDR, 16);
 
-				// central directory ‚ğƒ}ƒbƒv
+				// central directory ã‚’ãƒãƒƒãƒ—
 				pCentralDirView = mmf_.map(centralDirectoryPos, centralDirectorySize);
 				if (!pCentralDirView) return false;
 
 				goto endrecFound;
 			}
-			// UINT32 ‚È‚Ì‚Å 0 ‚æ‚è¬‚³‚¢‚©‚Ì”»’è‚ªo—ˆ‚È‚¢‚Ì‚Å
-			// ‚±‚±‚Å”»’è
+			// UINT32 ãªã®ã§ 0 ã‚ˆã‚Šå°ã•ã„ã‹ã®åˆ¤å®šãŒå‡ºæ¥ãªã„ã®ã§
+			// ã“ã“ã§åˆ¤å®š
 			if (i == 0) break;
 		}
 	}
-	// End of central directory record ‚ğŒ©‚Â‚¯‚ç‚ê‚È‚©‚Á‚½
+	// End of central directory record ã‚’è¦‹ã¤ã‘ã‚‰ã‚Œãªã‹ã£ãŸ
 	return false;
 
 endrecFound:;
 
-	// central directory ‚ğæ“ª‚©‚ç‘–¸
+	// central directory ã‚’å…ˆé ­ã‹ã‚‰èµ°æŸ»
 
 	UINT8* pCentralDir = (UINT8*)pCentralDirView->getPointer();
 
 	while (filenum-- > 0) {
-		if ( *((UINT32*)pCentralDir) != 0x02014b50 ) {	// ƒVƒOƒlƒ`ƒƒ[Šm”F
-			return false; // ƒtƒ@ƒCƒ‹‚ª‚¨‚©‚µ‚¢
+		if ( *((UINT32*)pCentralDir) != 0x02014b50 ) {	// ã‚·ã‚°ãƒãƒãƒ£ãƒ¼ç¢ºèª
+			return false; // ãƒ•ã‚¡ã‚¤ãƒ«ãŒãŠã‹ã—ã„
 		}
 
 //		#ifdef USE_ZIP_DETAIL_INFO
@@ -524,7 +524,7 @@ endrecFound:;
 			UINT16 generalPurposeBitFlag = GetUINT16(pCentralDir, 8);
 //		#endif
 
-		// compression method == 8 ‚É‚Â‚¢‚Ä‚Ízlib‚Å‰ğ“€‰Â”\‚È‚æ‚¤‚¾‚ª–³‹
+		// compression method == 8 ã«ã¤ã„ã¦ã¯zlibã§è§£å‡å¯èƒ½ãªã‚ˆã†ã ãŒç„¡è¦–
 		UINT16 compressionMethod = GetUINT16(pCentralDir, 10);
 
 		UINT16 last_mod_file_time = GetUINT16(pCentralDir, 12);
@@ -547,17 +547,17 @@ endrecFound:;
 
 //		bool isEncrypted = (generalPurposeBitFlag & 1);
 
-		// ”O‚Ì‚½‚ßƒtƒ@ƒCƒ‹ƒTƒCƒY‚àŠm”F
+		// å¿µã®ãŸã‚ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºã‚‚ç¢ºèª
 		bool isUncompressed = (compressionMethod == 0);
 		if (compressed_size != uncompressed_size) {
 			isUncompressed = false;
 		}
 
-		// ƒtƒ@ƒCƒ‹–¼‚Ìæ“¾
+		// ãƒ•ã‚¡ã‚¤ãƒ«åã®å–å¾—
 		String fileName;
 		#ifdef _UNICODE
 			{
-				// TODO I’[‚ÌNULL•¶š‚ÌˆÊ’uƒ`ƒFƒbƒN
+				// TODO çµ‚ç«¯ã®NULLæ–‡å­—ã®ä½ç½®ãƒã‚§ãƒƒã‚¯
 				char* src = (char*)(pCentralDir+46);
 				int srclen = filename_length;
 				TCHAR dst[MAX_PATH];
@@ -573,23 +573,23 @@ endrecFound:;
 		#endif
 
 
-		// '/' ‹æØ‚è‚ğ '\\' ‹æØ‚è‚É’¼‚·
+		// '/' åŒºåˆ‡ã‚Šã‚’ '\\' åŒºåˆ‡ã‚Šã«ç›´ã™
 		fileName.Replace(_TCHAR('/'), _TCHAR('\\'));
 
-		// ––”ö‚Ì '\\' ‚ğæ‚èœ‚­
+		// æœ«å°¾ã® '\\' ã‚’å–ã‚Šé™¤ã
 		FixPath(fileName);
 
 
-		// local file header ‚Æ central directory ‚Ìî•ñ‚Í“¯‚¶‚Å‚ ‚é‚Æ‰¼’è‚µ‚Ä
-		// ‘S‚Ä central directory ‚©‚çæ“¾‚·‚é
-		// ‚½‚¾‚µ local file ‚ğ“Ç‚ŞÛ‚ÉƒVƒOƒlƒ`ƒƒ‚ÌŠm”F‚®‚ç‚¢‚Í‚µ‚½•û‚ª‚¢‚¢‚©‚à‚µ‚ê‚È‚¢
-		// ‚³‚ç‚ÉŒ¾‚¦‚Î fileDataPos ‚à local file header ‚©‚ç‚Æ‚Á‚½ƒf[ƒ^‚ÅŒvZ‚µ‚½•û‚ª‚¢‚¢‚Ì‚©‚à
+		// local file header ã¨ central directory ã®æƒ…å ±ã¯åŒã˜ã§ã‚ã‚‹ã¨ä»®å®šã—ã¦
+		// å…¨ã¦ central directory ã‹ã‚‰å–å¾—ã™ã‚‹
+		// ãŸã ã— local file ã‚’èª­ã‚€éš›ã«ã‚·ã‚°ãƒãƒãƒ£ã®ç¢ºèªãã‚‰ã„ã¯ã—ãŸæ–¹ãŒã„ã„ã‹ã‚‚ã—ã‚Œãªã„
+		// ã•ã‚‰ã«è¨€ãˆã° fileDataPos ã‚‚ local file header ã‹ã‚‰ã¨ã£ãŸãƒ‡ãƒ¼ã‚¿ã§è¨ˆç®—ã—ãŸæ–¹ãŒã„ã„ã®ã‹ã‚‚
 
 		UINT32 localHeaderPos = GetUINT32(pCentralDir, 42);
 		UINT32 fileDataPos = localHeaderPos + 30 + filename_length + extra_field_length;
 
 		/*
-		// Local file header ‚ÉˆÚ“®‚µ‚Äî•ñ‚ğ“¾‚é
+		// Local file header ã«ç§»å‹•ã—ã¦æƒ…å ±ã‚’å¾—ã‚‹
 		shared_ptr<ViewOfFile> pLocalFileHeaderView;
 		{
 			pLocalFileHeaderView = mmf_.map(localHeaderPos, 30);
@@ -598,7 +598,7 @@ endrecFound:;
 		UINT8* pLocalFileHeader = pLocalFileHeaderView.getPointer();
 
 		if (GetUINT32(pLocalFileHeader, lh_pos) != 0x04034b50) {
-			// Local file header æ“ª‚ÌƒVƒOƒlƒ`ƒƒ‚ª‚¨‚©‚µ‚¢
+			// Local file header å…ˆé ­ã®ã‚·ã‚°ãƒãƒãƒ£ãŒãŠã‹ã—ã„
 			return false;
 		}
 
@@ -608,7 +608,7 @@ endrecFound:;
 		*/
 
 
-		// –³ˆ³k‚ÅˆÃ†‰»‚³‚ê‚Ä‚¢‚È‚¯‚ê‚ÎŠi”[
+		// ç„¡åœ§ç¸®ã§æš—å·åŒ–ã•ã‚Œã¦ã„ãªã‘ã‚Œã°æ ¼ç´
 		//if (!isEncrypted && isUncompressed) {
 			LocalFileInfo info;
 			info.fileName = fileName;
@@ -638,14 +638,14 @@ endrecFound:;
 
 			fileInfo_.push_back(info);
 		//} else {
-			// ƒGƒ‰[‚Æ‚µ‚Ä‚µ‚Ü‚¤
+			// ã‚¨ãƒ©ãƒ¼ã¨ã—ã¦ã—ã¾ã†
 		//	return false;
 		//}
 
-		// Ÿ‚ÌŠi”[ƒtƒ@ƒCƒ‹‚Ö
+		// æ¬¡ã®æ ¼ç´ãƒ•ã‚¡ã‚¤ãƒ«ã¸
 		pCentralDir += 46 + filename_length + extra_field_length + file_comment_length;
 
-		// ƒ|ƒCƒ“ƒ^‚ª³‚µ‚¢‚©Šm”F‚·‚×‚«H
+		// ãƒã‚¤ãƒ³ã‚¿ãŒæ­£ã—ã„ã‹ç¢ºèªã™ã¹ãï¼Ÿ
 	}
 
 	name_ = fileName;
@@ -734,13 +734,13 @@ bool ZipWriter::addLackFolder()
 	String path;
 	list<LocalFileData>::iterator it;	
 	for (it=localFileData_.begin(); it!=localFileData_.end(); ++it) {
-		// ŠK‘w‚Ìˆá‚¢
+		// éšå±¤ã®é•ã„
 		int difference;
 
 		if ((it->fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-			// ƒtƒHƒ‹ƒ_‚ğŒ©‚Â‚¯‚½‚çƒpƒX‚ğ‹L‰¯
-			// ‚½‚¾‚µA‚QŠK‘wˆê‹C‚É’Ç‰Á‚³‚ê‚é‰Â”\«‚à‚ ‚é‚Ì‚Å
-			// ‚PŠK‘w‚¸‚Âƒ`ƒFƒbƒN
+			// ãƒ•ã‚©ãƒ«ãƒ€ã‚’è¦‹ã¤ã‘ãŸã‚‰ãƒ‘ã‚¹ã‚’è¨˜æ†¶
+			// ãŸã ã—ã€ï¼’éšå±¤ä¸€æ°—ã«è¿½åŠ ã•ã‚Œã‚‹å¯èƒ½æ€§ã‚‚ã‚ã‚‹ã®ã§
+			// ï¼‘éšå±¤ãšã¤ãƒã‚§ãƒƒã‚¯
 
 			String common;
 			GetCommonPrefix(it->dstFileName.c_str(), path.c_str(), common);
@@ -752,16 +752,16 @@ bool ZipWriter::addLackFolder()
 
 			path = it->dstFileName;
 		} else {
-			// ƒtƒ@ƒCƒ‹‚ğŒ©‚Â‚¯‚½‚ç
-			// ‚»‚Ìƒtƒ@ƒCƒ‹‚ğ‚ÂƒfƒBƒŒƒNƒgƒŠ‚ª‚ ‚é‚©ƒ`ƒFƒbƒN‚·‚é
+			// ãƒ•ã‚¡ã‚¤ãƒ«ã‚’è¦‹ã¤ã‘ãŸã‚‰
+			// ãã®ãƒ•ã‚¡ã‚¤ãƒ«ã‚’æŒã¤ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãŒã‚ã‚‹ã‹ãƒã‚§ãƒƒã‚¯ã™ã‚‹
 			String parentFolderPath = it->dstFileName;
 			StripPath(parentFolderPath);
 			int r = lstrcmpi(parentFolderPath.c_str(), path.c_str());
 			if (r == 0) {
-				// ƒtƒHƒ‹ƒ_‚Í“o˜^Ï‚İ
+				// ãƒ•ã‚©ãƒ«ãƒ€ã¯ç™»éŒ²æ¸ˆã¿
 				continue;
 			} else if (r < 0) {
-				// ã‚ÌŠK‘w‚ÌƒtƒHƒ‹ƒ_‚É‚ ‚Á‚½
+				// ä¸Šã®éšå±¤ã®ãƒ•ã‚©ãƒ«ãƒ€ã«ã‚ã£ãŸ
 				path = parentFolderPath;
 				continue;
 			}
@@ -777,11 +777,11 @@ bool ZipWriter::addLackFolder()
 			path = parentFolderPath;
 		}
 
-		// srcFileName ‚ÍƒpƒX‚ğí‚Á‚Ä‘åä•v‚È‚Ì‚©
+		// srcFileName ã¯ãƒ‘ã‚¹ã‚’å‰Šã£ã¦å¤§ä¸ˆå¤«ãªã®ã‹
 		int srcDepth = PathGetDepth(it->srcFileName.c_str());
 		if (srcDepth <= difference-1) return false;
 
-		// Œ‡‚¯‚Ä‚¢‚éƒtƒHƒ‹ƒ_‚ğ‘}“ü
+		// æ¬ ã‘ã¦ã„ã‚‹ãƒ•ã‚©ãƒ«ãƒ€ã‚’æŒ¿å…¥
 		for (int i=difference-1; i>0; --i) {
 			LocalFileData lfd;
 			lfd.srcFileName = it->srcFileName.c_str();
@@ -796,9 +796,9 @@ bool ZipWriter::addLackFolder()
 	return true;
 }
 
-// ƒ\[ƒg—p
-// ƒGƒNƒXƒvƒ[ƒ‰‚Æ“¯‚¶•À‚Ñ‡‚É‚·‚é
-// ƒtƒHƒ‹ƒ_‚ÉƒtƒHƒ‹ƒ_“à‚Ìƒtƒ@ƒCƒ‹‚ª‘±‚­‚±‚Æ‚ª•ÛØ‚³‚ê‚é
+// ã‚½ãƒ¼ãƒˆç”¨
+// ã‚¨ã‚¯ã‚¹ãƒ—ãƒ­ãƒ¼ãƒ©ã¨åŒã˜ä¸¦ã³é †ã«ã™ã‚‹
+// ãƒ•ã‚©ãƒ«ãƒ€ã«ãƒ•ã‚©ãƒ«ãƒ€å†…ã®ãƒ•ã‚¡ã‚¤ãƒ«ãŒç¶šãã“ã¨ãŒä¿è¨¼ã•ã‚Œã‚‹
 struct SortCriterion : public binary_function <ZipWriter::LocalFileData, ZipWriter::LocalFileData, bool> 
 {
 	bool operator()(const ZipWriter::LocalFileData& _Left, const ZipWriter::LocalFileData& _Right) const 
@@ -855,7 +855,7 @@ void* ZipOpenFunc(void *opaque, const char* filename, int mode) {
 
 int ZipWriter::close()
 {
-	// –³ˆ³k‚Ìê‡‚Í©‘O‚Åˆ—
+	// ç„¡åœ§ç¸®ã®å ´åˆã¯è‡ªå‰ã§å‡¦ç†
 	if (compressLevel_ == 0) {
 		int r = closeSub();
 		return r;
@@ -868,10 +868,10 @@ int ZipWriter::close()
 		if (!correctLocalFileData(*it)) return -1;
 	}
 
-	// ƒ\[ƒg
+	// ã‚½ãƒ¼ãƒˆ
 	localFileData_.sort(SortCriterion());
 
-	// ‘«‚è‚È‚¢ƒtƒHƒ‹ƒ_‚Ì’Ç‰Á
+	// è¶³ã‚Šãªã„ãƒ•ã‚©ãƒ«ãƒ€ã®è¿½åŠ 
 	addLackFolder();
 
 	int err=ZIP_OK;
@@ -916,8 +916,8 @@ int ZipWriter::close()
 		FileTimeToLocalFileTime(&(it->lastWriteTime),&ftLocal);
 		FileTimeToDosDateTime(&ftLocal,((LPWORD)dt)+1,((LPWORD)dt)+0);
 
-		// '\\' ‚ğ '/' ‚É•Ï‚¦‚é
-		// ƒtƒHƒ‹ƒ_‚Ìê‡‚Í––”ö‚É '/' ‚ğ‰Á‚¦‚é
+		// '\\' ã‚’ '/' ã«å¤‰ãˆã‚‹
+		// ãƒ•ã‚©ãƒ«ãƒ€ã®å ´åˆã¯æœ«å°¾ã« '/' ã‚’åŠ ãˆã‚‹
 		String dstFileName = it->dstFileName;
 		dstFileName.Replace(_TCHAR('\\'), _TCHAR('/'));
 		if ((it->fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
@@ -1006,7 +1006,7 @@ int ZipWriter::close()
 	if (err==ZIP_OK) {
 		isOpen_ = false;
 	} else {
-		// ¸”s‚µ‚Ä‚¢‚é‚Ì‚Åƒtƒ@ƒCƒ‹íœ
+		// å¤±æ•—ã—ã¦ã„ã‚‹ã®ã§ãƒ•ã‚¡ã‚¤ãƒ«å‰Šé™¤
 		DeleteFileOrFolder(zipFileName_.c_str(), false);
 		return -1;
 	}
@@ -1023,10 +1023,10 @@ int ZipWriter::closeSub()
 		if (!correctLocalFileData(*it)) return -1;
 	}
 
-	// ƒ\[ƒg
+	// ã‚½ãƒ¼ãƒˆ
 	localFileData_.sort(SortCriterion());
 
-	// ‘«‚è‚È‚¢ƒtƒHƒ‹ƒ_‚Ì’Ç‰Á
+	// è¶³ã‚Šãªã„ãƒ•ã‚©ãƒ«ãƒ€ã®è¿½åŠ 
 	addLackFolder();
 
 	BinaryFileWriter zipFile;
@@ -1060,8 +1060,8 @@ int ZipWriter::closeSub()
 
 			UINT32 relativeOffset = zipFile.tell();
 
-			// '\\' ‚ğ '/' ‚É•Ï‚¦‚é
-			// ƒtƒHƒ‹ƒ_‚Ìê‡‚Í––”ö‚É '/' ‚ğ‰Á‚¦‚é
+			// '\\' ã‚’ '/' ã«å¤‰ãˆã‚‹
+			// ãƒ•ã‚©ãƒ«ãƒ€ã®å ´åˆã¯æœ«å°¾ã« '/' ã‚’åŠ ãˆã‚‹
 			String dstFileName = it->dstFileName;
 			dstFileName.Replace(_TCHAR('\\'), _TCHAR('/'));
 			if ((it->fileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0) {
@@ -1086,7 +1086,7 @@ int ZipWriter::closeSub()
 			zipFile.write(&vnte, sizeof(UINT16));
 
 			// general purpose bit flag        2 bytes
-			// ˆÃ†‰»–³‚µ‚Å–³ˆ³k‚È‚ç‚Î0‚Å‚¢‚¢
+			// æš—å·åŒ–ç„¡ã—ã§ç„¡åœ§ç¸®ãªã‚‰ã°0ã§ã„ã„
 			UINT16 flag = 0x0000;
 #ifdef _UNICODE
 			flag = flag | LANGUAGE_ENCODING_FLAG;
@@ -1094,7 +1094,7 @@ int ZipWriter::closeSub()
 			zipFile.write(&flag, sizeof(UINT16));
 
 			// compression method              2 bytes
-			// –³ˆ³k‚È‚ç‚Î0‚Å‚¢‚¢
+			// ç„¡åœ§ç¸®ãªã‚‰ã°0ã§ã„ã„
 			UINT16 method = 0x0000;
 			zipFile.write(&method, sizeof(UINT16));
 
@@ -1104,7 +1104,7 @@ int ZipWriter::closeSub()
 			zipFile.write(&fatDate, sizeof(WORD));
 
 			// crc-32                          4 bytes
-			// (ƒtƒHƒ‹ƒ_‚Ìê‡‚Í0)
+			// (ãƒ•ã‚©ãƒ«ãƒ€ã®å ´åˆã¯0)
 			zipFile.write(&crc, sizeof(UINT32));
 
 			// compressed size                 4 bytes
@@ -1113,7 +1113,7 @@ int ZipWriter::closeSub()
 			zipFile.write(&(it->fileSize), sizeof(UINT32));
 
 			// file name length                2 bytes
-			// ƒtƒHƒ‹ƒ_‚Ìê‡ ––”ö‚É / ‚ª•t‚­‚ª‚»‚Ì’·‚³‚àŠÜ‚ß‚é
+			// ãƒ•ã‚©ãƒ«ãƒ€ã®å ´åˆ æœ«å°¾ã« / ãŒä»˜ããŒãã®é•·ã•ã‚‚å«ã‚ã‚‹
 #ifdef _UNICODE
 			UINT16 fileNameLen = (UINT16)dstFileName.GetUtf8Length();
 #else
@@ -1247,16 +1247,16 @@ int ZipWriter::closeSub()
 	}
 
 	catch ( ... ) {
-		// ¸”s‚µ‚½‚Ì‚Åƒtƒ@ƒCƒ‹íœ
+		// å¤±æ•—ã—ãŸã®ã§ãƒ•ã‚¡ã‚¤ãƒ«å‰Šé™¤
 		zipFile.close();
 		DeleteFileOrFolder(zipFileName_.c_str(), false);
 		return -1;
 	}
 }
 
-// 0 ‚ª CRC32 ‚Ì’l‚Æ‚µ‚Ä‚ ‚è“¾‚é‚Ì‚©’²‚×‚é•K—v‚ª‚ ‚é
-// TODO ‹‘å‚Èƒtƒ@ƒCƒ‹‚Ìê‡‚Í•¡”‰ñ‚É•ª‚¯‚Äƒ}ƒbƒsƒ“ƒO‚·‚é•K—v‚ª‚ ‚é
-// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ª 0 ‚Ìƒtƒ@ƒCƒ‹‚ÍƒI[ƒvƒ“‚É¸”s‚·‚é‚Ì‚Å“n‚³‚È‚¢‚±‚Æ
+// 0 ãŒ CRC32 ã®å€¤ã¨ã—ã¦ã‚ã‚Šå¾—ã‚‹ã®ã‹èª¿ã¹ã‚‹å¿…è¦ãŒã‚ã‚‹
+// TODO å·¨å¤§ãªãƒ•ã‚¡ã‚¤ãƒ«ã®å ´åˆã¯è¤‡æ•°å›ã«åˆ†ã‘ã¦ãƒãƒƒãƒ”ãƒ³ã‚°ã™ã‚‹å¿…è¦ãŒã‚ã‚‹
+// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºãŒ 0 ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã‚ªãƒ¼ãƒ—ãƒ³ã«å¤±æ•—ã™ã‚‹ã®ã§æ¸¡ã•ãªã„ã“ã¨
 UINT32 ZipWriter::getCRC32(LPCTSTR fileName) 
 {
 	ReadOnlyMemoryMappedFileEx mmf;
@@ -1288,10 +1288,10 @@ UINT32 ZipWriter::getCRC32(LPCTSTR fileName)
 
 UINT16 ZipWriter::getInternalFileAttributes(LPCTSTR fileName, UINT32 fileAttributes, UINT32 fileSize) 
 {
-	// ƒtƒHƒ‹ƒ_‚Í 0
+	// ãƒ•ã‚©ãƒ«ãƒ€ã¯ 0
 	if (fileAttributes & FILE_ATTRIBUTE_DIRECTORY) return 0;
 
-	// ‹óƒtƒ@ƒCƒ‹‚Í 1
+	// ç©ºãƒ•ã‚¡ã‚¤ãƒ«ã¯ 1
 	if (fileSize == 0) return 1;
 
 	ReadOnlyMemoryMappedFileEx mmf;
@@ -1309,10 +1309,10 @@ UINT16 ZipWriter::getInternalFileAttributes(LPCTSTR fileName, UINT32 fileAttribu
 	for (;;) {
 		boost::shared_ptr<ViewOfFile> pView(mmf.map(checkedSize, mappingSize));
 		if (pView->getPointer() == NULL) {
-			// MIN_MAPPING_SIZE ‚Å
-			// ƒ}ƒbƒsƒ“ƒO‚ª¸”s‚·‚é‚È‚ç‚¨èã‚°
+			// MIN_MAPPING_SIZE ã§
+			// ãƒãƒƒãƒ”ãƒ³ã‚°ãŒå¤±æ•—ã™ã‚‹ãªã‚‰ãŠæ‰‹ä¸Šã’
 			if (mappingSize <= MIN_MAPPING_SIZE) return 0;
-			// ‚±‚êˆÈãƒ}ƒbƒsƒ“ƒOƒTƒCƒY‚ğ‘‚â‚¹‚È‚¢‚Ì‚¾‚ë‚¤
+			// ã“ã‚Œä»¥ä¸Šãƒãƒƒãƒ”ãƒ³ã‚°ã‚µã‚¤ã‚ºã‚’å¢—ã‚„ã›ãªã„ã®ã ã‚ã†
 			maximizes = true;
 			mappingSize = prevMappingSize;
 			pView.reset();
@@ -1352,7 +1352,7 @@ ZipWriter::~ZipWriter() {
 	}
 }
 
-// LocalFileData ‚Ì XV“ú ‚â ƒtƒ@ƒCƒ‹‘®« ‚È‚Ç‘«‚è‚È‚¢î•ñ‚ğ–„‚ß‚é
+// LocalFileData ã® æ›´æ–°æ—¥æ™‚ ã‚„ ãƒ•ã‚¡ã‚¤ãƒ«å±æ€§ ãªã©è¶³ã‚Šãªã„æƒ…å ±ã‚’åŸ‹ã‚ã‚‹
 bool ZipWriter::correctLocalFileData(LocalFileData& localFileData) 
 {
 	WIN32_FIND_DATA fd;
@@ -1371,7 +1371,7 @@ bool ZipWriter::correctLocalFileData(LocalFileData& localFileData)
 		localFileData.fileSize = 0;
 	}
 
-	// ƒtƒ@ƒCƒ‹ƒTƒCƒY‚ª‘å‚«‚·‚¬‚é‚Æ¸”s
+	// ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚ºãŒå¤§ãã™ãã‚‹ã¨å¤±æ•—
 	if (fd.nFileSizeHigh != 0) return false;
 
 	return true;

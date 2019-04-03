@@ -1,15 +1,15 @@
-//������Ɋւ���֐��Q
+//文字列に関する関数群
 
 /*
-���{�ꕶ���R�[�h�iShift-JIS JIS��3�A��4�����j�̏ꍇ
-��1�o�C�g�͈̔͂� 0x81 �` 0x9F�A0xE0 �` 0xFC
-��2�o�C�g�͈̔͂� 0x40 �` 0xFC
+日本語文字コード（Shift-JIS JIS第3、第4水準）の場合
+第1バイトの範囲は 0x81 ～ 0x9F、0xE0 ～ 0xFC
+第2バイトの範囲は 0x40 ～ 0xFC
 
-�����Œ��ڂ��ׂ��_��
-������������ɂ����Ă͑�1�o�C�g�A��2�o�C�g�͂������
-����R�[�h�i�^�u��X�y�[�X�܂ށj��
-�ꕔ�̋L���i!"#$%&'()*+,-./0123456789:;<=>?@�j
-�Ɠ����ɂȂ�Ȃ��Ƃ�������
+ここで注目すべき点は
+正しい文字列においては第1バイト、第2バイトはいずれも
+制御コード（タブやスペース含む）や
+一部の記号（!"#$%&'()*+,-./0123456789:;<=>?@）
+と同じにならないということ
 */
 
 #ifndef __STRFUNC_H__
@@ -23,14 +23,14 @@ LPCTSTR strchrex(LPCTSTR pszSrc, TCHAR c);
 LPCTSTR strrchrex(LPCTSTR pszSrc, TCHAR c);
 LPCTSTR strstrex(LPCTSTR pszString1, LPCTSTR pszString2);
 
-// ������̒����當���񂪍Ō�Ɍ��������ʒu��Ԃ�
+// 文字列の中から文字列が最後に見つかった位置を返す
 LPTSTR strrstrex(LPCTSTR pszString1, LPCTSTR pszString2);
 
-// 0xFF���Ƃ�C����̐��l�萔��int�ɕϊ�
+// 0xFFだとかC言語の数値定数をintに変換
 int StringToInteger(LPCTSTR psz);
 
-// �Q�o�C�g�����̂P�o�C�g�ڂ��ǂ������肷��
-// �iIsDBCSLeadByte()�ő�p�ł���炵���j
+// ２バイト文字の１バイト目かどうか判定する
+// （IsDBCSLeadByte()で代用できるらしい）
 inline bool IsKanji(TCHAR c)
 {
 #ifdef _UNICODE
@@ -41,20 +41,20 @@ inline bool IsKanji(TCHAR c)
 #endif
 }
 
-// �A���t�@�x�b�g���ǂ������肷��
-// ���C�u������ isalpha() �͍ŏ�ʃr�b�g�̒l�ɂ���Ă͋��������������̂Ŏ���
+// アルファベットかどうか判定する
+// ライブラリの isalpha() は最上位ビットの値によっては挙動がおかしいので自作
 inline bool IsAlpha(TCHAR c)
 {
 	return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z');
 }
 
-// �������ǂ������肷��
+// 数字かどうか判定する
 inline bool IsDigit(TCHAR c)
 {
 	return ('0' <= c && c <= '9');
 }
 
-// �p�������ǂ������肷��
+// 英数字かどうか判定する
 inline bool IsAlNum(TCHAR c)
 {
 	return (IsAlpha(c) || IsDigit(c));

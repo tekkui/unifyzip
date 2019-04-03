@@ -73,11 +73,11 @@ public:
 		return pBuffer_;
 	}
 
-	// CString ‚Ì GetBuffer() ReleaseBuffer() ‚Ì‚æ‚¤‚É
-	// GetBuffer() ‚Å const ‚Å‚È‚¢ƒ|ƒCƒ“ƒ^‚ğ•Ô‚µ
-	// (getPointer() ‚Í const ‚Ìƒ|ƒCƒ“ƒ^‚ğ•Ô‚·‚æ‚¤‚É‚·‚é)
-	// ReleaseBuffer() ‚Åƒf[ƒ^‚Ì’·‚³‚ğ–¾¦“I‚Éw’è‚µ‚È‚¨‚·‚æ‚¤‚É‚µ‚½‚Ù‚¤‚ª
-	// ƒ~ƒX‚ğ–h‚°‚é‚¾‚ë‚¤‚©c
+	// CString ã® GetBuffer() ReleaseBuffer() ã®ã‚ˆã†ã«
+	// GetBuffer() ã§ const ã§ãªã„ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã—
+	// (getPointer() ã¯ const ã®ãƒã‚¤ãƒ³ã‚¿ã‚’è¿”ã™ã‚ˆã†ã«ã™ã‚‹)
+	// ReleaseBuffer() ã§ãƒ‡ãƒ¼ã‚¿ã®é•·ã•ã‚’æ˜ç¤ºçš„ã«æŒ‡å®šã—ãªãŠã™ã‚ˆã†ã«ã—ãŸã»ã†ãŒ
+	// ãƒŸã‚¹ã‚’é˜²ã’ã‚‹ã ã‚ã†ã‹â€¦
 
 private:
 	static const int INITIAL_BUFFER_LENGTH = 16;

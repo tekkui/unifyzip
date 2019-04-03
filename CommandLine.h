@@ -6,7 +6,7 @@
 
 namespace KSDK {
 
-// コマンドライン関係の関数群
+// 繧ｳ繝槭Φ繝峨Λ繧､繝ｳ髢｢菫ゅ�ｮ髢｢謨ｰ鄒､
 void* AllocCommandLine(void);
 void FreeCommandLine(void* pvCommandLine);
 UINT GetStringFromCommandLine(void* pvCommandLine, UINT iParam, String& Param);

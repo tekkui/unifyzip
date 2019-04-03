@@ -1,4 +1,4 @@
-// �o�C�i���t�@�C��
+// バイナリファイル
 
 #ifndef __BINARYFILE_H__
 #define __BINARYFILE_H__
@@ -22,7 +22,7 @@ public:
 		}
 		hFile_ = NULL;
 
-		// �t�@�C���I�[�v���Ɏ��s�����̂ő����ύX�����݂�
+		// ファイルオープンに失敗したので属性変更を試みる
 		DWORD dwAttribute;
 		dwAttribute = GetFileAttributes(fileName);
 		if (dwAttribute == 0xFFFFFFFF) {
@@ -47,8 +47,8 @@ public:
 		}
 	}
 
-	// �������݂Ɏ��s�������O�𓊂���
-	// ��Ƀf�B�X�N�e�ʕs���ŋN����
+	// 書き込みに失敗したら例外を投げる
+	// 主にディスク容量不足で起こる
 	bool write(void* p, UINT32 size) {
 		DWORD numberOfBytesWritten;
 		if (hFile_ != NULL && WriteFile(hFile_, p, size, &numberOfBytesWritten, NULL) != 0) {
@@ -58,9 +58,9 @@ public:
 		return true;
 	}
 
-	// �t�@�C�����J���Ă��Ȃ��ꍇ�� 0 ��Ԃ�
-	// �t�@�C���T�C�Y�� DWORD, int �̂����ꂩ�̍ő�l�𒴂���ꍇ
-	// �Ԃ�l�͕s��
+	// ファイルを開いていない場合は 0 を返す
+	// ファイルサイズが DWORD, int のいずれかの最大値を超える場合
+	// 返る値は不定
 	int tell() {
 		if (hFile_ == NULL) {
 			return 0;
@@ -73,11 +73,11 @@ private:
 	BinaryFileWriter& operator=(const BinaryFileWriter&);
 
 	// 2007/09/09 
-	// std::ofstream ���� Microsoft Visual C++ 2005 �̃��C�u������
-	// �}���`�o�C�g�����Z�b�g���g�p����ꍇ
-	// ���{��̃p�X��n���ƃt�@�C�����I�[�v���ł��Ȃ�
-	// _tsetlocale( LC_ALL, _T("japanese") ); �ŉ������邪
-	// ����� cout �ւ̓��{��̏o�͂��ł��Ȃ��Ȃ�̂� CreateFile ���g�p����
+	// std::ofstream だと Microsoft Visual C++ 2005 のライブラリで
+	// マルチバイト文字セットを使用する場合
+	// 日本語のパスを渡すとファイルがオープンできない
+	// _tsetlocale( LC_ALL, _T("japanese") ); で解決するが
+	// すると cout への日本語の出力ができなくなるので CreateFile を使用する
 	HANDLE hFile_;
 };
 
