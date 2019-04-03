@@ -12,6 +12,7 @@ before_build:
     git submodule update
 build:
   project: UnifyZip.sln
+  parallel: true
   verbosity: minimal
 artifacts:
 - path: $(Configuration)
