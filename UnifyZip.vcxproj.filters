@@ -61,5 +61,6 @@
   </ItemGroup>
   <ItemGroup>
     <CopyFileToFolders Include="UnifyZip.ini" />
+    <CopyFileToFolders Include="index.html" />
   </ItemGroup>
 </Project>

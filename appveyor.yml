@@ -13,3 +13,6 @@ before_build:
 build:
   project: UnifyZip.sln
   verbosity: minimal
+artifacts:
+- path: $(Configuration)
+  name: uz$(APPVEYOR_BUILD_VERSION)
