@@ -571,15 +571,15 @@ bool ArchiveDll::getRunning() {
 }
 
 // 順序数  12
-bool ArchiveDll::checkArchive() {
+bool ArchiveDll::checkArchive(int mode) {
 	FARPROC f = getFuncAddress(_T("CheckArchive"));
 	if (f == NULL) { return false; }
 	typedef BOOL (WINAPI * CHECK_ARCHIVE)(LPCSTR, const int);
 #ifdef _UNICODE
 	setUnicodeMode();
-	BOOL b = ((CHECK_ARCHIVE)f)((LPCSTR)archiveFilename_.utf8_str(), 0);
+	BOOL b = ((CHECK_ARCHIVE)f)((LPCSTR)archiveFilename_.utf8_str(), mode);
 #else
-	BOOL b = ((CHECK_ARCHIVE)f)(archiveFilename_.c_str(), 0);
+	BOOL b = ((CHECK_ARCHIVE)f)(archiveFilename_.c_str(), mode);
 #endif
 
 	// UNZIP32.DLL はアーカイブでないファイルに対して
@@ -700,7 +700,7 @@ ArchiveDll* ArchiveDllManager::getSuitableArchiveDll(LPCTSTR filename) {
 				// DLL使用中
 			} else {
 				p->setArchiveFilename(filename);
-				if (p->checkArchive()) {
+				if (p->checkArchive(0)) {
 					return p;
 				}
 			}
@@ -719,7 +719,7 @@ ArchiveDll* ArchiveDllManager::getSuitableArchiveDll(LPCTSTR filename) {
 				// DLL使用中
 			} else {
 				p->setArchiveFilename(filename);
-				if (p->checkArchive()) {
+				if (p->checkArchive(0)) {
 					return p;
 				}
 			}

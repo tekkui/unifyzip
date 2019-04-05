@@ -226,6 +226,8 @@ bool g_OutputTextFile;
 bool g_ConvertFileName;
 String g_NkfOption;
 NkfDll *nkf;
+bool g_CompressWithTemporaryFolder;
+bool g_CheckArchive;
 
 std::vector<UINT8> g_ArchiveComment;
 
@@ -342,6 +344,9 @@ bool initialize()
 			return false;
 		}
 	}
+
+	g_CompressWithTemporaryFolder = (profile.GetInt(_T("Setting"), _T("CompressWithTemporaryFolder"), 0) != 0);
+	g_CheckArchive = (profile.GetInt(_T("Setting"), _T("CheckArchive"), 0) != 0);
 
 	if (g_CompressLevel != -1 && 
 		g_CompressLevel != 0 && 
@@ -2177,6 +2182,18 @@ bool process(LPCTSTR filename)
 		CatPath(finalDestFilename, fileName.c_str());
 	}
 
+	// 圧縮をTempフォルダで行う
+	if(g_CompressWithTemporaryFolder)
+	{
+		String orgFilename;
+		GetFileName(srcFilename.c_str(), orgFilename);
+		destFilename = temp_folder.getPath();
+		CatPath(destFilename, orgFilename.c_str());
+		RemoveExtension(destFilename);
+		destFilename.Cat(_T(".zip"));
+		EvacuateFileName(destFilename);
+	}
+
 	if (destFilename == srcFilename) {
 		EvacuateFileName(destFilename);
 	}
@@ -2223,11 +2240,26 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	// テンポラリフォルダの削除(明示的に行う)
-	if (!temp_folder.destroy()) {
-		// フォルダ削除失敗
-		cout << _T("テンポラリフォルダの削除に失敗しました") << endl;
-		cout << temp_folder.getPath() << endl;
+	// 作成した書庫のテストを行う
+	if (g_CheckArchive)
+	{
+		if (pArchiveDll->getID() != ArchiveDllID::SEVEN_ZIP) {
+			pArchiveDll = g_ArchiveDllManager.getArchiveDll(ArchiveDllID::SEVEN_ZIP);
+			if (pArchiveDll == NULL) {
+				pArchiveDll = g_ArchiveDllManager.addArchiveDll(ArchiveDllID::SEVEN_ZIP);
+			}
+			if (pArchiveDll == NULL) {
+				return false;
+			}
+		}
+
+		pArchiveDll->setArchiveFilename(destFilename.c_str());
+		if (!pArchiveDll->checkArchive(2))
+		{
+			cout << _T("作成した書庫のテストに失敗しました") << endl;
+			cout << destFilename.c_str() << endl;
+			return false;
+		}
 	}
 
 	// 元の書庫を削除
@@ -2266,6 +2298,13 @@ bool process(LPCTSTR filename)
 				cout << destFilename.c_str() << endl;
 			}
 		}
+	}
+
+	// テンポラリフォルダの削除(明示的に行う)
+	if (!temp_folder.destroy()) {
+		// フォルダ削除失敗
+		cout << _T("テンポラリフォルダの削除に失敗しました") << endl;
+		cout << temp_folder.getPath() << endl;
 	}
 
 	// 処理した結果注目ファイルのみで構成される場合

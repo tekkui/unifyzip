@@ -717,7 +717,42 @@
 		全角英数 ⇒ 半角英数 　(-Z0)<br>
 		全角スペース ⇒ 半角スペース 　(-Z1)<br>
 		結合文字列 ⇒ 合成済み文字　(--ic=UTF8-MAC)<br>
-
+		<br>
+		<b>CompressWithTemporaryFolder :</b><br>
+		圧縮をTempフォルダで行うか<br>
+		<br>
+		<table border="1">
+			<tr>
+				<th>値</th>
+				<th>圧縮ファイルを</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>元ファイルと同じフォルダに作成する</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>Tempフォルダに作成して、完成後にコピーする</td>
+			</tr>
+		</table>
+		<br>
+		<b>CheckArchive :</b><br>
+		作成した書庫のテストを行うか<br>
+		<br>
+		<table border="1">
+			<tr>
+				<th>値</th>
+				<th>書庫のテスト</th>
+			</tr>
+			<tr>
+				<td>0</td>
+				<td>行わない</td>
+			</tr>
+			<tr>
+				<td>1</td>
+				<td>行う</td>
+			</tr>
+		</table>
 	</p>
 	<p><a href="#index">目次へ</a></p>
 	<hr>
@@ -797,6 +832,10 @@
 		nkf(Network Kanji Filter)を使用した<br>
 		書庫名や書庫内のフォルダ、ファイル名の文字コード変換に対応しました。<br>
 		オプションの変更にも対応していますが制約があり、入力はUTF-8またはUTF8-MAC、出力はUTF-16LEを指定して下さい。<br>
+		<br>
+		CompressWithTemporaryFolder=1とする事で<br>
+		TempフォルダがRAMドライブなどの高速なドライブであれば処理が速くなる事があります。<br>
+		ただし、最大で書庫の展開サイズの2倍を必要とするので注意してください。<br>
 	</p>
 	<p><a href="#index">目次へ</a></p>
 	<hr>
@@ -829,7 +868,9 @@
 		e-mail : <a href="mailto:KurimaKDV@hotmail.com">KurimaKDV@hotmail.com</a><br>
 		home page : <a href="http://kurima.sakura.ne.jp/">http://kurima.sakura.ne.jp/</a><br>
 		<br>
-		UNICODE関連の不具合、意見などはひらめへメールを送って下さい。<br>
+		UNICODE版の不具合などはGitのIssues、もしくはひらめへメールを送って下さい。<br>
+		Git issues : <a
+			href="https://github.com/tekkui/unifyzip/issues">https://github.com/tekkui/unifyzip/issues</a><br>
 		e-mail : <a href="mailto:tekkui@outlook.jp">tekkui@outlook.jp</a><br>
 	</p>
 	<p><a href="#index">目次へ</a></p>
@@ -837,7 +878,8 @@
 
 	<h2><a name="development">開発環境</a></h2>
 	<p>Windows 10 Professional 64bit 1809<br>
-		Visual Studio 2017 Community 15.9.9<br></p>
+		Visual Studio 2017 Community 15.9.11<br></p>
+	<p>及び、Appveyor<br></p>
 	<h2><a>動作確認</a></h2>
 	<p>Windows XP Service Pack 3<br>
 		Windows 7 Service Pack 1<br>
@@ -1060,6 +1102,14 @@
 		　- Version 2.28 a4
 		<ul>
 			<li>nkf32.dllによる書庫名、書庫内のフォルダ、ファイル名の文字コード変換に対応<br>
+		</ul>
+
+		2019/04/05<br>
+		　- Version 2.28 a5
+		<ul>
+			<li>Appveyor、英語環境に対応、ソースコードをUTF8に変更<br>
+			<li>Tempフォルダに書庫を作成して、完成後にコピーにする処理、オプションの追加<br>
+			<li>作成した書庫のテスト処理、オプションの追加<br>
 		</ul>
 	</p>
 	<p><a href="#index">目次へ</a></p>

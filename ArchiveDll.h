@@ -65,7 +65,7 @@ public:
 	bool getRunning();
 
 	// 順序数  12
-	bool checkArchive();
+	bool checkArchive(int mode);
 
 	// 順序数  47
 	int getAttribute();
