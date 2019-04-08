@@ -161,6 +161,10 @@ bool initialize();
 // 書庫を処理する
 bool process(LPCTSTR filename);
 
+void setFileFolderDateTime(TemporaryFolder &temp_folder, int redundantPathLen);
+void setFileFolderAttribute(TemporaryFolder &temp_folder, int redundantPathLen);
+bool CheckArchiveDllRunning(ArchiveDll * pArchiveDll);
+
 void ConvertFileNameInArchive(TemporaryFolder& temp_folder, int redundantPathLen);
 void CompressWithTemporaryFolder(String& srcFilename, String& destFilename, TemporaryFolder& temp_folder);
 bool CheckArchive(ArchiveDll*& pArchiveDll, String& destFilename);
@@ -1883,157 +1887,11 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	// よく分からないが一応前のDLLの処理が終わるようにしてみる
-	{
-		DWORD startTime = timeGetTime();
-		while (pArchiveDll->getRunning()) {
-			Sleep(10);
-			if (timeGetTime() - startTime > 3000) {
-				cout << _T("解凍時にエラーが発生しました") << endl;
-				return false;
-			}
-		}
-	}
+	if (!CheckArchiveDllRunning(pArchiveDll)) return false;
 
-	// ファイル・フォルダの日時設定
-	if (g_FolderTimeMode != 2 || g_FileTimeMode != 0) {
-		list<boost::shared_ptr<IndividualInfo> >::iterator it;
-		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-			String path(temp_folder.getPath());
-			if (lstrlen((*it)->getFullPath()) <= redundantPathLen)
-				continue;
-			
-			if (g_BatchDecompress) {
-				CatPath(path, (*it)->getFullPath());
-			} else {
-				CatPath(path, (*it)->getFullPath() + redundantPathLen);
-			}
+	setFileFolderDateTime(temp_folder, redundantPathLen);
 
-			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-				// フォルダの場合
-				if (g_FolderTimeMode != 0 && g_FolderTimeMode != 1)
-					continue;
-
-				DWORD attribute = (*it)->getAttribute();
-
-				// フォルダは自前で作成されたものなので
-				// 読み込み専用属性はついていない
-				// ただし一括解凍の場合はその限りではない
-				// 属性が読み込み専用だと更新日時変更に失敗するので一時的に変更する
-				bool isReadOnly = false;
-				if (g_BatchDecompress && (attribute & FILE_ATTRIBUTE_READONLY) != 0) {
-					if (SetFileAttributes(path.c_str(), (attribute & (~FILE_ATTRIBUTE_READONLY)))) {
-						isReadOnly = true;
-					} else {
-						cout << _T("フォルダの属性一時変更に失敗しました") << endl;
-					}
-				}
-
-				HANDLE hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
-				if (hFile == INVALID_HANDLE_VALUE) {
-					cout << _T("フォルダの更新日時変更に失敗しました") << endl;
-				} else {
-					FILETIME ft;
-					if (g_FolderTimeMode == 0) {
-						// フォルダは解凍時の日付になってしまうので直す				
-						ft = *((*it)->getLastWriteTime());
-					} else if (g_FolderTimeMode == 1) {
-						StringToFileTime(g_FolderTime.c_str(), ft);
-					}
-					if (SetFileTime(hFile, NULL, NULL, &ft) == 0) {
-						cout << _T("フォルダの更新日時変更に失敗しました") << endl;
-					}
-					CloseHandle(hFile);
-				}
-
-				// 属性を元に戻す
-				if (isReadOnly && g_FolderAttribute == -1) {
-					if (!SetFileAttributes(path.c_str(), attribute)) {
-						cout << _T("フォルダの属性復帰に失敗しました") << endl;					
-					}
-				}
-			} else {
-				if (g_FileTimeMode != 1) continue;
-
-				DWORD attribute = (*it)->getAttribute();
-
-				// 属性が読み込み専用だと更新日時変更に失敗するので一時的に変更する
-				bool isReadOnly = false;
-				if ((attribute & FILE_ATTRIBUTE_READONLY) != 0) {
-					if (SetFileAttributes(path.c_str(), (attribute & (~FILE_ATTRIBUTE_READONLY)))) {
-						isReadOnly = true;
-					} else {
-						cout << _T("ファイルの属性一時変更に失敗しました") << endl;
-					}
-				}
-
-				if (SetFileLastWriteTime(path.c_str(), g_FileTime.c_str()) == false) {
-					cout << _T("ファイルの更新日時変更に失敗しました") << endl;
-				}
-
-				// 属性を元に戻す
-				if (isReadOnly && g_FileAttribute == -1) {
-					if (!SetFileAttributes(path.c_str(), attribute)) {
-						cout << _T("ファイルの属性復帰に失敗しました") << endl;					
-					}
-				}
-			}
-		}
-	}
-
-	if (g_FolderTimeMode == 2) {
-		setFolderTime(temp_folder.getPath());
-	}
-
-	// ファイル・フォルダの属性設定
-	if (g_FolderAttribute != -1 || g_FileAttribute != -1) {
-		list<boost::shared_ptr<IndividualInfo> >::iterator it;
-		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-			String path(temp_folder.getPath());
-			if (lstrlen((*it)->getFullPath()) <= redundantPathLen)
-				continue;
-
-			if (g_BatchDecompress) {
-				CatPath(path, (*it)->getFullPath());
-			} else {
-				CatPath(path, (*it)->getFullPath() + redundantPathLen);
-			}
-
-			DWORD attribute = (*it)->getAttribute();
-
-			if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-				// フォルダの場合
-				DWORD newAttribute;
-				if (g_FolderAttribute == -1) {
-					newAttribute = attribute;
-				} else {
-					newAttribute = FILE_ATTRIBUTE_DIRECTORY;
-					if ((g_FolderAttribute & FileAttribute::READ_ONLY) != 0)	newAttribute |= FILE_ATTRIBUTE_READONLY;
-					if ((g_FolderAttribute & FileAttribute::HIDDEN) != 0)		newAttribute |= FILE_ATTRIBUTE_HIDDEN;
-					if ((g_FolderAttribute & FileAttribute::SYSTEM) != 0)		newAttribute |= FILE_ATTRIBUTE_SYSTEM;
-					if ((g_FolderAttribute & FileAttribute::ARCHIVE) != 0)		newAttribute |= FILE_ATTRIBUTE_ARCHIVE;
-				}
-				if (SetFileAttributes(path.c_str(), newAttribute) == 0) {
-					cout << _T("フォルダの属性変更に失敗しました") << endl;
-					continue;
-				}
-			} else {
-				if (g_FileAttribute != -1) {
-					DWORD newAttribute = 0;
-					if ((g_FileAttribute & FileAttribute::READ_ONLY) != 0)	newAttribute |= FILE_ATTRIBUTE_READONLY;
-					if ((g_FileAttribute & FileAttribute::HIDDEN) != 0)		newAttribute |= FILE_ATTRIBUTE_HIDDEN;
-					if ((g_FileAttribute & FileAttribute::SYSTEM) != 0)		newAttribute |= FILE_ATTRIBUTE_SYSTEM;
-					if ((g_FileAttribute & FileAttribute::ARCHIVE) != 0)	newAttribute |= FILE_ATTRIBUTE_ARCHIVE;
-					if (newAttribute == 0) newAttribute = FILE_ATTRIBUTE_NORMAL;
-					if (newAttribute == attribute) continue;
-					if (SetFileAttributes(path.c_str(), newAttribute) == 0) {
-						cout << _T("ファイルの属性変更に失敗しました") << endl;
-						continue;
-					}
-				}
-			}
-		}
-	}
+	setFileFolderAttribute(temp_folder, redundantPathLen);
 
 	ConvertFileNameInArchive(temp_folder, redundantPathLen);
 
@@ -2176,6 +2034,177 @@ bool process(LPCTSTR filename)
 	// その旨を表示する
 	CheckRemarkableFile();
 
+	return true;
+}
+
+// ファイル・フォルダの日時設定
+void setFileFolderDateTime(TemporaryFolder &temp_folder, int redundantPathLen)
+{
+	if (g_FolderTimeMode != 2 || g_FileTimeMode != 0) {
+		list<boost::shared_ptr<IndividualInfo> >::iterator it;
+		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
+			String path(temp_folder.getPath());
+			if (lstrlen((*it)->getFullPath()) <= redundantPathLen)
+				continue;
+
+			if (g_BatchDecompress) {
+				CatPath(path, (*it)->getFullPath());
+			}
+			else {
+				CatPath(path, (*it)->getFullPath() + redundantPathLen);
+			}
+
+			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+				// フォルダの場合
+				if (g_FolderTimeMode != 0 && g_FolderTimeMode != 1)
+					continue;
+
+				DWORD attribute = (*it)->getAttribute();
+
+				// フォルダは自前で作成されたものなので
+				// 読み込み専用属性はついていない
+				// ただし一括解凍の場合はその限りではない
+				// 属性が読み込み専用だと更新日時変更に失敗するので一時的に変更する
+				bool isReadOnly = false;
+				if (g_BatchDecompress && (attribute & FILE_ATTRIBUTE_READONLY) != 0) {
+					if (SetFileAttributes(path.c_str(), (attribute & (~FILE_ATTRIBUTE_READONLY)))) {
+						isReadOnly = true;
+					}
+					else {
+						cout << _T("フォルダの属性一時変更に失敗しました") << endl;
+					}
+				}
+
+				HANDLE hFile = CreateFile(path.c_str(), GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_FLAG_BACKUP_SEMANTICS, NULL);
+				if (hFile == INVALID_HANDLE_VALUE) {
+					cout << _T("フォルダの更新日時変更に失敗しました") << endl;
+				}
+				else {
+					FILETIME ft;
+					if (g_FolderTimeMode == 0) {
+						// フォルダは解凍時の日付になってしまうので直す				
+						ft = *((*it)->getLastWriteTime());
+					}
+					else if (g_FolderTimeMode == 1) {
+						StringToFileTime(g_FolderTime.c_str(), ft);
+					}
+					if (SetFileTime(hFile, NULL, NULL, &ft) == 0) {
+						cout << _T("フォルダの更新日時変更に失敗しました") << endl;
+					}
+					CloseHandle(hFile);
+				}
+
+				// 属性を元に戻す
+				if (isReadOnly && g_FolderAttribute == -1) {
+					if (!SetFileAttributes(path.c_str(), attribute)) {
+						cout << _T("フォルダの属性復帰に失敗しました") << endl;
+					}
+				}
+			}
+			else {
+				if (g_FileTimeMode != 1) continue;
+
+				DWORD attribute = (*it)->getAttribute();
+
+				// 属性が読み込み専用だと更新日時変更に失敗するので一時的に変更する
+				bool isReadOnly = false;
+				if ((attribute & FILE_ATTRIBUTE_READONLY) != 0) {
+					if (SetFileAttributes(path.c_str(), (attribute & (~FILE_ATTRIBUTE_READONLY)))) {
+						isReadOnly = true;
+					}
+					else {
+						cout << _T("ファイルの属性一時変更に失敗しました") << endl;
+					}
+				}
+
+				if (SetFileLastWriteTime(path.c_str(), g_FileTime.c_str()) == false) {
+					cout << _T("ファイルの更新日時変更に失敗しました") << endl;
+				}
+
+				// 属性を元に戻す
+				if (isReadOnly && g_FileAttribute == -1) {
+					if (!SetFileAttributes(path.c_str(), attribute)) {
+						cout << _T("ファイルの属性復帰に失敗しました") << endl;
+					}
+				}
+			}
+		}
+	}
+
+	if (g_FolderTimeMode == 2) {
+		setFolderTime(temp_folder.getPath());
+	}
+}
+
+// ファイル・フォルダの属性設定
+void setFileFolderAttribute(TemporaryFolder &temp_folder, int redundantPathLen)
+{
+	if (g_FolderAttribute != -1 || g_FileAttribute != -1) {
+		list<boost::shared_ptr<IndividualInfo> >::iterator it;
+		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
+			String path(temp_folder.getPath());
+			if (lstrlen((*it)->getFullPath()) <= redundantPathLen)
+				continue;
+
+			if (g_BatchDecompress) {
+				CatPath(path, (*it)->getFullPath());
+			}
+			else {
+				CatPath(path, (*it)->getFullPath() + redundantPathLen);
+			}
+
+			DWORD attribute = (*it)->getAttribute();
+
+			if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+				// フォルダの場合
+				DWORD newAttribute;
+				if (g_FolderAttribute == -1) {
+					newAttribute = attribute;
+				}
+				else {
+					newAttribute = FILE_ATTRIBUTE_DIRECTORY;
+					if ((g_FolderAttribute & FileAttribute::READ_ONLY) != 0)	newAttribute |= FILE_ATTRIBUTE_READONLY;
+					if ((g_FolderAttribute & FileAttribute::HIDDEN) != 0)		newAttribute |= FILE_ATTRIBUTE_HIDDEN;
+					if ((g_FolderAttribute & FileAttribute::SYSTEM) != 0)		newAttribute |= FILE_ATTRIBUTE_SYSTEM;
+					if ((g_FolderAttribute & FileAttribute::ARCHIVE) != 0)		newAttribute |= FILE_ATTRIBUTE_ARCHIVE;
+				}
+				if (SetFileAttributes(path.c_str(), newAttribute) == 0) {
+					cout << _T("フォルダの属性変更に失敗しました") << endl;
+					continue;
+				}
+			}
+			else {
+				if (g_FileAttribute != -1) {
+					DWORD newAttribute = 0;
+					if ((g_FileAttribute & FileAttribute::READ_ONLY) != 0)	newAttribute |= FILE_ATTRIBUTE_READONLY;
+					if ((g_FileAttribute & FileAttribute::HIDDEN) != 0)		newAttribute |= FILE_ATTRIBUTE_HIDDEN;
+					if ((g_FileAttribute & FileAttribute::SYSTEM) != 0)		newAttribute |= FILE_ATTRIBUTE_SYSTEM;
+					if ((g_FileAttribute & FileAttribute::ARCHIVE) != 0)	newAttribute |= FILE_ATTRIBUTE_ARCHIVE;
+					if (newAttribute == 0) newAttribute = FILE_ATTRIBUTE_NORMAL;
+					if (newAttribute == attribute) continue;
+					if (SetFileAttributes(path.c_str(), newAttribute) == 0) {
+						cout << _T("ファイルの属性変更に失敗しました") << endl;
+						continue;
+					}
+				}
+			}
+		}
+	}
+}
+
+// よく分からないが一応前のDLLの処理が終わるようにしてみる
+bool CheckArchiveDllRunning(ArchiveDll * pArchiveDll)
+{
+	{
+		DWORD startTime = timeGetTime();
+		while (pArchiveDll->getRunning()) {
+			Sleep(10);
+			if (timeGetTime() - startTime > 3000) {
+				cout << _T("解凍時にエラーが発生しました") << endl;
+				return false;
+			}
+		}
+	}
 	return true;
 }
 
