@@ -161,14 +161,15 @@ bool initialize();
 // 書庫を処理する
 bool process(LPCTSTR filename);
 
+void deleteTemporaryFolder(TemporaryFolder &temp_folder);
 void setFileFolderDateTime(TemporaryFolder &temp_folder, int redundantPathLen);
 void setFileFolderAttribute(TemporaryFolder &temp_folder, int redundantPathLen);
-bool CheckArchiveDllRunning(ArchiveDll * pArchiveDll);
+bool checkArchiveDllRunning(ArchiveDll * pArchiveDll);
 
-void ConvertFileNameInArchive(TemporaryFolder& temp_folder, int redundantPathLen);
-void CompressWithTemporaryFolder(String& srcFilename, String& destFilename, TemporaryFolder& temp_folder);
-bool CheckArchive(ArchiveDll*& pArchiveDll, String& destFilename);
-void ConvertFileName(String& finalDestFilename);
+void convertFileNameInArchive(TemporaryFolder& temp_folder, int redundantPathLen);
+void compressWithTemporaryFolder(String& srcFilename, String& destFilename, TemporaryFolder& temp_folder);
+bool checkArchive(ArchiveDll*& pArchiveDll, String& destFilename);
+void convertFileName(String& finalDestFilename);
 
 void analyzePath(vector<String>& src, vector<String>& dest);
 bool analyzePathSub(LPCTSTR src, vector<String>& dest);
@@ -182,6 +183,9 @@ bool setFolderTimeSub(LPCTSTR path, FILETIME& rNewestFileTime);
 void GetRedundantPath(String& rRedundantPath);
 
 bool AddLackFolder();
+
+bool checkAttribute();
+bool checkUpdateDateTime();
 
 bool GetIndividualInfo(LPCTSTR path);
 bool GetIndividualInfoSub(LPCTSTR searchPath, LPCTSTR basePath);
@@ -1431,75 +1435,94 @@ int isProcessedArchive(LPCTSTR filename)
 		if (ExistsRedundantFolde()) return 1;
 	}
 
+	// 属性のチェック
+	if (checkAttribute())
 	{
-		// 属性のチェック
-		list<boost::shared_ptr<IndividualInfo> >::iterator it;
-		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-				if (g_FolderAttribute == -1) continue;
-				DWORD attribute = MyFileAttributeToFileAttribute(g_FolderAttribute, true);
-				if (attribute != (*it)->getAttribute()) return 1;
-			} else {
-				if (g_FileAttribute == -1) continue;
-				DWORD attribute = MyFileAttributeToFileAttribute(g_FileAttribute, false);
-				if (attribute != (*it)->getAttribute()) return 1;
-			}
-		}
+		return 1;
 	}
 
+	// 更新日時のチェック
+	if (checkUpdateDateTime())
 	{
-		// 更新日時のチェック
-		list<boost::shared_ptr<IndividualInfo> >::iterator it;
-		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-			if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-				if (g_FolderTimeMode == 0) continue;
-
-				if (g_FolderTimeMode == 1) {
-					FILETIME ft;
-					StringToFileTime(g_FolderTime.c_str(), ft);
-					if (CompareFileTime((*it)->getLastWriteTime(),  &ft) != 0) {
-						return 1;
-					}					
-				} else if (g_FolderTimeMode == 2) {
-					// フォルダの更新日時よりも新しいファイル・フォルダが
-					// フォルダ以下にあったら中止
-					// フォルダ以下の最新のファイル・フォルダとフォルダの更新日時が
-					// 一致しない場合も中止
-					FILETIME ft;
-					ft.dwHighDateTime = 0;
-					ft.dwLowDateTime = 0;
-
-					list<boost::shared_ptr<IndividualInfo> >::iterator i = it;
-					++i;
-					for ( ; i != g_compressFileList.end(); ++i) {
-						if (_tcsncmp((*it)->getFullPath(), (*i)->getFullPath(), lstrlen((*it)->getFullPath())) != 0 ||
-						*((*i)->getFullPath() + lstrlen((*it)->getFullPath())) != _TCHAR('\\')) {
-							break;
-						}
-						if (CompareFileTime((*it)->getLastWriteTime(),  (*i)->getLastWriteTime()) == -1) {
-							return 1;
-						}
-						if (CompareFileTime(&ft,  (*i)->getLastWriteTime()) == -1) {
-							ft = *((*i)->getLastWriteTime());
-						}
-					}
-					if (CompareFileTime(&ft,  (*it)->getLastWriteTime()) != 0) {
-						return 1;
-					}
-				}
-			} else {
-				if (g_FileTimeMode == 0) continue;
-
-				FILETIME ft;
-				StringToFileTime(g_FileTime.c_str(), ft);
-				if (CompareFileTime((*it)->getLastWriteTime(),  &ft) != 0) {
-					return 1;
-				}
-			}
-		}
+		return 1;
 	}
 
 	return 0;
+}
+
+bool checkAttribute()
+{
+	list<boost::shared_ptr<IndividualInfo> >::iterator it;
+	for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
+		if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+			if (g_FolderAttribute == -1) continue;
+			DWORD attribute = MyFileAttributeToFileAttribute(g_FolderAttribute, true);
+			if (attribute != (*it)->getAttribute()) return true;
+		}
+		else {
+			if (g_FileAttribute == -1) continue;
+			DWORD attribute = MyFileAttributeToFileAttribute(g_FileAttribute, false);
+			if (attribute != (*it)->getAttribute()) return true;
+		}
+	}
+
+	return false;
+}
+
+bool checkUpdateDateTime()
+{
+	list<boost::shared_ptr<IndividualInfo> >::iterator it;
+	for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
+		if (((*it)->getAttribute() & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+			if (g_FolderTimeMode == 0) continue;
+
+			if (g_FolderTimeMode == 1) {
+				FILETIME ft;
+				StringToFileTime(g_FolderTime.c_str(), ft);
+				if (CompareFileTime((*it)->getLastWriteTime(), &ft) != 0) {
+					return true;
+				}
+			}
+			else if (g_FolderTimeMode == 2) {
+				// フォルダの更新日時よりも新しいファイル・フォルダが
+				// フォルダ以下にあったら中止
+				// フォルダ以下の最新のファイル・フォルダとフォルダの更新日時が
+				// 一致しない場合も中止
+				FILETIME ft;
+				ft.dwHighDateTime = 0;
+				ft.dwLowDateTime = 0;
+
+				list<boost::shared_ptr<IndividualInfo> >::iterator i = it;
+				++i;
+				for (; i != g_compressFileList.end(); ++i) {
+					if (_tcsncmp((*it)->getFullPath(), (*i)->getFullPath(), lstrlen((*it)->getFullPath())) != 0 ||
+						*((*i)->getFullPath() + lstrlen((*it)->getFullPath())) != _TCHAR('\\')) {
+						break;
+					}
+					if (CompareFileTime((*it)->getLastWriteTime(), (*i)->getLastWriteTime()) == -1) {
+						return true;
+					}
+					if (CompareFileTime(&ft, (*i)->getLastWriteTime()) == -1) {
+						ft = *((*i)->getLastWriteTime());
+					}
+				}
+				if (CompareFileTime(&ft, (*it)->getLastWriteTime()) != 0) {
+					return true;
+				}
+			}
+		}
+		else {
+			if (g_FileTimeMode == 0) continue;
+
+			FILETIME ft;
+			StringToFileTime(g_FileTime.c_str(), ft);
+			if (CompareFileTime((*it)->getLastWriteTime(), &ft) != 0) {
+				return true;
+			}
+		}
+	}
+
+	return false;
 }
 
 
@@ -1887,13 +1910,16 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	if (!CheckArchiveDllRunning(pArchiveDll)) return false;
+	if (!checkArchiveDllRunning(pArchiveDll))
+	{
+		return false;
+	}
 
 	setFileFolderDateTime(temp_folder, redundantPathLen);
 
 	setFileFolderAttribute(temp_folder, redundantPathLen);
 
-	ConvertFileNameInArchive(temp_folder, redundantPathLen);
+	convertFileNameInArchive(temp_folder, redundantPathLen);
 
 	// 圧縮しようとするフォルダ内が
 	// 指定の拡張子のファイル(例えばアーカイブ)のみだったら
@@ -1904,12 +1930,7 @@ bool process(LPCTSTR filename)
 	if (IsEmptyFolder(temp_folder.getPath())) {
 		cout << _T("空の書庫となるため書庫を作成しません") << endl;
 
-		// テンポラリフォルダの削除(明示的に行う)
-		if (!temp_folder.destroy()) {
-			// フォルダ削除失敗
-			cout << _T("テンポラリフォルダの削除に失敗しました") << endl;
-			cout << temp_folder.getPath() << endl;
-		}
+		deleteTemporaryFolder(temp_folder);
 
 		// 元の書庫を削除
 		if (!DeleteFileOrFolder(srcFilename.c_str(), UsesRecycleBin)) {
@@ -1949,7 +1970,7 @@ bool process(LPCTSTR filename)
 		CatPath(finalDestFilename, fileName.c_str());
 	}
 
-	CompressWithTemporaryFolder(srcFilename, destFilename, temp_folder);
+	compressWithTemporaryFolder(srcFilename, destFilename, temp_folder);
 
 	// 指定の名前で必要なフォルダ以下を圧縮
 	{
@@ -1993,8 +2014,10 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	if (!CheckArchive(pArchiveDll, destFilename))
+	if (!checkArchive(pArchiveDll, destFilename))
+	{
 		return false;
+	}
 
 
 	// 元の書庫を削除
@@ -2004,7 +2027,7 @@ bool process(LPCTSTR filename)
 		cout << srcFilename.c_str() << endl;
 	}
 	
-	ConvertFileName(finalDestFilename);
+	convertFileName(finalDestFilename);
 	
 	// 元の書庫削除後目標の名前に変える
 	if (finalDestFilename != destFilename) {
@@ -2023,18 +2046,23 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	// テンポラリフォルダの削除(明示的に行う)
-	if (!temp_folder.destroy()) {
-		// フォルダ削除失敗
-		cout << _T("テンポラリフォルダの削除に失敗しました") << endl;
-		cout << temp_folder.getPath() << endl;
-	}
+	deleteTemporaryFolder(temp_folder);
 
 	// 処理した結果注目ファイルのみで構成される場合
 	// その旨を表示する
 	CheckRemarkableFile();
 
 	return true;
+}
+
+// テンポラリフォルダの削除(明示的に行う)
+void deleteTemporaryFolder(TemporaryFolder &temp_folder)
+{
+	if (!temp_folder.destroy()) {
+		// フォルダ削除失敗
+		cout << _T("テンポラリフォルダの削除に失敗しました") << endl;
+		cout << temp_folder.getPath() << endl;
+	}
 }
 
 // ファイル・フォルダの日時設定
@@ -2193,7 +2221,7 @@ void setFileFolderAttribute(TemporaryFolder &temp_folder, int redundantPathLen)
 }
 
 // よく分からないが一応前のDLLの処理が終わるようにしてみる
-bool CheckArchiveDllRunning(ArchiveDll * pArchiveDll)
+bool checkArchiveDllRunning(ArchiveDll * pArchiveDll)
 {
 	{
 		DWORD startTime = timeGetTime();
@@ -2208,7 +2236,7 @@ bool CheckArchiveDllRunning(ArchiveDll * pArchiveDll)
 	return true;
 }
 
-void ConvertFileNameInArchive(TemporaryFolder& temp_folder, int redundantPathLen)
+void convertFileNameInArchive(TemporaryFolder& temp_folder, int redundantPathLen)
 {
 	if (g_ConvertFileName) {
 		// ファイル名の文字変換
@@ -2309,7 +2337,7 @@ void ConvertFileNameInArchive(TemporaryFolder& temp_folder, int redundantPathLen
 }
 
 // 圧縮をTempフォルダで行う
-void CompressWithTemporaryFolder(String& srcFilename, String& destFilename, TemporaryFolder& temp_folder)
+void compressWithTemporaryFolder(String& srcFilename, String& destFilename, TemporaryFolder& temp_folder)
 {
 	if (g_CompressWithTemporaryFolder)
 	{
@@ -2328,7 +2356,7 @@ void CompressWithTemporaryFolder(String& srcFilename, String& destFilename, Temp
 }
 
 // 作成した書庫のテストを行う
-bool CheckArchive(ArchiveDll*& pArchiveDll, String& destFilename)
+bool checkArchive(ArchiveDll*& pArchiveDll, String& destFilename)
 {
 	if (g_CheckArchive)
 	{
@@ -2354,7 +2382,7 @@ bool CheckArchive(ArchiveDll*& pArchiveDll, String& destFilename)
 }
 
 // 書庫のファイル名をnkfで変換
-void ConvertFileName(String& finalDestFilename)
+void convertFileName(String& finalDestFilename)
 {
 	if (g_ConvertFileName) {
 		String orgFilename;
