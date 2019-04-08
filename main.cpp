@@ -161,6 +161,11 @@ bool initialize();
 // 書庫を処理する
 bool process(LPCTSTR filename);
 
+void ConvertFileNameInArchive(TemporaryFolder& temp_folder, int redundantPathLen);
+void CompressWithTemporaryFolder(String& srcFilename, String& destFilename, TemporaryFolder& temp_folder);
+bool CheckArchive(ArchiveDll*& pArchiveDll, String& destFilename);
+void ConvertFileName(String& finalDestFilename);
+
 void analyzePath(vector<String>& src, vector<String>& dest);
 bool analyzePathSub(LPCTSTR src, vector<String>& dest);
 
@@ -1643,11 +1648,6 @@ bool process(LPCTSTR filename)
 
 	pArchiveDll->setArchiveFilename(srcFilename.c_str());
 
-
-
-
-
-
 	// 解凍先に使うテンポラリフォルダを得る
 	String destPath;
 	getTemporaryPath(destPath);
@@ -2035,98 +2035,7 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	if (g_ConvertFileName) {
-		// ファイル名の文字変換
-		list<boost::shared_ptr<IndividualInfo> >::iterator it;
-		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
-			String path(temp_folder.getPath());
-			if (lstrlen((*it)->getFullPath()) <= redundantPathLen) continue;
-
-			if (g_BatchDecompress) {
-				CatPath(path, (*it)->getFullPath());
-			}
-			else {
-				CatPath(path, (*it)->getFullPath() + redundantPathLen);
-			}
-
-			DWORD attribute = (*it)->getAttribute();
-
-			String orgFilename;
-			String cnvFilename;
-			GetFileName(path.c_str(), orgFilename);
-			nkf->Convert(orgFilename, cnvFilename);
-
-			if((orgFilename != cnvFilename) || (orgFilename.GetLength() != cnvFilename.GetLength())) {
-				if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-					continue;
-				}
-				else {
-					cout << _T("ファイル名 変換前：") << orgFilename.c_str() << endl;
-					cout << _T("ファイル名 変換後：") << cnvFilename.c_str() << endl;
-				}
-
-				String cnvPath(path);
-				RemoveFileName(cnvPath);
-				CatPath(cnvPath, cnvFilename.c_str());
-				int n = 2;
-				for (int i = 0; i < n; ++i) {
-					if (MoveFileEx(path.c_str(), cnvPath.c_str(), MOVEFILE_WRITE_THROUGH) != 0) {
-						break;
-					} else if (i < n - 1) {
-						Sleep(3000);
-					} else {
-						cout << _T("リネームに失敗しました") << endl;
-					}
-				}
-			}
-		}
-
-		// フォルダ名の文字変換
-		list<boost::shared_ptr<IndividualInfo> >::reverse_iterator ir;
-		for (ir = g_compressFileList.rbegin() ; ir != g_compressFileList.rend() ; ++ir) {
-			String path(temp_folder.getPath());
-			if (lstrlen((*ir)->getFullPath()) <= redundantPathLen)
-				continue;
-
-			if (g_BatchDecompress) {
-				CatPath(path, (*ir)->getFullPath());
-			}
-			else {
-				CatPath(path, (*ir)->getFullPath() + redundantPathLen);
-			}
-
-			DWORD attribute = (*ir)->getAttribute();
-
-			String orgFilename;
-			String cnvFilename;
-			GetFileName(path.c_str(), orgFilename);
-			nkf->Convert(orgFilename, cnvFilename);
-
-			if((orgFilename != cnvFilename) || (orgFilename.GetLength() != cnvFilename.GetLength())) {
-				if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
-					cout << _T("フォルダ名 変換前：") << orgFilename.c_str() << endl;
-					cout << _T("フォルダ名 変換後：") << cnvFilename.c_str() << endl;
-				}
-				else {
-					continue;
-				}
-
-				String cnvPath(path);
-				RemoveFileName(cnvPath);
-				CatPath(cnvPath, cnvFilename.c_str());
-				int n = 2;
-				for (int i = 0; i < n; ++i) {
-					if (MoveFileEx(path.c_str(), cnvPath.c_str(), MOVEFILE_WRITE_THROUGH) != 0) {
-						break;
-					} else if (i < n - 1) {
-						Sleep(3000);
-					} else {
-						cout << _T("リネームに失敗しました") << endl;
-					}
-				}
-			}
-		}
-	}
+	ConvertFileNameInArchive(temp_folder, redundantPathLen);
 
 	// 圧縮しようとするフォルダ内が
 	// 指定の拡張子のファイル(例えばアーカイブ)のみだったら
@@ -2182,21 +2091,7 @@ bool process(LPCTSTR filename)
 		CatPath(finalDestFilename, fileName.c_str());
 	}
 
-	// 圧縮をTempフォルダで行う
-	if(g_CompressWithTemporaryFolder)
-	{
-		String orgFilename;
-		GetFileName(srcFilename.c_str(), orgFilename);
-		destFilename = temp_folder.getPath();
-		CatPath(destFilename, orgFilename.c_str());
-		RemoveExtension(destFilename);
-		destFilename.Cat(_T(".zip"));
-		EvacuateFileName(destFilename);
-	}
-
-	if (destFilename == srcFilename) {
-		EvacuateFileName(destFilename);
-	}
+	CompressWithTemporaryFolder(srcFilename, destFilename, temp_folder);
 
 	// 指定の名前で必要なフォルダ以下を圧縮
 	{
@@ -2240,27 +2135,9 @@ bool process(LPCTSTR filename)
 		}
 	}
 
-	// 作成した書庫のテストを行う
-	if (g_CheckArchive)
-	{
-		if (pArchiveDll->getID() != ArchiveDllID::SEVEN_ZIP) {
-			pArchiveDll = g_ArchiveDllManager.getArchiveDll(ArchiveDllID::SEVEN_ZIP);
-			if (pArchiveDll == NULL) {
-				pArchiveDll = g_ArchiveDllManager.addArchiveDll(ArchiveDllID::SEVEN_ZIP);
-			}
-			if (pArchiveDll == NULL) {
-				return false;
-			}
-		}
+	if (!CheckArchive(pArchiveDll, destFilename))
+		return false;
 
-		pArchiveDll->setArchiveFilename(destFilename.c_str());
-		if (!pArchiveDll->checkArchive(2))
-		{
-			cout << _T("作成した書庫のテストに失敗しました") << endl;
-			cout << destFilename.c_str() << endl;
-			return false;
-		}
-	}
 
 	// 元の書庫を削除
 	if (!DeleteFileOrFolder(srcFilename.c_str(), UsesRecycleBin)) {
@@ -2269,19 +2146,7 @@ bool process(LPCTSTR filename)
 		cout << srcFilename.c_str() << endl;
 	}
 	
-	// 書庫のファイル名をnkfで変換
-	if (g_ConvertFileName) {
-		String orgFilename;
-		GetFileName(finalDestFilename.c_str(), orgFilename);
-		String cnvFilename;
-		nkf->Convert(orgFilename, cnvFilename);
-		RemoveFileName(finalDestFilename);
-		CatPath(finalDestFilename, cnvFilename.c_str());
-		if(orgFilename != cnvFilename) {
-			cout << _T("書庫名 変換前：") << orgFilename.c_str() << endl;
-			cout << _T("書庫名 変換後：") << cnvFilename.c_str() << endl;
-		}
-	}
+	ConvertFileName(finalDestFilename);
 	
 	// 元の書庫削除後目標の名前に変える
 	if (finalDestFilename != destFilename) {
@@ -2289,7 +2154,7 @@ bool process(LPCTSTR filename)
 		// MoveFileEx() は Windows 2000 以降でしか使えない
 		int n = 2;
 		for (int i = 0; i < n; ++i) {
-			if (MoveFileEx(destFilename.c_str(), finalDestFilename.c_str(), MOVEFILE_WRITE_THROUGH) != 0) {
+			if (MoveFileEx(destFilename.c_str(), finalDestFilename.c_str(), MOVEFILE_COPY_ALLOWED | MOVEFILE_REPLACE_EXISTING | MOVEFILE_WRITE_THROUGH) != 0) {
 				break;
 			} else if (i < n - 1) {
 				Sleep(3000);
@@ -2314,10 +2179,167 @@ bool process(LPCTSTR filename)
 	return true;
 }
 
+void ConvertFileNameInArchive(TemporaryFolder& temp_folder, int redundantPathLen)
+{
+	if (g_ConvertFileName) {
+		// ファイル名の文字変換
+		list<boost::shared_ptr<IndividualInfo> >::iterator it;
+		for (it = g_compressFileList.begin(); it != g_compressFileList.end(); ++it) {
+			String path(temp_folder.getPath());
+			if (lstrlen((*it)->getFullPath()) <= redundantPathLen) continue;
 
+			if (g_BatchDecompress) {
+				CatPath(path, (*it)->getFullPath());
+			}
+			else {
+				CatPath(path, (*it)->getFullPath() + redundantPathLen);
+			}
 
+			DWORD attribute = (*it)->getAttribute();
 
+			String orgFilename;
+			String cnvFilename;
+			GetFileName(path.c_str(), orgFilename);
+			nkf->Convert(orgFilename, cnvFilename);
 
+			if ((orgFilename != cnvFilename) || (orgFilename.GetLength() != cnvFilename.GetLength())) {
+				if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+					continue;
+				}
+				else {
+					cout << _T("ファイル名 変換前：") << orgFilename.c_str() << endl;
+					cout << _T("ファイル名 変換後：") << cnvFilename.c_str() << endl;
+				}
+
+				String cnvPath(path);
+				RemoveFileName(cnvPath);
+				CatPath(cnvPath, cnvFilename.c_str());
+				int n = 2;
+				for (int i = 0; i < n; ++i) {
+					if (MoveFileEx(path.c_str(), cnvPath.c_str(), MOVEFILE_WRITE_THROUGH) != 0) {
+						break;
+					}
+					else if (i < n - 1) {
+						Sleep(3000);
+					}
+					else {
+						cout << _T("リネームに失敗しました") << endl;
+					}
+				}
+			}
+		}
+
+		// フォルダ名の文字変換
+		list<boost::shared_ptr<IndividualInfo> >::reverse_iterator ir;
+		for (ir = g_compressFileList.rbegin(); ir != g_compressFileList.rend(); ++ir) {
+			String path(temp_folder.getPath());
+			if (lstrlen((*ir)->getFullPath()) <= redundantPathLen)
+				continue;
+
+			if (g_BatchDecompress) {
+				CatPath(path, (*ir)->getFullPath());
+			}
+			else {
+				CatPath(path, (*ir)->getFullPath() + redundantPathLen);
+			}
+
+			DWORD attribute = (*ir)->getAttribute();
+
+			String orgFilename;
+			String cnvFilename;
+			GetFileName(path.c_str(), orgFilename);
+			nkf->Convert(orgFilename, cnvFilename);
+
+			if ((orgFilename != cnvFilename) || (orgFilename.GetLength() != cnvFilename.GetLength())) {
+				if ((attribute & FILE_ATTRIBUTE_DIRECTORY) != 0) {
+					cout << _T("フォルダ名 変換前：") << orgFilename.c_str() << endl;
+					cout << _T("フォルダ名 変換後：") << cnvFilename.c_str() << endl;
+				}
+				else {
+					continue;
+				}
+
+				String cnvPath(path);
+				RemoveFileName(cnvPath);
+				CatPath(cnvPath, cnvFilename.c_str());
+				int n = 2;
+				for (int i = 0; i < n; ++i) {
+					if (MoveFileEx(path.c_str(), cnvPath.c_str(), MOVEFILE_WRITE_THROUGH) != 0) {
+						break;
+					}
+					else if (i < n - 1) {
+						Sleep(3000);
+					}
+					else {
+						cout << _T("リネームに失敗しました") << endl;
+					}
+				}
+			}
+		}
+	}
+}
+
+// 圧縮をTempフォルダで行う
+void CompressWithTemporaryFolder(String& srcFilename, String& destFilename, TemporaryFolder& temp_folder)
+{
+	if (g_CompressWithTemporaryFolder)
+	{
+		String orgFilename;
+		GetFileName(srcFilename.c_str(), orgFilename);
+		destFilename = temp_folder.getPath();
+		CatPath(destFilename, orgFilename.c_str());
+		RemoveExtension(destFilename);
+		destFilename.Cat(_T(".zip"));
+		EvacuateFileName(destFilename);
+	}
+
+	if (destFilename == srcFilename) {
+		EvacuateFileName(destFilename);
+	}
+}
+
+// 作成した書庫のテストを行う
+bool CheckArchive(ArchiveDll*& pArchiveDll, String& destFilename)
+{
+	if (g_CheckArchive)
+	{
+		if (pArchiveDll->getID() != ArchiveDllID::SEVEN_ZIP) {
+			pArchiveDll = g_ArchiveDllManager.getArchiveDll(ArchiveDllID::SEVEN_ZIP);
+			if (pArchiveDll == NULL) {
+				pArchiveDll = g_ArchiveDllManager.addArchiveDll(ArchiveDllID::SEVEN_ZIP);
+			}
+			if (pArchiveDll == NULL) {
+				return false;
+			}
+		}
+
+		pArchiveDll->setArchiveFilename(destFilename.c_str());
+		if (!pArchiveDll->checkArchive(2))
+		{
+			cout << _T("作成した書庫のテストに失敗しました") << endl;
+			cout << destFilename.c_str() << endl;
+			return false;
+		}
+	}
+	return true;
+}
+
+// 書庫のファイル名をnkfで変換
+void ConvertFileName(String& finalDestFilename)
+{
+	if (g_ConvertFileName) {
+		String orgFilename;
+		GetFileName(finalDestFilename.c_str(), orgFilename);
+		String cnvFilename;
+		nkf->Convert(orgFilename, cnvFilename);
+		RemoveFileName(finalDestFilename);
+		CatPath(finalDestFilename, cnvFilename.c_str());
+		if (orgFilename != cnvFilename) {
+			cout << _T("書庫名 変換前：") << orgFilename.c_str() << endl;
+			cout << _T("書庫名 変換後：") << cnvFilename.c_str() << endl;
+		}
+	}
+}
 
 // 指定のフォルダ内（サブフォルダ含む）のフォルダの更新日時を
 // フォルダ内の最新の更新日時を持つファイル・フォルダと一致させる
