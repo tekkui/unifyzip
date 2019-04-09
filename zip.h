@@ -12,6 +12,8 @@
 #include "MemoryMappedFile.h"
 #include "String.h"
 
+const unsigned long LANGUAGE_ENCODING_FLAG = 0x1 << 11;
+
 namespace KSDK {
 
 bool Compress(LPCTSTR srcPath, LPCTSTR dstPath, int compressLevel);

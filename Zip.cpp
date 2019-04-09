@@ -22,8 +22,6 @@
 using namespace std;
 using namespace boost;
 
-const uLong LANGUAGE_ENCODING_FLAG = 0x1 << 11;
-
 namespace {
 
 // ファイルの更新日時を設定する
@@ -523,6 +521,10 @@ endrecFound:;
 			UINT16 versionNeededToExtract = GetUINT16(pCentralDir, 6);
 			UINT16 generalPurposeBitFlag = GetUINT16(pCentralDir, 8);
 //		#endif
+#ifdef  _UNICODE
+			generalPurposeBitFlag &= ~LANGUAGE_ENCODING_FLAG;
+#endif //  _UNICODE
+
 
 		// compression method == 8 についてはzlibで解凍可能なようだが無視
 		UINT16 compressionMethod = GetUINT16(pCentralDir, 10);
@@ -566,7 +568,7 @@ endrecFound:;
 					return false;
 				}
 				dst[dstlen] = 0;
-				fileName = srclen;
+				fileName = dst;
 			}
 		#else
 			fileName.NCopy((char*)(pCentralDir+46), filename_length);
