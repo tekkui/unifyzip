@@ -393,6 +393,22 @@ int String::Replace(LPCTSTR pszOld, LPCTSTR pszNew) {
 	}
 }
 
+// 置換2
+int String::Replace2(LPCTSTR pszOld, LPCTSTR pszNew) {
+	int newLen = lstrlen(pszNew);
+
+    int i = 0;
+	int start = 0;
+	TCHAR org[MAX_PATH];
+	lstrcpy(org, m_pszStr);
+	for (int pos = Find(pszOld, start); pos != -1; ++i, pos = Find(pszOld, start)) {
+		lstrcpy(org + pos, pszNew);
+		start = pos + newLen;
+		lstrcat(org, m_pszStr + start);
+	}
+	Copy(org);
+	return i;
+}
 
 // 挿入
 int String::Insert( int nIndex, TCHAR ch )

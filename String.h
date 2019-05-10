@@ -75,6 +75,7 @@ public:
 	void MakeLower();
 	int Replace( TCHAR chOld, TCHAR chNew );	// 置換
 	int Replace(LPCTSTR pszOld, LPCTSTR pszNew);
+	int Replace2(LPCTSTR pszOld, LPCTSTR pszNew);
 	int Insert( int nIndex, TCHAR ch );			// 挿入
 	int Insert( int nIndex, LPCTSTR pstr );
 	int Delete( int nIndex, int nCount = 1 );	// 削除

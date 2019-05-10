@@ -2389,6 +2389,15 @@ void convertFileName(String& finalDestFilename)
 		GetFileName(finalDestFilename.c_str(), orgFilename);
 		String cnvFilename;
 		nkf->Convert(orgFilename, cnvFilename);
+
+		// ファイル名に使えない文字は２バイト文字に戻す。
+		TCHAR stringNg[][2] = { _T("\\"), _T("/"), _T(":"), _T("*"), _T("?"), _T("\""), _T("<"), _T(">"), _T("|"), _T("") };
+		TCHAR stringOk[][2] = { _T("￥"), _T("／"), _T("："), _T("＊"), _T("？"), _T("”"), _T("＜"), _T("＞"), _T("｜"), _T("") };
+		for (int i = 0; stringNg[i][0] != NULL; i++)
+		{
+			cnvFilename.Replace2(stringNg[i], stringOk[i]);
+		}
+
 		RemoveFileName(finalDestFilename);
 		CatPath(finalDestFilename, cnvFilename.c_str());
 		if (orgFilename != cnvFilename) {
