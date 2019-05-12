@@ -1735,6 +1735,22 @@ bool process(LPCTSTR filename)
 		// 一括解凍
 		int r = pArchiveDll->extract(temp_folder.getPath(), g_ShowsProgress, true);
 
+		if ((r != 0) && (pArchiveDll->getID() == ArchiveDllID::SEVEN_ZIP))
+		{
+			String ext;
+			GetExtention(srcFilename.c_str(), ext);
+			if (lstrcmpi(ext.c_str(), _T(".zip")) == 0) {
+				pArchiveDll = g_ArchiveDllManager.getArchiveDll(ArchiveDllID::UNZIP);
+				if (pArchiveDll == NULL) {
+					pArchiveDll = g_ArchiveDllManager.addArchiveDll(ArchiveDllID::UNZIP);
+					if (pArchiveDll != NULL) {
+						pArchiveDll->setArchiveFilename(srcFilename.c_str());
+						r = pArchiveDll->extract(temp_folder.getPath(), g_ShowsProgress, true);
+					}
+				}
+			}
+		}
+
 		if (r != 0) {
 			cout << _T("解凍時にエラーが発生しました") << endl;
 			return false;

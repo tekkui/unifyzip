@@ -768,7 +768,7 @@
 		<br>
 		UnDup<br>
 		作者 Sim-Gさん<br>
-		作者ページ <a href="http://simg.infoseek.livedoor.com/">http://simg.infoseek.livedoor.com/</a><br>
+		作者ページ <a href="http://hp.vector.co.jp/authors/VA032597/">http://hp.vector.co.jp/authors/VA032597/</a><br>
 		<br>
 		さて、同じファイルを格納してあるはずの書庫がバイナリ的に一致しないのはなぜでしょうか。<br>
 		冗長なフォルダを含んでいたり、空フォルダがあったり、余計なファイルがあったり<br>
@@ -830,6 +830,9 @@
 		プログラムからは正常に出力しています。<br>
 		コンソールではフォントリンクが動作していないと推測されます。<br>
 		設定でファイル出力に切り替える事で、文字化け無く結果を確認できます。<br>
+		<br>
+		7-zip32.dllで展開できないZIP書庫をUNZIP32.DLLで展開を行いますが<br>
+		UNZIP32.DLLはUNICODEに対応していない為に、正常に処理できないことがあります。<br>
 		<br>
 		nkf(Network Kanji Filter)を使用した<br>
 		書庫名や書庫内のフォルダ、ファイル名の文字コード変換に対応しました。<br>
@@ -1136,6 +1139,14 @@
 		　- Version 2.28 a8
 		<ul>
 			<li>URLエンコード（パーセントエンコーディング）されたファイル名のデーコードに対応<br>
+		</ul>
+
+		2019/05/12<br>
+		　- Version 2.28 a9
+		<ul>
+			<li>nkf32.dllでファイル名に使えない文字に変換される問題に対応<br>
+			<li>UNZIP32.DLLに指定するファイル名をUTF8からANSIに変更（UNICODE対応していない為）<br>
+			<li>7-zip32.dllでZIP展開に失敗した場合に、UNZIP32.DLLで展開するように変更<br>
 		</ul>
 	</p>
 	<p><a href="#index">目次へ</a></p>

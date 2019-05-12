@@ -165,7 +165,15 @@ bool ArchiveDll::openArchive(const HWND hwnd, const DWORD mode)  {
 	if (f == NULL) { return false; }
 	typedef HARC (WINAPI* OPEN_ARCHIVE)(const HWND, LPCSTR, const DWORD);
 #ifdef _UNICODE
-	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, (LPCSTR)archiveFilename_.utf8_str(), mode);
+	if (archiveDllID_ == ArchiveDllID::UNZIP)
+	{
+		mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, (LPCSTR)archiveFilename_.ansi_str(), mode);
+	}
+	else
+	{
+		setUnicodeMode();
+		mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, (LPCSTR)archiveFilename_.utf8_str(), mode);
+	}
 #else
 	mArchiveHandle = ((OPEN_ARCHIVE)f)(hwnd, archiveFilename_.c_str(), mode);
 #endif
@@ -188,10 +196,6 @@ bool ArchiveDll::closeArchive() {
 LPCTSTR ArchiveDll::getArchiveFilename() {
 	return archiveFilename_.c_str();
 }
-
-
-
-
 
 
 // 一括解凍
@@ -328,7 +332,15 @@ int ArchiveDll::extract(LPCTSTR destPath, bool showsProgress, bool overwritesFil
 
 	String output;
 #ifdef _UNICODE
-	int ret = command(NULL, commandLine.utf8_str(), output);
+	int ret;
+	if (archiveDllID_ == ArchiveDllID::UNZIP)
+	{
+		ret = command(NULL, (LPCTSTR)commandLine.ansi_str(), output);
+	}
+	else
+	{
+		ret = command(NULL, commandLine.utf8_str(), output);
+	}
 #else
 	int ret = command(NULL, commandLine.c_str(), output);
 #endif
@@ -576,8 +588,16 @@ bool ArchiveDll::checkArchive(int mode) {
 	if (f == NULL) { return false; }
 	typedef BOOL (WINAPI * CHECK_ARCHIVE)(LPCSTR, const int);
 #ifdef _UNICODE
-	setUnicodeMode();
-	BOOL b = ((CHECK_ARCHIVE)f)((LPCSTR)archiveFilename_.utf8_str(), mode);
+	BOOL b;
+	if (archiveDllID_ == ArchiveDllID::UNZIP)
+	{
+		b = ((CHECK_ARCHIVE)f)((LPCSTR)archiveFilename_.ansi_str(), mode);
+	}
+	else
+	{
+		setUnicodeMode();
+		b = ((CHECK_ARCHIVE)f)((LPCSTR)archiveFilename_.utf8_str(), mode);
+	}
 #else
 	BOOL b = ((CHECK_ARCHIVE)f)(archiveFilename_.c_str(), mode);
 #endif
